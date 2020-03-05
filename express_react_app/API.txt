@@ -2,17 +2,19 @@ Denna text förklarar hur mak kommunicerar med backend servern
 För att kommunicera med backend behövs 'whatwg-fetch' för att sätta body taggen
 App.js måste allstå innehålla en rad som står:
     import 'whatwg-fetch'
-Man behöver även skriva npm install whatwg-fetch för att installera den
+Man behöver även skriva npm install whatwg-fetch för att installera det
+
 
 POST /register_user
     Detta används för att registrera nya användare.
+
+    Returnerar användarnamnet om registering lyckades
+
     För att registrera nya användare behöver man ange användernamn och lösenord
     detta görs genom att lägga in den informationen i body.
         Body ska vara en json sträng som innehåller följande:
             {usename: 'ny användare', password: 'hemlight lösenord}
-    
-    /register_user svarar med användarnamnet om registreringen lyckades
-    
+        
     exepmel kod för att registrera ny användare:
         Denna kod skapar en function registerUser som returnerar användarnamnet
 
@@ -40,8 +42,14 @@ POST /register_user
             return body
         }
 
+
+
 POST /login
-    Detta används för att logga in. Ange användarnamn och lösenord på samma sätt
+    Detta används för att logga in.
+    
+    Returnerar användarnamnet om inloggning lyckades, annars false.
+
+    Ange användarnamn och lösenord på samma sätt
     som man gör när man registrerar. Allstå med en body som innehåller en
     json sträng:
         {username: användare, password: lösenord}
