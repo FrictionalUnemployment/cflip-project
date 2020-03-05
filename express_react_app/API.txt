@@ -1,0 +1,49 @@
+Denna text förklarar hur mak kommunicerar med backend servern
+För att kommunicera med backend behövs 'whatwg-fetch' för att sätta body taggen
+App.js måste allstå innehålla en rad som står:
+    import 'whatwg-fetch'
+Man behöver även skriva npm install whatwg-fetch för att installera den
+
+POST /register_user
+    Detta används för att registrera nya användare.
+    För att registrera nya användare behöver man ange användernamn och lösenord
+    detta görs genom att lägga in den informationen i body.
+        Body ska vara en json sträng som innehåller följande:
+            {usename: 'ny användare', password: 'hemlight lösenord}
+    
+    /register_user svarar med användarnamnet om registreringen lyckades
+    
+    exepmel kod för att registrera ny användare:
+        Denna kod skapar en function registerUser som returnerar användarnamnet
+
+        register_user = async () => {
+            // data innehåller informationen som behövs i header
+            const data = {username: `${username}`, password: `${password}`};
+
+            // gör förfrågningen med fetch functionen.
+            const response = await fetch('/register_user', {
+                method: 'POST',
+                body: JSON.stringify(data), // Gör om data till en json sträng
+                // jag fick det inte att fungera utan headers, du kan pröva
+                headers: {
+                    'Accept': 'application/json', 'Content-Type': application/json'
+                }
+            });
+
+            // Här kollar vi på svaret som vi får av servern
+            const body = await response.json();
+            if (response.status !== 200) {
+                // Någon har gått fel
+                throw Error(body.message)
+            }
+            //returnerar svar från backend vilket är användarnamnet
+            return body
+        }
+
+POST /login
+    Detta används för att logga in. Ange användarnamn och lösenord på samma sätt
+    som man gör när man registrerar. Allstå med en body som innehåller en
+    json sträng:
+        {username: användare, password: lösenord}
+
+    exempel kod för /login ser nästan likadan ut som för /register_user
