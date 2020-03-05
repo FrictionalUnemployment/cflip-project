@@ -62,10 +62,12 @@ GET /coin
     Detta används för att få status på coin. Denna körs många gånger per
     sekund för att hålla clienten uppdaterad.
 
-    Returnerar {timeleft: 'tid kvar i ms', winner: 'heads'/'tails'}
+    Returnerar 
+        {timeleft: 'tid kvar i ms', winner: [[heads/tails][alla vinnare]]}
 
-    Om det finns tid kvar är winner: null. När tiden är slut (under 100 ms)
-    blir timeleft: null och winner blir heads eller tails.
+    Om det finns tid kvar är winner null. När tiden är slut (under 100 ms)
+    blir timeleft null och winner en lista med längd 2. winner[0] är
+    heads eller tails, winner[1] är en lista av alla vinnare.
 
     exempel kod för klienten:
         Denna funktion returnerar {timeleft, winner} och bör

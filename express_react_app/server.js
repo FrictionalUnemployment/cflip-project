@@ -5,7 +5,7 @@ const crypto = require('crypto');
 var bodyParser = require('body-parser');
 
 // Connectar mot våran databas
-let connection;
+let db;
 mariadb.createConnection({
     user:'coinflip',
     password: 'amirphilip9896',
@@ -14,7 +14,7 @@ mariadb.createConnection({
     })
     .then(conn => {
         console.log("Connected to database. Connection id is " + conn.threadId);
-        connection = conn;
+        db = conn;
     })
     .catch(err => {
         console.log('error connecting to database: ' + err);
@@ -31,7 +31,7 @@ function updateCoin() {
     if (!coinStatus.timeleft) {
         // Ingen tid kvar, bestämmer vinnaren
         coinStatus.winner = coin.getWinner();
-        console.log('flip! Winners: ' + coinStatus.winner)
+        console.log(coinStatus.winner[0]);
     }else {
         // Nedräkning pågår, ingen vinnare
         coinStatus.winner = null;
@@ -39,7 +39,7 @@ function updateCoin() {
 }
 
 
-// Startar waebservern och lyssnar
+// Startar webservern och lyssnar
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false}))
 app.use(bodyParser.json())
@@ -60,7 +60,7 @@ app.post('/register_user', (req, res) => {
     const hash = crypto.createHash('sha256')
                     .update(pwd)
                     .digest('hex');
-    connection.query(`INSERT INTO user (Username, Password, Balance) VALUES ("${user}", "${hash}", 50);`)
+    db.query(`INSERT INTO user (Username, Password, Balance) VALUES ("${user}", "${hash}", 50);`)
                 .then(ans => {
                     res.send({express: user});
                 })
@@ -77,7 +77,7 @@ app.post('/login', (req, res) => {
     const hash = crypto.createHash('sha256')
                     .update(pwd)
                     .digest('hex');
-    connection.query(`SELECT Password FROM user WHERE Username="${user}"`)
+    db.query(`SELECT Password FROM user WHERE Username="${user}"`)
                 .then(ans => {
                     let stored_hash = ans[0].Password;
                     if (stored_hash === hash) {
