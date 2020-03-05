@@ -15,7 +15,7 @@ POST /register_user
         Body ska vara en json sträng som innehåller följande:
             {usename: 'ny användare', password: 'hemlight lösenord}
         
-    exepmel kod för att registrera ny användare:
+    exepmel kod för att registrera ny användare på klienten:
         Denna kod skapar en function registerUser som returnerar användarnamnet
 
         register_user = async () => {
@@ -55,3 +55,28 @@ POST /login
         {username: användare, password: lösenord}
 
     exempel kod för /login ser nästan likadan ut som för /register_user
+
+
+
+GET /coin
+    Detta används för att få status på coin. Denna körs många gånger per
+    sekund för att hålla clienten uppdaterad.
+
+    Returnerar {timeleft: 'tid kvar i ms', winner: 'heads'/'tails'}
+
+    Om det finns tid kvar är winner: null. När tiden är slut (under 100 ms)
+    blir timeleft: null och winner blir heads eller tails.
+
+    exempel kod för klienten:
+        Denna funktion returnerar {timeleft, winner} och bör
+        kallas många gånger per sekund för att hålla klienten uppdaterad
+        callCoinApi = async () => {
+            const response = await fetch('/coin');
+            const body = await response.json();
+
+            if (response.status !== 200) {
+                throw Error(body.message)
+            }
+            return body;
+        }
+

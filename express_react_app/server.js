@@ -1,3 +1,4 @@
+const Coin = require('./Coin');
 const express = require('express');
 const mariadb = require('mariadb');
 const crypto = require('crypto');
@@ -19,6 +20,24 @@ mariadb.createConnection({
         console.log('error connecting to database: ' + err);
     });
 
+// Skapar Coin object och en funktion som uppdaterar den
+var coin = new Coin();
+let c = setInterval(updateCoin, 100) // Uppdaterar coin varje 100ms
+
+var coinStatus = {timeleft:null, winner:null};
+function updateCoin() {
+    // Ändrar coinStatus så att den stämmer överräns med coin objektet
+    coinStatus.timeleft = coin.decreaseTime();
+    if (!coinStatus.timeleft) {
+        // Ingen tid kvar, bestämmer vinnaren
+        coinStatus.winner = coin.getWinner();
+        console.log('flip! Winners: ' + coinStatus.winner)
+    }else {
+        // Nedräkning pågår, ingen vinnare
+        coinStatus.winner = null;
+    }
+}
+
 
 // Startar waebservern och lyssnar
 const app = express();
@@ -26,6 +45,9 @@ app.use(bodyParser.urlencoded({ extended: false}))
 app.use(bodyParser.json())
 const port = process.env.PORT || 5000; // Om port inte sätts när man startar så är den 5000
 app.listen(port, () => console.log('Listening on port ' + port));
+
+
+
 
 // ==========================================================
 // Här finns alla API som går att nå från frontend
@@ -69,5 +91,11 @@ app.post('/login', (req, res) => {
                 .catch(err => {
                     console.log('error logging in: ' + err);
                 })
+})
+
+// Få coin status, denna bör kallas många gånger per sekund, typ varje 50 ms
+app.get('/coin', (req, res) => {
+    console.log(coinStatus);
+    res.send({express: coinStatus});
 })
 
