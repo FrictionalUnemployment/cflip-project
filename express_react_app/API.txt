@@ -5,6 +5,33 @@ App.js måste allstå innehålla en rad som står:
 Man behöver även skriva npm install whatwg-fetch för att installera det
 
 
+COIN
+    Coin används inte någon GET eller POST request men istället använder den
+    websockets. På så vis kan servern skicka uppdateringar till clienten varje
+    gång Coin har uppdaterats.
+
+    Det som skickas från servern till klienten är en JSON sträng:
+        {timeleft: tid_som_är_kvar, winner: [heads/tails, [lista på alla vinnare]]}
+
+
+    För att koppla upp sig mot coin behövs en websocket. 'isomorphic-ws' funkar
+    för mig. 'npm install isomorphic-ws ws --save'. Coin ligger på samma ip-address
+    som servern men har port nummer 5001.
+
+    Exempel kod på uppkoppling till coin:
+        const WebSocket = require('isomorphic-ws');
+        const ws = new WebSocket('ws//127.0.0.1:5001'); // Kopplad mot coinen
+
+        // När medelanden kommer körs funktionen updateCoinStatus
+        ws.onmessage = updateCoinStatus;
+
+        updateCoinStatus(data) {
+            // Här är data.data JSON strängen
+            CoinStatus = JSON.parse(data.data);
+        }
+
+
+
 POST /register_user
     Detta används för att registrera nya användare.
 
@@ -56,29 +83,4 @@ POST /login
 
     exempel kod för /login ser nästan likadan ut som för /register_user
 
-
-
-GET /coin
-    Detta används för att få status på coin. Denna körs många gånger per
-    sekund för att hålla clienten uppdaterad.
-
-    Returnerar 
-        {timeleft: 'tid kvar i ms', winner: [[heads/tails][alla vinnare]]}
-
-    Om det finns tid kvar är winner null. När tiden är slut (under 100 ms)
-    blir timeleft null och winner en lista med längd 2. winner[0] är
-    heads eller tails, winner[1] är en lista av alla vinnare.
-
-    exempel kod för klienten:
-        Denna funktion returnerar {timeleft, winner} och bör
-        kallas många gånger per sekund för att hålla klienten uppdaterad
-        callCoinApi = async () => {
-            const response = await fetch('/coin');
-            const body = await response.json();
-
-            if (response.status !== 200) {
-                throw Error(body.message)
-            }
-            return body;
-        }
 

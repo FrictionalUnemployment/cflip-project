@@ -20,24 +20,8 @@ mariadb.createConnection({
         console.log('error connecting to database: ' + err);
     });
 
-// Skapar Coin object och en funktion som uppdaterar den
+// Skapar Coin objectn
 var coin = new Coin();
-let c = setInterval(updateCoin, 100) // Uppdaterar coin varje 100ms
-
-var coinStatus = {timeleft:null, winner:null};
-function updateCoin() {
-    // Ändrar coinStatus så att den stämmer överräns med coin objektet
-    coinStatus.timeleft = coin.decreaseTime();
-    if (!coinStatus.timeleft) {
-        // Ingen tid kvar, bestämmer vinnaren
-        coinStatus.winner = coin.getWinner();
-        console.log(coinStatus.winner[0]);
-    }else {
-        // Nedräkning pågår, ingen vinnare
-        coinStatus.winner = null;
-    }
-}
-
 
 // Startar webservern och lyssnar
 const app = express();
@@ -92,10 +76,5 @@ app.post('/login', (req, res) => {
                     console.log('error logging in: ' + err);
                 })
 })
-
-// Få coin status, denna bör kallas många gånger per sekund, typ varje 50 ms
-app.get('/coin', (req, res) => {
-    console.log(coinStatus);
-    res.send({express: coinStatus});
-})
+)
 
