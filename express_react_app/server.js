@@ -76,24 +76,34 @@ app.post('/login', (req, res) => {
                     let stored_hash = ans[0].Password;
                     if (stored_hash === hash) {
                         res.send({express: user});
-                        console.log('logged in');
+                        console.log('logged in ' + user);
                     } else {
                         res.send({express: 'false'});
-                        console.log('not loggin in');
+                        console.log('incorrect password: ' + user);
                     }
                 })
                 .catch(err => {
+                    res.send({express: null})
                     console.log('error logging in: ' + err);
                 })
 })
 
-app.get('/place_bet', (req, res) => {
-    const bet = String(req.body.bet);
+app.post('/place_bet', (req, res) => {
+    const bet = String(req.body.bet); // 'heads' eller 'tails'
     const user = String(req.body.username);
     const amount = req.body.amount;
+    
+    db.query(`SELECT Balance FROM user WHERE Username="${user}"`)
+        .then(ans => {
+            if (amount > ans[0].Balance) amount = ans[0].balance;
 
-    if (bet === 'heads') {
-        coin.betHeads(user, amount)
-    }
+            if (bet === 'heads') {
+                coin.betOnHeads(user, amount);
+            } else if (bet === 'tails') {
+                coin.betOnTails(user, amount);
+            }
+            res.send({express: `Bet placed by ${user} on ${bet} for ${amount}.`});
+            console.log(`Bet placed by ${user} on ${bet} for ${amount}.`);
+        })
 })
 

@@ -7,7 +7,7 @@ class Coin {
         this.timeLeft = FLIPTIME;
         this.betHeads = [];
         this.betTails = [];
-        this.allBets = {};
+        this.allBets = {}; 
         this.potsizeHeads = 0;
         this.potsizeTails = 0;
         
@@ -46,35 +46,66 @@ class Coin {
     }
 
     logChanges(result, db) {
+        // Denna funktionen blev skitful men den funkar   ...typ
         let totalPot = this.potsizeHeads + this.potsizeTails;
         let winners = (result === 'heads') ? this.betHeads : this.betTails;
         let losers = (result === 'heads') ? this.betTails : this.betHeads;
         let loserpot = (result === 'tails') ? this.potsizeHeads : this.potsizeTails;
         let datetime = + new Date();
 
-        console.log(result);
-        console.log("logging changes: " + datetime);
+        console.log("\n\nCoin has flipped!\nResult: " + result + "\nTime: " + datetime);
 
         db.query(`INSERT INTO flip (Result, Date_time, Pot_size) VALUES ("${result}", ${datetime}, ${totalPot});`);
-        let FID = db.query(`SELECT FID from flip WHERE Date_time=${datetime};`);
 
-        for (let i = 0; i < losers.length; i++) {
-            let currentUser = loser[i];
-            let UID = db.query(`SELECT UID from user WHERE Username="${currentUser};`);
-            db.query(`INSERT INTO loser (Losses, UID, FID) VALUES (${this.allBets.currentUser}, ${UID}, ${FID});`);
-            db.query(`UPDATE user SET Balance=Balance-${this.allBets.currentUser} WHERE UID=${UID};`);
-        }
+        db.query(`SELECT FID from flip WHERE Date_time=${datetime};`)
+            .then(ans => {
+                let FID = ans[0].FID;
 
-        for (let i = 0; i < winners.length; i++) {
-            let currentUser = winner[i];
-            let UID = db.query(`SELECT UID from user WHERE Username="${currentUser};`);
-            let winnings = (this.allBets.currentUser / (this.potsizeHeads + this.potsizeTails)) * loserpot;
-            db.query(`INSERT INTO winner (Winnings, UID, FID) VALUES (${winnings}, ${UID}, ${FID});`);
-            db.query(`UPDATE user SET Balance=Balance+${winnings} WHERE UID=${UID};`);
-        }
+                // Uppdaterar alla förlorare
+                for (let i = 0; i < losers.length; i++) {
+                    let currentUser = losers[i];
+                    db.query(`SELECT UID from user WHERE Username="${currentUser}";`)
+                        .then(ans => {
+                            let losses;
+                            if (winners.length < 1) {
+                                // Inga vinnare, förlorar inga pengar
+                                losses = 0;
+                            } else {
+                                losses = this.allBets[currentUser];
+                            }
 
-        this.reset();
+                            let UID = ans[0].UID;
+                            db.query(`INSERT INTO loser (Losses, UID, FID) VALUES (${losses}, ${UID}, ${FID});`);
+                            db.query(`UPDATE user SET Balance=Balance-${losses} WHERE UID=${UID};`);
+                        })
+                        .catch(err => {
+                            console.log('Error getting user id ' + err);
+                        });
+                }
 
+                // Uppdaterar alla vinnare
+                for (let i = 0; i < winners.length; i++) {
+                    let currentUser = winners[i];
+                    db.query(`SELECT UID from user WHERE Username="${currentUser}";`)
+                        .then(ans => {
+                            let winnings = (this.allBets[currentUser] / (this.potsizeHeads + this.potsizeTails)) * loserpot;
+                            let UID = ans[0].UID;
+                            db.query(`INSERT INTO winner (Winnings, UID, FID) VALUES (${winnings}, ${UID}, ${FID});`);
+                            db.query(`UPDATE user SET Balance=Balance+${winnings} WHERE UID=${UID};`);
+                        })
+                        .catch(err => {
+                            console.log('Error getting user id ' + err);
+                        });
+                }
+                //Kör reset efter 100ms. Pajade hela skiten annars och tog mig
+                //evigheter att lösa problemet. Finns förmodligen bättre sätt att
+                //göra detta
+                setTimeout(function() {this.reset; }, 100);
+            })
+            .catch (err => {
+                console.log('Error getting flip id ' + err);
+                this.reset();
+        });
     }
 
     decreaseTime() {
@@ -92,7 +123,7 @@ class Coin {
         let winners = (flip_result === 'heads') ? this.betHeads : this.betTails;
         let copy = new Array(winners.length);
         for (let i = 0; i < winners.length; i++) {
-            ret[i] = winners[i];
+            copy[i] = winners[i];
         }
         let ret = [flip_result, copy];
         //this.betHeads = [];
@@ -102,13 +133,13 @@ class Coin {
 
     betOnHeads(user, amount) {
         this.betHeads.push(user);
-        this.allBets.user = amount;
+        this.allBets[user] = amount
         this.potsizeHeads += amount;
     }
 
     betOnTails(user, amount) {
-        this.betHeads.push(user);
-        this.allBets.user = amount;
+        this.betTails.push(user);
+        this.allBets[user] = amount;
         this.potsizeTails += amount;
     }
 

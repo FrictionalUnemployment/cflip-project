@@ -87,6 +87,35 @@ POST /login
     json sträng:
         {username: användare, password: lösenord}
 
-    exempel kod för /login ser nästan likadan ut som för /register_user
+    Kod för /login ser nästan likadan ut som för /register_user
 
 
+
+POST /place_bet
+    Detta används för att satsa på 'heads' eller 'tails'
+
+    Returnerar en sträng som säger 'Bet placed by ${user} on ${heads/tails} for ${amount}'
+
+    För att satsa på heads eller tails behöver GET anropet en body som innehåller en sträng:
+        {bet: 'heads' eller 'tails', username: 'användarnamn', amount: 'belopp att satsa'}
+
+    Om beloppet som satsas är större än vad användaren har att satsa blir beloppet lika med
+    vad användaren har.
+
+    Exempel kod för att satsa 1 på heads:
+        placeBet = async () => {
+            // Här sätts vad, vem och hur mycket
+            const data = {bet: "heads", username: "test_user", amount: 1};
+
+            const response = await fetch('/place_bet', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headrs: {'Accept':'application/json', 'Content-Type': 'application/json'}
+            });
+
+            const body = await response.json();
+            if (response.status !== 200) {
+                throw Error(body.message);
+            }
+            return body.express;
+        }
