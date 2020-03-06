@@ -60,6 +60,7 @@ class Coin {
         db.query(`SELECT FID from flip WHERE Date_time=${datetime};`)
             .then(ans => {
                 let FID = ans[0].FID;
+                console.log("Flip ID: " + FID);
 
                 // Uppdaterar alla förlorare
                 for (let i = 0; i < losers.length; i++) {

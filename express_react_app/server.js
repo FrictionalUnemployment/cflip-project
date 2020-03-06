@@ -6,19 +6,36 @@ var bodyParser = require('body-parser');
 
 // Connectar mot våran databas
 let db;
-mariadb.createConnection({
-    user:'coinflip',
-    password: 'amirphilip9896',
-    host: '193.10.236.94',
-    database: 'coinflip'
+if (process.env.local) {
+    // TODO
+    mariadb.createConnection({
+        socketPath: '/var/lib/mysql/mysql.sock',
+        user: 'coinflip',
+        password: 'amirphilip9896',
+        database: 'coinflip'
     })
     .then(conn => {
-        console.log("Connected to database. Connection id is " + conn.threadId);
+        console.log("Connected to local database. Connection id is " + conn.threadId);
         db = conn;
     })
     .catch(err => {
-        console.log('error connecting to database: ' + err);
+        console.log('error connecting to local database: ' + err);
     });
+} else {
+    mariadb.createConnection({
+        user:'coinflip',
+        password: 'amirphilip9896',
+        host: '193.10.236.94',
+        database: 'coinflip'
+        })
+        .then(conn => {
+            console.log("Connected to database. Connection id is " + conn.threadId);
+            db = conn;
+        })
+        .catch(err => {
+            console.log('error connecting to database: ' + err);
+    });
+}
 
 // Skapar Coin object
 var coin = new Coin();
@@ -95,7 +112,7 @@ app.post('/place_bet', (req, res) => {
     
     db.query(`SELECT Balance FROM user WHERE Username="${user}"`)
         .then(ans => {
-            if (amount > ans[0].Balance) amount = ans[0].balance;
+            if (amount > ans[0].Balance) amount = ans[0].Balance;
 
             if (bet === 'heads') {
                 coin.betOnHeads(user, amount);
