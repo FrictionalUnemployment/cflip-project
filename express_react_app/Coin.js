@@ -1,6 +1,6 @@
 const WebSocket = require('ws')
 
-const FLIPTIME = 5 * 1000;
+const FLIPTIME = 60 * 1000;
 
 class Coin {
     constructor() {
@@ -17,8 +17,6 @@ class Coin {
             console.log('client connected to coin');
         })
 
-        // Uppdaterar sig själv
-        //this.intervalID = setInterval(this.updateCoin.bind(this), 100);
     }
 
     reset() {
