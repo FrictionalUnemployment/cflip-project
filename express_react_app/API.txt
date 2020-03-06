@@ -4,6 +4,9 @@ App.js måste allstå innehålla en rad som står:
     import 'whatwg-fetch'
 Man behöver även skriva npm install whatwg-fetch för att installera det
 
+För att koppla sig till webservern behöver man lägga till rad i
+package.json som står: "proxy": "http://localhost:5000/",
+
 
 COIN
     Coin används inte någon GET eller POST request men istället använder den
@@ -38,7 +41,7 @@ COIN
 POST /register_user
     Detta används för att registrera nya användare.
 
-    Returnerar användarnamnet om registering lyckades
+    Returnerar användarnamnet om registering lyckades, annars null.
 
     För att registrera nya användare behöver man ange användernamn och lösenord
     detta görs genom att lägga in den informationen i body.

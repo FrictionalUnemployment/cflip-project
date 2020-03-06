@@ -21,7 +21,7 @@ mariadb.createConnection({
     });
 
 // Skapar Coin objectn
-var coin = new Coin();
+var coin = new Coin(db);
 
 // Startar webservern och lyssnar
 const app = express();
@@ -49,6 +49,7 @@ app.post('/register_user', (req, res) => {
                     res.send({express: user});
                 })
                 .catch(err => {
+                    res.send({express: null});
                     console.log('error registering user:' + err);
                 })
 })
@@ -61,7 +62,7 @@ app.post('/login', (req, res) => {
     const hash = crypto.createHash('sha256')
                     .update(pwd)
                     .digest('hex');
-    db.query(`SELECT Password FROM user WHERE Username="${user}"`)
+    db.query(`SELECT Password FROM user WHERE Username="${user}";`)
                 .then(ans => {
                     let stored_hash = ans[0].Password;
                     if (stored_hash === hash) {
@@ -75,5 +76,15 @@ app.post('/login', (req, res) => {
                 .catch(err => {
                     console.log('error logging in: ' + err);
                 })
+})
+
+app.get('/place_bet', (req, res) => {
+    const bet = String(req.body.bet);
+    const user = String(req.body.username);
+    const amount = req.body.amount;
+
+    if (bet === 'heads') {
+        coin.betHeads(user, amount)
+    }
 })
 
