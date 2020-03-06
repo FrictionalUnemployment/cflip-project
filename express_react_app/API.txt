@@ -13,6 +13,9 @@ COIN
     Det som skickas från servern till klienten är en JSON sträng:
         {timeleft: tid_som_är_kvar, winner: [heads/tails, [lista på alla vinnare]]}
 
+        Om det finns dit kvar är winner null. Om det inte finns tid kvar är
+        timeleft null och winner är inte längre null.
+
 
     För att koppla upp sig mot coin behövs en websocket. 'isomorphic-ws' funkar
     för mig. 'npm install isomorphic-ws ws --save'. Coin ligger på samma ip-address
