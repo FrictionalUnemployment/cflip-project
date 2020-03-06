@@ -1,10 +1,10 @@
 const WebSocket = require('ws')
 
+const FLIPTIME = 5 * 1000;
+
 class Coin {
-    constructor(database) {
-        this.db = database;
-        this.db.query.bind(this);
-        this.timeLeft = 60 * 1000;
+    constructor() {
+        this.timeLeft = FLIPTIME;
         this.betHeads = [];
         this.betTails = [];
         this.allBets = {};
@@ -18,7 +18,7 @@ class Coin {
         })
 
         // Uppdaterar sig själv
-        this.intervalID = setInterval(this.updateCoin.bind(this), 100);
+        //this.intervalID = setInterval(this.updateCoin.bind(this), 100);
     }
 
     reset() {
@@ -32,18 +32,19 @@ class Coin {
     updateCoin() {
         let coinStatus = {timeleft: null, winner: null};
         coinStatus.timeleft = this.decreaseTime();
+        let res = null;
         if (!coinStatus.timeleft) {
             // Finns ingen tid kvar, kommer att sätta en vinnare
             coinStatus.winner = this.getWinner();
-            console.log(coinStatus.winner[0]);
-            this.logChanges(coinStatus.winner[0], db);
+            //this.logChanges(coinStatus.winner[0]);
+            res = coinStatus.winner[0];
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
                 client.send(JSON.stringify(coinStatus));
             }
         })
-
+        return res;
     }
 
     logChanges(result, db) {
@@ -51,11 +52,12 @@ class Coin {
         let winners = (result === 'heads') ? this.betHeads : this.betTails;
         let losers = (result === 'heads') ? this.betTails : this.betHeads;
         let loserpot = (result === 'tails') ? this.potsizeHeads : this.potsizeTails;
-        let datetime = Date.now();
+        let datetime = + new Date();
 
         console.log(result);
-        console.log()
-        db.query(`INSERT INTO flip (Result, Date_time, Pot_size) VALUES ("${result}", ${datetime}, ${totalPot};`);
+        console.log("logging changes: " + datetime);
+
+        db.query(`INSERT INTO flip (Result, Date_time, Pot_size) VALUES ("${result}", ${datetime}, ${totalPot});`);
         let FID = db.query(`SELECT FID from flip WHERE Date_time=${datetime};`);
 
         for (let i = 0; i < losers.length; i++) {
@@ -82,7 +84,7 @@ class Coin {
             this.timeLeft = this.timeLeft - 100;
             return this.timeLeft;
         }else {
-            this.timeLeft = 60 * 1000;
+            this.timeLeft = FLIPTIME;
             return null;
         }
     }

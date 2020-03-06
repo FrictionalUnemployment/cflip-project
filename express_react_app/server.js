@@ -20,8 +20,17 @@ mariadb.createConnection({
         console.log('error connecting to database: ' + err);
     });
 
-// Skapar Coin objectn
-var coin = new Coin(db);
+// Skapar Coin object
+var coin = new Coin();
+intervalID = setInterval(updateCoin, 100);
+
+function updateCoin() {
+    let flipped = coin.updateCoin();
+    if (flipped) {
+        coin.logChanges(flipped, db);
+    }
+}
+
 
 // Startar webservern och lyssnar
 const app = express();
