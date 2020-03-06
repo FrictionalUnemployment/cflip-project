@@ -20,7 +20,7 @@ COIN
 
     Exempel kod på uppkoppling till coin:
         const WebSocket = require('isomorphic-ws');
-        const ws = new WebSocket('ws//127.0.0.1:5001'); // Kopplad mot coinen
+        const ws = new WebSocket('ws//193.10.236.94:5001'); // Kopplad mot coinen
 
         // När medelanden kommer körs funktionen updateCoinStatus
         ws.onmessage = updateCoinStatus;
