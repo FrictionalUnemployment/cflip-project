@@ -76,5 +76,4 @@ app.post('/login', (req, res) => {
                     console.log('error logging in: ' + err);
                 })
 })
-)
 
