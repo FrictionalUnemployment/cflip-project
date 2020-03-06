@@ -3,6 +3,7 @@ const WebSocket = require('ws')
 class Coin {
     constructor(database) {
         this.db = database;
+        this.db.query.bind(this);
         this.timeLeft = 60 * 1000;
         this.betHeads = [];
         this.betTails = [];
@@ -35,7 +36,7 @@ class Coin {
             // Finns ingen tid kvar, kommer att sätta en vinnare
             coinStatus.winner = this.getWinner();
             console.log(coinStatus.winner[0]);
-            this.logChanges(coinStatus.winner[0]);
+            this.logChanges(coinStatus.winner[0], db);
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
@@ -45,29 +46,31 @@ class Coin {
 
     }
 
-    logChanges(result) {
+    logChanges(result, db) {
         let totalPot = this.potsizeHeads + this.potsizeTails;
         let winners = (result === 'heads') ? this.betHeads : this.betTails;
         let losers = (result === 'heads') ? this.betTails : this.betHeads;
         let loserpot = (result === 'tails') ? this.potsizeHeads : this.potsizeTails;
         let datetime = Date.now();
 
-        this.db.query(`INSERT INTO flip (Result, Date_time, Pot_size) VALUES ("${result}", ${datetime}, ${totalPot};`);
+        console.log(result);
+        console.log()
+        db.query(`INSERT INTO flip (Result, Date_time, Pot_size) VALUES ("${result}", ${datetime}, ${totalPot};`);
         let FID = db.query(`SELECT FID from flip WHERE Date_time=${datetime};`);
 
         for (let i = 0; i < losers.length; i++) {
             let currentUser = loser[i];
-            let UID = this.db.query(`SELECT UID from user WHERE Username="${currentUser};`);
-            this.db.query(`INSERT INTO loser (Losses, UID, FID) VALUES (${this.allBets.currentUser}, ${UID}, ${FID});`);
-            this.db.query(`UPDATE user SET Balance=Balance-${this.allBets.currentUser} WHERE UID=${UID};`);
+            let UID = db.query(`SELECT UID from user WHERE Username="${currentUser};`);
+            db.query(`INSERT INTO loser (Losses, UID, FID) VALUES (${this.allBets.currentUser}, ${UID}, ${FID});`);
+            db.query(`UPDATE user SET Balance=Balance-${this.allBets.currentUser} WHERE UID=${UID};`);
         }
 
         for (let i = 0; i < winners.length; i++) {
             let currentUser = winner[i];
-            let UID = this.db.query(`SELECT UID from user WHERE Username="${currentUser};`);
+            let UID = db.query(`SELECT UID from user WHERE Username="${currentUser};`);
             let winnings = (this.allBets.currentUser / (this.potsizeHeads + this.potsizeTails)) * loserpot;
-            this.db.query(`INSERT INTO winner (Winnings, UID, FID) VALUES (${winnings}, ${UID}, ${FID});`);
-            this.db.query(`UPDATE user SET Balance=Balance+${winnings} WHERE UID=${UID};`);
+            db.query(`INSERT INTO winner (Winnings, UID, FID) VALUES (${winnings}, ${UID}, ${FID});`);
+            db.query(`UPDATE user SET Balance=Balance+${winnings} WHERE UID=${UID};`);
         }
 
         this.reset();
