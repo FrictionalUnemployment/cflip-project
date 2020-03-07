@@ -15,12 +15,12 @@ class TopList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            topFive: Array(5).fill(null)
+            topFive: ["Hejsan", "Bester", "BENLPS", "HEMSKT", "BAJS"]
         };
     }
 
     renderItem(itm) {
-        return <TopItem value={itm} />;
+        return <TopItem value={this.state.topFive[itm]} />;
     }
 
     render() {
@@ -33,6 +33,18 @@ class TopList extends React.Component {
                     {this.renderItem(3)}
                     {this.renderItem(4)}
                 </ol>                
+            </div>
+        );
+    }
+}
+
+class Game extends Component {
+    render() {
+        return (
+            <div className="App-game">
+                <div>
+                    <img src={logo} className="App-logo" alt="logo" />
+                </div>
             </div>
         );
     }
@@ -147,9 +159,7 @@ class Header extends Component {
                         handleLoginSubmit={this.handleLogin.bind(this)}
                     />
                     : null
-                }
-
-                <img src={logo} className="App-logo" alt="logo" />
+                } 
 
             </header>
 
@@ -162,8 +172,9 @@ class App extends Component {
     }
     render() {
         return (
-            <div>
+            <div className="Site">
                 <Header />
+                <Game />
                 <TopList />
             </div>
 
