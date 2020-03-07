@@ -43,8 +43,11 @@ intervalID = setInterval(updateCoin, 100);
 
 function updateCoin() {
     let flipped = coin.updateCoin();
-    if (flipped && (coin.potsizeHeads + coin.potsizeTails > 0)) {
-        coin.logChanges(flipped, db);
+    if (flipped) {
+        console.log("\n\nCoin has flipped!\nResult: " + flipped);
+        if (coin.potsizeTails + coin.potsizeHeads > 0) {
+            coin.logChanges(flipped, db);
+        }
     }
 }
 
