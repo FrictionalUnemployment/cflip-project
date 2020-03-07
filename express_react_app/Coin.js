@@ -3,7 +3,6 @@ const WebSocket = require('ws')
 class Coin {
     constructor(database) {
         this.db = database;
-        this.db.query.bind(this);
         this.timeLeft = 60 * 1000;
         this.betHeads = [];
         this.betTails = [];
@@ -36,7 +35,7 @@ class Coin {
             // Finns ingen tid kvar, kommer att sätta en vinnare
             coinStatus.winner = this.getWinner();
             console.log(coinStatus.winner[0]);
-            this.logChanges(coinStatus.winner[0], db);
+            this.logChanges(coinStatus.winner[0], this.db);
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
