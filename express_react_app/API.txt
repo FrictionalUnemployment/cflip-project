@@ -1,3 +1,8 @@
+Servern startas med 'node server.js'
+Om servern är på samma dator som databasen kan man skriva 'local=true node server.js'
+detta gör så att servern kommunicerar med databasen via pipes sockets istället för nätverket.
+
+
 Denna text förklarar hur mak kommunicerar med backend servern
 För att kommunicera med backend behövs 'whatwg-fetch' för att sätta body taggen
 App.js måste allstå innehålla en rad som står:
@@ -5,7 +10,7 @@ App.js måste allstå innehålla en rad som står:
 Man behöver även skriva npm install whatwg-fetch för att installera det
 
 För att koppla sig till webservern behöver man lägga till rad i
-package.json som står: "proxy": "http://localhost:5000/",
+package.json som står: "proxy": "http://193.10.236.94:5000/",
 
 
 COIN
@@ -87,6 +92,35 @@ POST /login
     json sträng:
         {username: användare, password: lösenord}
 
-    exempel kod för /login ser nästan likadan ut som för /register_user
+    Kod för /login ser nästan likadan ut som för /register_user
 
 
+
+POST /place_bet
+    Detta används för att satsa på 'heads' eller 'tails'
+
+    Returnerar en sträng som säger 'Bet placed by ${user} on ${heads/tails} for ${amount}'
+
+    För att satsa på heads eller tails behöver GET anropet en body som innehåller en sträng:
+        {bet: 'heads' eller 'tails', username: 'användarnamn', amount: 'belopp att satsa'}
+
+    Om beloppet som satsas är större än vad användaren har att satsa blir beloppet lika med
+    vad användaren har.
+
+    Exempel kod för att satsa 1 på heads:
+        placeBet = async () => {
+            // Här sätts vad, vem och hur mycket
+            const data = {bet: "heads", username: "test_user", amount: 1};
+
+            const response = await fetch('/place_bet', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headrs: {'Accept':'application/json', 'Content-Type': 'application/json'}
+            });
+
+            const body = await response.json();
+            if (response.status !== 200) {
+                throw Error(body.message);
+            }
+            return body.express;
+        }
