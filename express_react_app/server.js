@@ -40,10 +40,12 @@ if (process.env.local) {
 var coin = new Coin();
 intervalID = setInterval(updateCoin, 100);
 
+let flipsSinceStart = 0;
 function updateCoin() {
     let flipped = coin.updateCoin();
     if (flipped) {
-        console.log("\n\nCoin has flipped!\nResult: " + flipped);
+	flipsSinceStart++;
+        console.log("\n\nCoin has flipped!\nFlips since server start: " + flipsSinceStart + "\nResult: " + flipped);
         if (coin.potsizeTails + coin.potsizeHeads > 0) {
             coin.logChanges(flipped, db);
         } else {
