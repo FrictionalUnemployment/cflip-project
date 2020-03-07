@@ -34,7 +34,6 @@ class Coin {
         if (!coinStatus.timeleft) {
             // Finns ingen tid kvar, kommer att sätta en vinnare
             coinStatus.winner = this.getWinner();
-            //this.logChanges(coinStatus.winner[0]);
             res = coinStatus.winner[0];
         }
         this.wss.clients.forEach(function each(client) {
