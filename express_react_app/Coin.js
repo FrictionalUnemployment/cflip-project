@@ -3,9 +3,8 @@ const WebSocket = require('ws')
 const FLIPTIME = 60 * 1000;
 
 class Coin {
-    constructor(database) {
-        this.db = database;
-        this.timeLeft = 60 * 1000;
+    constructor() {
+        this.timeLeft = FLIPTIME;
         this.betHeads = [];
         this.betTails = [];
         this.allBets = {}; 
@@ -35,13 +34,8 @@ class Coin {
         if (!coinStatus.timeleft) {
             // Finns ingen tid kvar, kommer att sätta en vinnare
             coinStatus.winner = this.getWinner();
-<<<<<<< HEAD
             //this.logChanges(coinStatus.winner[0]);
             res = coinStatus.winner[0];
-=======
-            console.log(coinStatus.winner[0]);
-            this.logChanges(coinStatus.winner[0], this.db);
->>>>>>> Very nice commit
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
@@ -59,7 +53,7 @@ class Coin {
         let loserpot = (result === 'tails') ? this.potsizeHeads : this.potsizeTails;
         let datetime = + new Date();
 
-        console.log("\n\nCoin has flipped!\nResult: " + result + "\nTime: " + datetime);
+        console.log("Time: " + datetime);
 
         db.query(`INSERT INTO flip (Result, Date_time, Pot_size) VALUES ("${result}", ${datetime}, ${totalPot});`);
 
@@ -150,6 +144,10 @@ class Coin {
         this.potsizeTails += amount;
     }
 
+    hasExistingBet(user) {
+        if (this.allBets[user]) return true;
+        return false;
+    }
     randomChoice(choices) {
         let i = Math.floor(Math.random() * choices.length);
         return choices[i];
