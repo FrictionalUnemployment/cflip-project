@@ -61,42 +61,9 @@ class Coin {
                 let FID = ans[0].FID;
                 console.log("Flip ID: " + FID);
 
-                // Uppdaterar alla förlorare
-                for (let i = 0; i < losers.length; i++) {
-                    let currentUser = losers[i];
-                    db.query(`SELECT UID from user WHERE Username="${currentUser}";`)
-                        .then(ans => {
-                            let losses;
-                            if (winners.length < 1) {
-                                // Inga vinnare, förlorar inga pengar
-                                losses = 0;
-                            } else {
-                                losses = this.allBets[currentUser];
-                            }
+                this.logUsers(losers, db, false, winners.length, loserpot, FID);
+                this.logUsers(winners, db, true, losers.length, loserpot, FID);
 
-                            let UID = ans[0].UID;
-                            db.query(`INSERT INTO loser (Losses, UID, FID) VALUES (${losses}, ${UID}, ${FID});`);
-                            db.query(`UPDATE user SET Balance=Balance-${losses} WHERE UID=${UID};`);
-                        })
-                        .catch(err => {
-                            console.log('Error getting user id ' + err);
-                        });
-                }
-
-                // Uppdaterar alla vinnare
-                for (let i = 0; i < winners.length; i++) {
-                    let currentUser = winners[i];
-                    db.query(`SELECT UID from user WHERE Username="${currentUser}";`)
-                        .then(ans => {
-                            let winnings = (this.allBets[currentUser] / (this.potsizeHeads + this.potsizeTails)) * loserpot;
-                            let UID = ans[0].UID;
-                            db.query(`INSERT INTO winner (Winnings, UID, FID) VALUES (${winnings}, ${UID}, ${FID});`);
-                            db.query(`UPDATE user SET Balance=Balance+${winnings} WHERE UID=${UID};`);
-                        })
-                        .catch(err => {
-                            console.log('Error getting user id ' + err);
-                        });
-                }
                 //Kör reset efter 100ms. Pajade hela skiten annars och tog mig
                 //evigheter att lösa problemet. Finns förmodligen bättre sätt att
                 //göra detta
@@ -106,6 +73,40 @@ class Coin {
                 console.log('Error getting flip id ' + err);
                 this.reset();
         });
+    }
+
+    logUsers(userlist, db, winner, opponents, loserpot, FID) {
+        for (let i = 0; i < userlist.length; i++) {
+            let currentUser = userlist[i];
+            db.query(`SELECT UID from user WHERE Username="${currentUser}";`)
+                .then(ans => {
+
+                    let balanceChange;
+                    let losses;
+                    if (!winner) {
+                        if (opponents < 1) {
+                            balanceChange = 0;
+                            losses = 0
+                        } else {
+                            balanceChange = this.allBets[currentUser] * -1;
+                            losses = balanceChange * -1;
+                        }
+                    } else {
+                        balanceChange = (this.allBets[currentUser] / (this.potsizeHeads + this.potsizeTails)) * loserpot;
+                        losses = balanceChange
+                    }
+
+                    let UID = ans[0].UID;
+                    let winner_loser = winner ? 'winner' : 'loser';
+                    let Winnings_Losses = winner ? 'Winnings' : 'Losses';
+
+                    db.query(`INSERT INTO ${winner_loser} (${Winnings_Losses}, UID, FID) VALUES (${losses}, ${UID}, ${FID});`);
+                    db.query(`UPDATE user SET Balance=Balance+${balanceChange} WHERE UID=${UID};`);
+                })
+                .catch(err => {
+                    console.log('Error getting user id ' + err);
+                });
+        }
     }
 
     decreaseTime() {
