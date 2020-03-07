@@ -5,7 +5,40 @@ import Popup from './components/popup.js';
 import Loginpopup from './components/loginpopup';
 import 'whatwg-fetch'
 
-class App extends Component {
+function TopItem(props) {
+    return (
+        <li className="topitem">{props.value}</li>
+    );
+}
+
+class TopList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            topFive: Array(5).fill(null)
+        };
+    }
+
+    renderItem(itm) {
+        return <TopItem value={itm} />;
+    }
+
+    render() {
+        return (
+            <div className="toplist">
+                <ol>
+                    {this.renderItem(0)}
+                    {this.renderItem(1)}
+                    {this.renderItem(2)}
+                    {this.renderItem(3)}
+                    {this.renderItem(4)}
+                </ol>                
+            </div>
+        );
+    }
+}
+
+class Header extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -88,76 +121,56 @@ class App extends Component {
 
     render() {
         return (
-            <div>
+            <header className="App-header">
+                <button onClick={this.togglePopup.bind(this)}>Login/register</button>
 
-                <header className="App-header">
-                    <button onClick={this.togglePopup.bind(this)}>Login/register</button>
+                {this.state.showPopup && !this.state.Login ?
+                    <Popup
+                        text='Registration'
+                        closePopup={this.togglePopup.bind(this)}
+                        handleOnChange={this.handleOnChange.bind(this)}
+                        changeLogin={this.changeLogin.bind(this)}
 
-                    {this.state.showPopup && !this.state.Login ?
-                        <Popup
-                            text='Registration'
-                            closePopup={this.togglePopup.bind(this)}
-                            handleOnChange={this.handleOnChange.bind(this)}
-                            changeLogin={this.changeLogin.bind(this)}
+                        handleSubmit={this.comparePassword.bind(this)}
+                        message={this.state.passwordsMatch === false && <div>Passwords don't match!</div>
+                            || this.state.passwordsMatch === true && <div>Registered!</div>}
 
-                            handleSubmit={this.comparePassword.bind(this)}
-                            message={this.state.passwordsMatch === false && <div>Passwords don't match!</div>
-                                || this.state.passwordsMatch === true && <div>Registered!</div>}
+                    />
+                    : null
+                }
 
-                        />
-                        : null
-                    }
+                {this.state.Login && this.state.showPopup ?
+                    <Loginpopup
+                        text='Login'
+                        closeLoginPopup={this.togglePopup.bind(this)}
+                        handleOnChange={this.handleOnChange.bind(this)}
+                        handleLoginSubmit={this.handleLogin.bind(this)}
+                    />
+                    : null
+                }
 
-                    {this.state.Login && this.state.showPopup ?
-                        <Loginpopup
-                            text='Login'
-                            closeLoginPopup={this.togglePopup.bind(this)}
-                            handleOnChange={this.handleOnChange.bind(this)}
-                            handleLoginSubmit={this.handleLogin.bind(this)}
-                        />
-                        : null
-                    }
+                <img src={logo} className="App-logo" alt="logo" />
 
-                    <img src={logo} className="App-logo" alt="logo" />
-
-                </header>
-            </div>
+            </header>
 
         );
     }
 }
-
-function TopItem(props) {
-    return (
-        <li className="topitem">{this.props.value}</li>
-    );
-}
-
-class TopList extends React.Component {
+class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            topFive: Array(5).fill(null)
-        };
     }
-
-    renderItem(itm) {
-        return <TopItem value={itm} />;
-    }
-
     render() {
         return (
-            <div className="toplist">
-                <ol>
-                    {this.renderItem(0)}
-                    {this.renderItem(1)}
-                    {this.renderItem(2)}
-                    {this.renderItem(3)}
-                    {this.renderItem(4)}
-                </ol>                
+            <div>
+                <Header />
+                <TopList />
             </div>
+
         );
     }
 }
+
+
 
 export default App;
