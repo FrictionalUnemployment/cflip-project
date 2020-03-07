@@ -47,6 +47,8 @@ function updateCoin() {
         console.log("\n\nCoin has flipped!\nResult: " + flipped);
         if (coin.potsizeTails + coin.potsizeHeads > 0) {
             coin.logChanges(flipped, db);
+        } else {
+            console.log("No bets placed on this flip.")
         }
     }
 }
