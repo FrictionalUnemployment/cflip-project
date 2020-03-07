@@ -53,7 +53,7 @@ class Coin {
         let loserpot = (result === 'tails') ? this.potsizeHeads : this.potsizeTails;
         let datetime = + new Date();
 
-        console.log("Time: " + datetime);
+        console.log("\n\nCoin has flipped!\nResult: " + result + "\nTime: " + datetime);
 
         db.query(`INSERT INTO flip (Result, Date_time, Pot_size) VALUES ("${result}", ${datetime}, ${totalPot});`);
 
@@ -144,10 +144,6 @@ class Coin {
         this.potsizeTails += amount;
     }
 
-    hasExistingBet(user) {
-        if (this.allBets[user]) return true;
-        return false;
-    }
     randomChoice(choices) {
         let i = Math.floor(Math.random() * choices.length);
         return choices[i];

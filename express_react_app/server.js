@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 // Connectar mot våran databas
 let db;
 if (process.env.local) {
+    // TODO
     mariadb.createConnection({
         socketPath: '/var/lib/mysql/mysql.sock',
         user: 'coinflip',
@@ -114,22 +115,17 @@ app.post('/place_bet', (req, res) => {
     const user = String(req.body.username);
     const amount = req.body.amount;
     
-    if (!coin.hasExistingBet(user)) {
-        db.query(`SELECT Balance FROM user WHERE Username="${user}"`)
-            .then(ans => {
-                if (amount > ans[0].Balance) amount = ans[0].Balance;
+    db.query(`SELECT Balance FROM user WHERE Username="${user}"`)
+        .then(ans => {
+            if (amount > ans[0].Balance) amount = ans[0].Balance;
 
-                if (bet === 'heads') {
-                    coin.betOnHeads(user, amount);
-                } else if (bet === 'tails') {
-                    coin.betOnTails(user, amount);
-                }
-                res.send({express: `Bet placed by ${user} on ${bet} for ${amount}.`});
-                console.log(`Bet placed by ${user} on ${bet} for ${amount}.`);
-            })
-    } else {
-        res.send({express: `${user} has already bet on this flip.`});
-        console.log(`${user} has existing bet on this flip. Cancelling bet.`)
-    }
+            if (bet === 'heads') {
+                coin.betOnHeads(user, amount);
+            } else if (bet === 'tails') {
+                coin.betOnTails(user, amount);
+            }
+            res.send({express: `Bet placed by ${user} on ${bet} for ${amount}.`});
+            console.log(`Bet placed by ${user} on ${bet} for ${amount}.`);
+        })
 })
 
