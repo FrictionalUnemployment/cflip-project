@@ -3,8 +3,9 @@ const WebSocket = require('ws')
 const FLIPTIME = 60 * 1000;
 
 class Coin {
-    constructor() {
-        this.timeLeft = FLIPTIME;
+    constructor(database) {
+        this.db = database;
+        this.timeLeft = 60 * 1000;
         this.betHeads = [];
         this.betTails = [];
         this.allBets = {}; 
@@ -34,8 +35,13 @@ class Coin {
         if (!coinStatus.timeleft) {
             // Finns ingen tid kvar, kommer att sätta en vinnare
             coinStatus.winner = this.getWinner();
+<<<<<<< HEAD
             //this.logChanges(coinStatus.winner[0]);
             res = coinStatus.winner[0];
+=======
+            console.log(coinStatus.winner[0]);
+            this.logChanges(coinStatus.winner[0], this.db);
+>>>>>>> Very nice commit
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
