@@ -1,3 +1,8 @@
+Servern startas med 'node server.js'
+Om servern är på samma dator som databasen kan man skriva 'local=true node server.js'
+detta gör så att servern kommunicerar med databasen via pipes sockets istället för nätverket.
+
+
 Denna text förklarar hur mak kommunicerar med backend servern
 För att kommunicera med backend behövs 'whatwg-fetch' för att sätta body taggen
 App.js måste allstå innehålla en rad som står:
@@ -5,7 +10,7 @@ App.js måste allstå innehålla en rad som står:
 Man behöver även skriva npm install whatwg-fetch för att installera det
 
 För att koppla sig till webservern behöver man lägga till rad i
-package.json som står: "proxy": "http://localhost:5000/",
+package.json som står: "proxy": "http://193.10.236.94:5000/",
 
 
 COIN
