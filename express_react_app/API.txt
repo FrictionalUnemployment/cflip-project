@@ -100,6 +100,8 @@ POST /place_bet
     Detta används för att satsa på 'heads' eller 'tails'
 
     Returnerar en sträng som säger 'Bet placed by ${user} on ${heads/tails} for ${amount}'
+    Om användaren redan har lagt ett bet på denn flip returnerar den:
+        '${user} has existing bet on this flip. Cancelling bet.'
 
     För att satsa på heads eller tails behöver GET anropet en body som innehåller en sträng:
         {bet: 'heads' eller 'tails', username: 'användarnamn', amount: 'belopp att satsa'}
