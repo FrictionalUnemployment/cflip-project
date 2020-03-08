@@ -15,7 +15,8 @@ class Coin {
         this.wss = new WebSocket.Server({port: 5001});
         this.wss.on('connection', function connection(ws) {
             console.log('client connected to coin');
-        })
+            console.log(ws);
+        });
 
     }
 
