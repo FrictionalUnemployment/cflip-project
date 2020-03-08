@@ -53,14 +53,17 @@ class Coin {
         let loserpot = (result === 'tails') ? this.potsizeHeads : this.potsizeTails;
         let datetime = + new Date();
 
-        console.log("Time: " + datetime);
+        console.log(`Time: ${datetime}`)
 
         db.query(`INSERT INTO flip (Result, Date_time, Pot_size) VALUES ("${result}", ${datetime}, ${totalPot});`);
 
         db.query(`SELECT FID from flip WHERE Date_time=${datetime};`)
             .then(ans => {
                 let FID = ans[0].FID;
-                console.log("Flip ID: " + FID);
+                console.log(`Flip ID: ${FId}`);
+                console.log(`Pot size: ${totalPot}`);
+                console.log(`Winners: ${winners}`);
+                console.log(`Losers: ${losers}`);
 
                 this.logUsers(losers, db, false, winners.length, loserpot, FID);
                 this.logUsers(winners, db, true, losers.length, loserpot, FID);
