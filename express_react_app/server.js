@@ -5,36 +5,29 @@ const crypto = require('crypto');
 var bodyParser = require('body-parser');
 
 // Connectar mot våran databas
-let db;
+let databaseInfo = {
+    user: 'coinflip',
+    password: 'amirphilip9896',
+    database: 'coinflip',
+    host: '193.10.236.94'
+};
 if (process.env.local) {
-    mariadb.createConnection({
-        socketPath: '/var/lib/mysql/mysql.sock',
-        user: 'coinflip',
-        password: 'amirphilip9896',
-        database: 'coinflip'
-    })
+    console.log("Attempting to connecect to local database.")
+    databaseInfo.socketPath = '/var/lib/mysql/mysql.sock';
+} else {
+    console.log("Attempting to connect to remote database.")
+}
+let db;
+mariadb.createConnection(databaseInfo)
     .then(conn => {
-        console.log("Connected to local database. Connection id is " + conn.threadId);
+        console.log(`Connected to database. Connection id is ${conn.threadId}`);
         db = conn;
     })
     .catch(err => {
-        console.log('error connecting to local database: ' + err);
+        console.log(`Error connecting to database: ${err}`);
     });
-} else {
-    mariadb.createConnection({
-        user:'coinflip',
-        password: 'amirphilip9896',
-        host: '193.10.236.94',
-        database: 'coinflip'
-        })
-        .then(conn => {
-            console.log("Connected to database. Connection id is " + conn.threadId);
-            db = conn;
-        })
-        .catch(err => {
-            console.log('error connecting to database: ' + err);
-    });
-}
+
+
 
 // Skapar Coin object
 var coin = new Coin();
