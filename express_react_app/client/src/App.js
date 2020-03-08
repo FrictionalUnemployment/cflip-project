@@ -43,7 +43,6 @@ class Header extends Component {
 
     handleLogin() {
 
-
     }
 
     comparePassword() {
