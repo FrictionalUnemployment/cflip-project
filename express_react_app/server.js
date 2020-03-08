@@ -68,7 +68,7 @@ app.post('/register_user', (req, res) => {
                     .update(req.body.password)
                     .digest('hex');
     
-    console.log(`Registering user: ${user}\nHash: ${hash}`);
+    console.log(`\nRegistering user: ${user}\nHash: ${hash}`);
     db.query('INSERT INTO user (Username, Password, Balance) ' + 
              `VALUES ("${user}", "${hash}", 50);`)
                 .then(ans => {
@@ -90,7 +90,7 @@ app.post('/login', (req, res) => {
                     .update(pwd)
                     .digest('hex');
 
-    console.log(`Logging in ${user}`);
+    console.log(`\nLogging in ${user}`);
     db.query(`SELECT Password FROM user WHERE Username="${user}";`)
                 .then(ans => {
                     let stored_hash = ans[0].Password;
@@ -114,7 +114,7 @@ app.post('/place_bet', (req, res) => {
     const user = String(req.body.username);
     const amount = req.body.amount;
     
-    console.log(`Placing bet for ${user}, for ${amount}, on ${bet}`);
+    console.log(`\nPlacing bet for ${user}, for ${amount}, on ${bet}`);
     if (!coin.hasExistingBet(user)) {
         db.query(`SELECT Balance FROM user WHERE Username="${user}"`)
             .then(ans => {

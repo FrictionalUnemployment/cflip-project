@@ -10,12 +10,12 @@ class Coin {
         this.allBets = {}; 
         this.potsizeHeads = 0;
         this.potsizeTails = 0;
-        this.lastemoji = null;
+        this.animationChar = '|';
         
         // Web socket server, denna ska klienten koppla upp sig till
         this.wss = new WebSocket.Server({port: 5001});
         this.wss.on('connection', function connection(ws) {
-            console.log('client connected to coin');
+            console.log('\nclient connected to coin');
             console.log(ws);
         });
 
@@ -42,7 +42,18 @@ class Coin {
             if (seconds.length < 2) {
                 seconds = '0' + seconds;
             }
-            process.stdout.write(`\rFlip timer: ${seconds}s`);
+
+            // / - \ |
+            let coolAnimation = ['/', '-', '\\', '|']
+            let index = coolAnimation.indexOf(this.animationChar);
+            if (index !== 3) {
+                index++;
+            }else{
+                index = 0;
+            }
+            this.animationChar = coolAnimation[index];
+            let string = this.animationChar + this.animationChar;
+            process.stdout.write(`\r${string} ${seconds}s ${string}`);
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
