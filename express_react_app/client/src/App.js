@@ -108,13 +108,13 @@ class Header extends Component {
             username: '',
             password: '',
             checkpassword: '',
-            message: "Pass don't match",
             registeredUsername: ''
         };
 
     }
 
     handleOnChange(event) {
+       
         this.setState({
             [event.target.name]: event.target.value
         })
@@ -128,9 +128,26 @@ class Header extends Component {
 
     }
 
-    handleLogin() {
+    handleLogin = async () => {
+        // data innehåller informationen som behövs i header
 
+        const data = { username: `${this.state.username}`, password: `${this.state.password}` };
 
+        // gör förfrågningen med fetch functionen.
+        const response = await fetch('/login', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+        });
+        // Här kollar vi på svaret som vi får av servern
+        const body = await response.json();
+        if (response.status !== 200) {
+            // Någon har gått fel
+            throw Error(body.message)
+        }
+        //returnerar svar från backend vilket är användarnamnet
+        
+        return this.setState({ registeredUsername: body.express, isLoggedin: true })
     }
 
     comparePassword() {
@@ -173,13 +190,19 @@ class Header extends Component {
             throw Error(body.message)
         }
         //returnerar svar från backend vilket är användarnamnet
-        alert(body.express)
-        return this.setState({ registeredUsername: body })
+        
+        return this.setState({ registeredUsername: body.express})
     }
+
+   
+
 
     render() {
         return (
             <header className="App-header">
+
+        
+
                 <button onClick={this.togglePopup.bind(this)}>Login/register</button>
 
                 {this.state.showPopup && !this.state.Login ?
@@ -191,13 +214,13 @@ class Header extends Component {
 
                         handleSubmit={this.comparePassword.bind(this)}
                         message={this.state.passwordsMatch === false && <div>Passwords don't match!</div>
-                            || this.state.passwordsMatch === true && <div>Registered!</div>}
+                            || this.state.passwordsMatch === true && this.state.registeredUsername !== undefined && <div>You're registered! {this.state.registeredUsername} </div>}
 
                     />
                     : null
                 }
 
-                {this.state.Login && this.state.showPopup ?
+                {this.state.registeredUsername !== undefined && this.state.Login && this.state.showPopup ?
                     <Loginpopup
                         text='Login'
                         closeLoginPopup={this.togglePopup.bind(this)}
