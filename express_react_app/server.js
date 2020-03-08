@@ -2,65 +2,57 @@ const Coin = require('./Coin');
 const express = require('express');
 const mariadb = require('mariadb');
 const crypto = require('crypto');
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 // Connectar mot våran databas
-let db;
+let databaseInfo = {
+    user: 'coinflip',
+    password: 'amirphilip9896',
+    database: 'coinflip',
+    host: '193.10.236.94'
+};
 if (process.env.local) {
-    mariadb.createConnection({
-        socketPath: '/var/lib/mysql/mysql.sock',
-        user: 'coinflip',
-        password: 'amirphilip9896',
-        database: 'coinflip'
-    })
+    console.log("Attempting to connecect to local database.")
+    databaseInfo.socketPath = '/var/lib/mysql/mysql.sock';
+} else {
+    console.log("Attempting to connect to remote database.")
+}
+let db;
+mariadb.createConnection(databaseInfo)
     .then(conn => {
-        console.log("Connected to local database. Connection id is " + conn.threadId);
+        console.log(`Connected to database. Connection id is ${conn.threadId}\n`);
         db = conn;
     })
     .catch(err => {
-        console.log('error connecting to local database: ' + err);
+        console.log(`Error connecting to database: ${err}`);
     });
-} else {
-    mariadb.createConnection({
-        user:'coinflip',
-        password: 'amirphilip9896',
-        host: '193.10.236.94',
-        database: 'coinflip'
-        })
-        .then(conn => {
-            console.log("Connected to database. Connection id is " + conn.threadId);
-            db = conn;
-        })
-        .catch(err => {
-            console.log('error connecting to database: ' + err);
-    });
-}
+
 
 // Skapar Coin object
-var coin = new Coin();
+const coin = new Coin();
 intervalID = setInterval(updateCoin, 100);
 
 let flipsSinceStart = 0;
 function updateCoin() {
     let flipped = coin.updateCoin();
     if (flipped) {
-	flipsSinceStart++;
-        console.log("\n\nCoin has flipped!\nFlips since server start: " + flipsSinceStart + "\nResult: " + flipped);
+        process.stdout.write('\rCoin has flipped!' + 
+            `\nFlips since server start: ${++flipsSinceStart}` +
+            `\nResults: ${flipped}`);
         if (coin.potsizeTails + coin.potsizeHeads > 0) {
             coin.logChanges(flipped, db);
         } else {
-            console.log("No bets placed on this flip.")
+            console.log("\nNo bets placed on this flip.\n")
         }
     }
 }
-
 
 // Startar webservern och lyssnar
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false}))
 app.use(bodyParser.json())
-const port = process.env.PORT || 5000; // Om port inte sätts när man startar så är den 5000
-app.listen(port, () => console.log('Listening on port ' + port));
+const port = 5000;
+app.listen(port, () => console.log('Express is listening on port ' + port));
 
 
 
@@ -70,15 +62,18 @@ app.listen(port, () => console.log('Listening on port ' + port));
 
 // Lägg till användare
 app.post('/register_user', (req, res) => {
-    const pwd = String(req.body.password);
     const user = String(req.body.username);
 
     const hash = crypto.createHash('sha256')
-                    .update(pwd)
+                    .update(req.body.password)
                     .digest('hex');
-    db.query(`INSERT INTO user (Username, Password, Balance) VALUES ("${user}", "${hash}", 50);`)
+    
+    console.log(`Registering user: ${user}\nHash: ${hash}`);
+    db.query('INSERT INTO user (Username, Password, Balance) ' + 
+             `VALUES ("${user}", "${hash}", 50);`)
                 .then(ans => {
                     res.send({express: user});
+                    console.log(`Registered ${user}`);
                 })
                 .catch(err => {
                     res.send({express: null});
@@ -94,6 +89,8 @@ app.post('/login', (req, res) => {
     const hash = crypto.createHash('sha256')
                     .update(pwd)
                     .digest('hex');
+
+    console.log(`Logging in ${user}`);
     db.query(`SELECT Password FROM user WHERE Username="${user}";`)
                 .then(ans => {
                     let stored_hash = ans[0].Password;
@@ -116,6 +113,7 @@ app.post('/place_bet', (req, res) => {
     const user = String(req.body.username);
     const amount = req.body.amount;
     
+    console.log(`Placing bet for ${user}, for ${amount}, on ${bet}`);
     if (!coin.hasExistingBet(user)) {
         db.query(`SELECT Balance FROM user WHERE Username="${user}"`)
             .then(ans => {

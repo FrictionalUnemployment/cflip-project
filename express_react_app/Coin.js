@@ -15,7 +15,8 @@ class Coin {
         this.wss = new WebSocket.Server({port: 5001});
         this.wss.on('connection', function connection(ws) {
             console.log('client connected to coin');
-        })
+            console.log(ws);
+        });
 
     }
 
@@ -35,6 +36,12 @@ class Coin {
             // Finns ingen tid kvar, kommer att sätta en vinnare
             coinStatus.winner = this.getWinner();
             res = coinStatus.winner[0];
+        } else {
+            let seconds = Math.floor(coinStatus.timeleft / 1000).toString();
+            if (seconds.length < 2) {
+                seconds = '0' + seconds;
+            }
+            process.stdout.write(`\rFlip timer: ${seconds}s`);
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
@@ -52,14 +59,21 @@ class Coin {
         let loserpot = (result === 'tails') ? this.potsizeHeads : this.potsizeTails;
         let datetime = + new Date();
 
-        console.log("Time: " + datetime);
+        console.log(`\nTime: ${datetime}`)
 
-        db.query(`INSERT INTO flip (Result, Date_time, Pot_size) VALUES ("${result}", ${datetime}, ${totalPot});`);
+        db.query('INSERT INTO flip (Result, Date_time, Pot_size) ' + 
+                 `VALUES ("${result}", ${datetime}, ${totalPot});`);
 
         db.query(`SELECT FID from flip WHERE Date_time=${datetime};`)
             .then(ans => {
                 let FID = ans[0].FID;
-                console.log("Flip ID: " + FID);
+                console.log(`Flip ID: ${FId}`);
+                console.log(`Pot size: ${totalPot}`);
+                process.stdout.write('Winners: ');
+                console.dir(winners)
+                process.stdout.write('Losers: ');
+                console.dir(losers);
+                console.log();
 
                 this.logUsers(losers, db, false, winners.length, loserpot, FID);
                 this.logUsers(winners, db, true, losers.length, loserpot, FID);
@@ -80,7 +94,7 @@ class Coin {
             let currentUser = userlist[i];
             db.query(`SELECT UID from user WHERE Username="${currentUser}";`)
                 .then(ans => {
-
+                    let amountBet = this.allBets[currentUser];
                     let balanceChange;
                     let losses;
                     if (!winner) {
@@ -88,11 +102,12 @@ class Coin {
                             balanceChange = 0;
                             losses = 0
                         } else {
-                            balanceChange = this.allBets[currentUser] * -1;
-                            losses = balanceChange * -1;
+                            balanceChange = amountBet * -1;
+                            losses = amountBet;
                         }
                     } else {
-                        balanceChange = (this.allBets[currentUser] / (this.potsizeHeads + this.potsizeTails)) * loserpot;
+                        totalpot = this.potsizeHeads + this.potsizeTails;
+                        balanceChange = (amountBet / (totalpot)) * loserpot;
                         losses = balanceChange
                     }
 
@@ -122,13 +137,7 @@ class Coin {
     getWinner() {
         let flip_result = this.randomChoice(['heads', 'tails']);
         let winners = (flip_result === 'heads') ? this.betHeads : this.betTails;
-        let copy = new Array(winners.length);
-        for (let i = 0; i < winners.length; i++) {
-            copy[i] = winners[i];
-        }
-        let ret = [flip_result, copy];
-        //this.betHeads = [];
-        //this.betTails = [];
+        let ret = [flip_result, winners];
         return ret;
     }
 
