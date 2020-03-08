@@ -37,7 +37,11 @@ class Coin {
             coinStatus.winner = this.getWinner();
             res = coinStatus.winner[0];
         } else {
-            process.stdout.write(`\x1b[0GTimer: ${coinStatus.timeleft}`);
+            let seconds = Math.floor(coinStatus.timeleft / 1000).toString();
+            if (seconds.length < 2) {
+                seconds = '0' + seconds;
+            }
+            process.stdout.write(`\rFlip timer: ${seconds}s`);
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {

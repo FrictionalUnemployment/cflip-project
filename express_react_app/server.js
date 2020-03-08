@@ -36,7 +36,7 @@ let flipsSinceStart = 0;
 function updateCoin() {
     let flipped = coin.updateCoin();
     if (flipped) {
-        process.stdout.write('\x1b[0GCoin has flipped!' + 
+        process.stdout.write('\rCoin has flipped!' + 
             `\nFlips since server start: ${++flipsSinceStart}` +
             `\nResults: ${flipped}`);
         if (coin.potsizeTails + coin.potsizeHeads > 0) {
