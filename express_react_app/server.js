@@ -2,7 +2,7 @@ const Coin = require('./Coin');
 const express = require('express');
 const mariadb = require('mariadb');
 const crypto = require('crypto');
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 // Connectar mot våran databas
 let databaseInfo = {
@@ -30,14 +30,14 @@ mariadb.createConnection(databaseInfo)
 
 
 // Skapar Coin object
-var coin = new Coin();
+const coin = new Coin();
 intervalID = setInterval(updateCoin, 100);
 
 let flipsSinceStart = 0;
 function updateCoin() {
     let flipped = coin.updateCoin();
     if (flipped) {
-	flipsSinceStart++;
+	    flipsSinceStart++;
         console.log("\n\nCoin has flipped!\nFlips since server start: " + flipsSinceStart + "\nResult: " + flipped);
         if (coin.potsizeTails + coin.potsizeHeads > 0) {
             coin.logChanges(flipped, db);
@@ -63,11 +63,10 @@ app.listen(port, () => console.log('Listening on port ' + port));
 
 // Lägg till användare
 app.post('/register_user', (req, res) => {
-    const pwd = String(req.body.password);
     const user = String(req.body.username);
 
     const hash = crypto.createHash('sha256')
-                    .update(pwd)
+                    .update(req.body.password)
                     .digest('hex');
     
     console.log(`Registering user: ${user}\nHash: ${hash}`);

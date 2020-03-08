@@ -126,13 +126,7 @@ class Coin {
     getWinner() {
         let flip_result = this.randomChoice(['heads', 'tails']);
         let winners = (flip_result === 'heads') ? this.betHeads : this.betTails;
-        let copy = new Array(winners.length);
-        for (let i = 0; i < winners.length; i++) {
-            copy[i] = winners[i];
-        }
-        let ret = [flip_result, copy];
-        //this.betHeads = [];
-        //this.betTails = [];
+        let ret = [flip_result, winners];
         return ret;
     }
 
