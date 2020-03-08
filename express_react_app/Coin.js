@@ -42,9 +42,7 @@ class Coin {
             if (seconds.length < 2) {
                 seconds = '0' + seconds;
             }
-            let emoji = {smile: '🙂', nosmile: '🙃'}
-            this.lastemoji = (emoji.smile === this.lastemoji) ? emoji.nosmile : emoji.smile;
-            process.stdout.write(`\r${this.lastemoji} ${seconds}s`);
+            process.stdout.write(`\rFlip timer: ${seconds}s`);
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
