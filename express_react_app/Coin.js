@@ -36,6 +36,8 @@ class Coin {
             // Finns ingen tid kvar, kommer att sätta en vinnare
             coinStatus.winner = this.getWinner();
             res = coinStatus.winner[0];
+        } else {
+            process.stdout.write(`\x1b[0GTimer: ${coinStatus.timeleft}`);
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
@@ -62,8 +64,10 @@ class Coin {
                 let FID = ans[0].FID;
                 console.log(`Flip ID: ${FId}`);
                 console.log(`Pot size: ${totalPot}`);
-                console.log(`Winners: ${winners}`);
-                console.log(`Losers: ${losers}`);
+                process.stdout.write('Winners: ');
+                console.dir(winners)
+                process.stdout.write('Losers: ');
+                console.dir(losers);
 
                 this.logUsers(losers, db, false, winners.length, loserpot, FID);
                 this.logUsers(winners, db, true, losers.length, loserpot, FID);

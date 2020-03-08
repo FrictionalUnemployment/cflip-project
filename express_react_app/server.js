@@ -28,7 +28,6 @@ mariadb.createConnection(databaseInfo)
     });
 
 
-
 // Skapar Coin object
 const coin = new Coin();
 intervalID = setInterval(updateCoin, 100);
@@ -38,7 +37,7 @@ function updateCoin() {
     let flipped = coin.updateCoin();
     if (flipped) {
 	    flipsSinceStart++;
-        console.log("\n\nCoin has flipped!\nFlips since server start: " + flipsSinceStart + "\nResult: " + flipped);
+        console.log(`\n\nCoin has flipped!\nFlips since server start: ${flipsSinceStart}\nResult: ${flipped}`);
         if (coin.potsizeTails + coin.potsizeHeads > 0) {
             coin.logChanges(flipped, db);
         } else {
@@ -46,7 +45,6 @@ function updateCoin() {
         }
     }
 }
-
 
 // Startar webservern och lyssnar
 const app = express();
