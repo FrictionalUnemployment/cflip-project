@@ -42,6 +42,7 @@
 }
 
 .App-game {
+  background-color: #3f434a;
   align-items: center;
   justify-content: center;
   flex-direction: row;
@@ -52,4 +53,8 @@
   background-color: #282c34;
   min-height: 10vh;
   color: white;
+}
+
+ol {
+  background: #282c34
 }
