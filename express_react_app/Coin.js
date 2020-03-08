@@ -55,9 +55,10 @@ class Coin {
         let loserpot = (result === 'tails') ? this.potsizeHeads : this.potsizeTails;
         let datetime = + new Date();
 
-        console.log(`Time: ${datetime}`)
+        console.log(`\nTime: ${datetime}`)
 
-        db.query(`INSERT INTO flip (Result, Date_time, Pot_size) VALUES ("${result}", ${datetime}, ${totalPot});`);
+        db.query('INSERT INTO flip (Result, Date_time, Pot_size) ' + 
+                 `VALUES ("${result}", ${datetime}, ${totalPot});`);
 
         db.query(`SELECT FID from flip WHERE Date_time=${datetime};`)
             .then(ans => {
@@ -68,6 +69,7 @@ class Coin {
                 console.dir(winners)
                 process.stdout.write('Losers: ');
                 console.dir(losers);
+                console.log();
 
                 this.logUsers(losers, db, false, winners.length, loserpot, FID);
                 this.logUsers(winners, db, true, losers.length, loserpot, FID);
@@ -88,7 +90,7 @@ class Coin {
             let currentUser = userlist[i];
             db.query(`SELECT UID from user WHERE Username="${currentUser}";`)
                 .then(ans => {
-
+                    let amountBet = this.allBets[currentUser];
                     let balanceChange;
                     let losses;
                     if (!winner) {
@@ -96,11 +98,12 @@ class Coin {
                             balanceChange = 0;
                             losses = 0
                         } else {
-                            balanceChange = this.allBets[currentUser] * -1;
-                            losses = balanceChange * -1;
+                            balanceChange = amountBet * -1;
+                            losses = amountBet;
                         }
                     } else {
-                        balanceChange = (this.allBets[currentUser] / (this.potsizeHeads + this.potsizeTails)) * loserpot;
+                        totalpot = this.potsizeHeads + this.potsizeTails;
+                        balanceChange = (amountBet / (totalpot)) * loserpot;
                         losses = balanceChange
                     }
 

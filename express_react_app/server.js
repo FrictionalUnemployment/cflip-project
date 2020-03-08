@@ -20,7 +20,7 @@ if (process.env.local) {
 let db;
 mariadb.createConnection(databaseInfo)
     .then(conn => {
-        console.log(`Connected to database. Connection id is ${conn.threadId}`);
+        console.log(`Connected to database. Connection id is ${conn.threadId}\n`);
         db = conn;
     })
     .catch(err => {
@@ -36,12 +36,13 @@ let flipsSinceStart = 0;
 function updateCoin() {
     let flipped = coin.updateCoin();
     if (flipped) {
-	    flipsSinceStart++;
-        console.log(`\n\nCoin has flipped!\nFlips since server start: ${flipsSinceStart}\nResult: ${flipped}`);
+        process.stdout.write('\x1b[0GCoin has flipped!' + 
+            `\nFlips since server start: ${++flipsSinceStart}` +
+            `\nResults: ${flipped}`);
         if (coin.potsizeTails + coin.potsizeHeads > 0) {
             coin.logChanges(flipped, db);
         } else {
-            console.log("No bets placed on this flip.")
+            console.log("\nNo bets placed on this flip.\n")
         }
     }
 }
@@ -50,8 +51,8 @@ function updateCoin() {
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false}))
 app.use(bodyParser.json())
-const port = process.env.PORT || 5000; // Om port inte sätts när man startar så är den 5000
-app.listen(port, () => console.log('Listening on port ' + port));
+const port = 5000;
+app.listen(port, () => console.log('Express is listening on port ' + port));
 
 
 
@@ -68,7 +69,8 @@ app.post('/register_user', (req, res) => {
                     .digest('hex');
     
     console.log(`Registering user: ${user}\nHash: ${hash}`);
-    db.query(`INSERT INTO user (Username, Password, Balance) VALUES ("${user}", "${hash}", 50);`)
+    db.query('INSERT INTO user (Username, Password, Balance) ' + 
+             `VALUES ("${user}", "${hash}", 50);`)
                 .then(ans => {
                     res.send({express: user});
                     console.log(`Registered ${user}`);
