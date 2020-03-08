@@ -1,100 +1,13 @@
 import React, { Component, useImperativeHandle } from 'react';
-import logo from './logo512.png';
+
 import './App.css';
 import Popup from './components/popup.js';
-import Loginpopup from './components/loginpopup';
+import Loginpopup from './components/loginpopup.js';
+import TopList from './components/TopList.js'
+import Game from './components/Game.js'
 import 'whatwg-fetch'
 
-function TopItem(props) {
-    return (
-        <li className="topitem">{props.value}</li>
-    );
-}
 
-class TopList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            topFive: ["Hejsan", "Bester", "BENLPS", "HEMSKT", "BAJS"]
-        };
-    }
-
-    renderItem(itm) {
-        return <TopItem value={this.state.topFive[itm]} />;
-    }
-
-    render() {
-        return (
-            <div className="toplist">
-                <ol>
-                    {this.renderItem(0)}
-                    {this.renderItem(1)}
-                    {this.renderItem(2)}
-                    {this.renderItem(3)}
-                    {this.renderItem(4)}
-                </ol>                
-            </div>
-        );
-    }
-}
-
-class BetChoice extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            amount: 0
-        }
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick() {
-        this.props.onClick(this.props.suit, this.state.amount);
-    }
-
-    render() {
-        return (
-            <button className="s" onClick={this.handleClick}>Bet {this.props.suit}!</button>
-        )
-    }
-}
-
-class Game extends Component {
-
-    placeBet = async (suit, amount) => {
-        // Här sätts vad, vem och hur mycket
-        const data = {bet: suit, username: "test_user", amount: amount};
-
-        const response = await fetch('/place_bet', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {'Accept':'application/json', 'Content-Type': 'application/json'}
-        });
-
-        const body = await response.json();
-        if (response.status !== 200) {
-            throw Error(body.message);
-        }
-        return body.express;
-    }
-
-    handleClick(suit, amount) {
-        let res = this.placeBet(suit, amount);
-        console.log(res);
-
-    }
-
-    render() {
-        return (
-            <div className="App-game">
-                <div>
-                    <BetChoice suit="Heads" onClick={this.handleClick} />
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <BetChoice suit="Tails" onClick={this.handleClick} />
-                </div>
-            </div>
-        );
-    }
-}
 
 class Header extends Component {
     constructor(props) {
