@@ -36,13 +36,13 @@ let flipsSinceStart = 0;
 function updateCoin() {
     let flipped = coin.updateCoin();
     if (flipped) {
-        process.stdout.write('\rCoin has flipped!' + 
-            `\nFlips since server start: ${++flipsSinceStart}` +
-            `\nResults: ${flipped}`);
+        process.stdout.write('\rCoin has flipped!\n')
+        console.log(`Flips since server start: ${++flipsSinceStart}`);
+        console.log(`Results: ${flipped}`);
         if (coin.potsizeTails + coin.potsizeHeads > 0) {
             coin.logChanges(flipped, db);
         } else {
-            console.log("\nNo bets placed on this flip.\n")
+            console.log("No bets placed on this flip.\n")
         }
     }
 }
@@ -108,6 +108,7 @@ app.post('/login', (req, res) => {
                 })
 })
 
+// Satsa på heads eller tails
 app.post('/place_bet', (req, res) => {
     const bet = String(req.body.bet); // 'heads' eller 'tails'
     const user = String(req.body.username);

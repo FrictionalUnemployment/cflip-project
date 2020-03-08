@@ -10,6 +10,7 @@ class Coin {
         this.allBets = {}; 
         this.potsizeHeads = 0;
         this.potsizeTails = 0;
+        this.lastemoji = null;
         
         // Web socket server, denna ska klienten koppla upp sig till
         this.wss = new WebSocket.Server({port: 5001});
@@ -41,7 +42,9 @@ class Coin {
             if (seconds.length < 2) {
                 seconds = '0' + seconds;
             }
-            process.stdout.write(`\rFlip timer: ${seconds}s`);
+            let emoji = {smile: '🙂', nosmile: '🙃'}
+            this.lastemoji = (emoji.smile === this.lastemoji) ? emoji.nosmile : emoji.smile;
+            process.stdout.write(`\r${this.lastemoji} ${seconds}s`);
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
@@ -51,6 +54,7 @@ class Coin {
         return res;
     }
 
+
     logChanges(result, db) {
         // Denna funktionen blev skitful men den funkar   ...typ
         let totalPot = this.potsizeHeads + this.potsizeTails;
@@ -59,7 +63,7 @@ class Coin {
         let loserpot = (result === 'tails') ? this.potsizeHeads : this.potsizeTails;
         let datetime = + new Date();
 
-        console.log(`\nTime: ${datetime}`)
+        console.log(`Time: ${datetime}`)
 
         db.query('INSERT INTO flip (Result, Date_time, Pot_size) ' + 
                  `VALUES ("${result}", ${datetime}, ${totalPot});`);
