@@ -120,8 +120,8 @@ class Coin {
                         }
                     } else {
                         totalpot = this.potsizeHeads + this.potsizeTails;
-                        balanceChange = (amountBet / (totalpot)) * loserpot;
-                        losses = balanceChange
+                        balanceChange = Math.floor((amountBet / (totalpot-loserpot)) * loserpot);
+                        losses = balanceChange;
                     }
 
                     let UID = ans[0].UID;
