@@ -1,6 +1,6 @@
 const WebSocket = require('ws')
 
-const FLIPTIME = 60 * 1000;
+const FLIPTIME = 10 * 1000;
 
 class Coin {
     constructor() {
@@ -94,7 +94,7 @@ class Coin {
                 //Kör reset efter 100ms. Pajade hela skiten annars och tog mig
                 //evigheter att lösa problemet. Finns förmodligen bättre sätt att
                 //göra detta
-                setTimeout(function() {this.reset; }, 100);
+                //setTimeout(function() {this.reset; }, 100);
             })
             .catch (err => {
                 console.log('Error getting flip id ' + err);
