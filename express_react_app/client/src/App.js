@@ -44,7 +44,6 @@ class Header extends Component {
     handleLogin = async () => {
         // data innehåller informationen som behövs i header
 
-<<<<<<< HEAD
         const data = { username: `${this.state.username}`, password: `${this.state.password}` };
 
         // gör förfrågningen med fetch functionen.
@@ -62,8 +61,6 @@ class Header extends Component {
         //returnerar svar från backend vilket är användarnamnet
         
         return this.setState({ registeredUsername: body.express, isLoggedin: true })
-=======
->>>>>>> 59ccc4735e8decb41148e0c344c28bc88910e7b0
     }
 
     comparePassword() {
