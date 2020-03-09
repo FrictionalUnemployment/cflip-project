@@ -109,7 +109,7 @@ app.post('/login', (req, res) => {
 })
 
 // Satsa på heads eller tails
-app.post('/place_bet', (req, res) => {
+app.post('/place_bet/:user', (req, res) => {
     const bet = String(req.body.bet); // 'heads' eller 'tails'
     const user = String(req.body.username);
     let amount = req.body.amount;
@@ -134,3 +134,14 @@ app.post('/place_bet', (req, res) => {
     }
 })
 
+app.get('/stats/all/:top/:limit', (req, res) => {
+
+})
+
+app.get('/stats/user/:user', (req, res) => {
+
+})
+
+app.get('/user/:user', (req, res) => {
+
+})
