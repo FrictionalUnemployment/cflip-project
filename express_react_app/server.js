@@ -39,8 +39,6 @@ function updateCoin() {
         process.stdout.write('\rCoin has flipped!\n')
         console.log(`Flips since server start: ${++flipsSinceStart}`);
         console.log(`Results: ${flipped}`);
-        console.log(`heads pot: ${coin.potsizeHeads}`);
-        console.log(`tails pot: ${coin.potsizeTails}`);
         if (coin.potsizeTails + coin.potsizeHeads > 0) {
             coin.logChanges(flipped, db);
         } else {

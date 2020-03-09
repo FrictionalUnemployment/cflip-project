@@ -94,7 +94,7 @@ class Coin {
                 //Kör reset efter 100ms. Pajade hela skiten annars och tog mig
                 //evigheter att lösa problemet. Finns förmodligen bättre sätt att
                 //göra detta
-                //setTimeout(function() {this.reset; }, 100);
+                setTimeout(function() {this.reset; }, 100);
             })
             .catch (err => {
                 console.log('Error getting flip id ' + err);
@@ -158,12 +158,14 @@ class Coin {
         this.betHeads.push(user);
         this.allBets[user] = amount
         this.potsizeHeads += amount;
+        console.log(`pot heads: ${this.potsizeHeads}`);
     }
 
     betOnTails(user, amount) {
         this.betTails.push(user);
         this.allBets[user] = amount;
         this.potsizeTails += amount;
+        console.log(`pot tails: ${this.potsizeTails}`);
     }
 
     hasExistingBet(user) {
