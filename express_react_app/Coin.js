@@ -80,7 +80,7 @@ class Coin {
         db.query(`SELECT FID from flip WHERE Date_time=${datetime};`)
             .then(ans => {
                 let FID = ans[0].FID;
-                console.log(`Flip ID: ${FId}`);
+                console.log(`Flip ID: ${FID}`);
                 console.log(`Pot size: ${totalPot}`);
                 process.stdout.write('Winners: ');
                 console.dir(winners)
@@ -94,7 +94,7 @@ class Coin {
                 //Kör reset efter 100ms. Pajade hela skiten annars och tog mig
                 //evigheter att lösa problemet. Finns förmodligen bättre sätt att
                 //göra detta
-                //setTimeout(function() {this.reset; }, 100);
+                setTimeout(function() {this.reset; }, 100);
             })
             .catch (err => {
                 console.log('Error getting flip id ' + err);
