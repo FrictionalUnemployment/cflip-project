@@ -119,7 +119,7 @@ class Coin {
                             losses = amountBet;
                         }
                     } else {
-                        totalpot = this.potsizeHeads + this.potsizeTails;
+                        let totalpot = this.potsizeHeads + this.potsizeTails;
                         balanceChange = Math.floor((amountBet / (totalpot-loserpot)) * loserpot);
                         losses = balanceChange;
                     }
