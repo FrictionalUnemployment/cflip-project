@@ -128,13 +128,39 @@ app.post('/place_bet', (req, res) => {
                 res.send({express: `Bet placed by ${user} on ${bet} for ${amount}.`});
                 console.log(`Bet placed by ${user} on ${bet} for ${amount}.`);
             })
+            .catch(err => {
+                console.log('Erro getting user balance: ' + err);
+                res.send({express: 'Error getting user balance, unable to place bet.'});
+            });
     } else {
         res.send({express: `${user} has already bet on this flip.`});
-        console.log(`${user} has existing bet on this flip. Cancelling bet.`)
+        console.log(`${user} has existing bet on this flip. Cancelling bet.`);
     }
 })
 
 app.get('/stats/all/:top/:limit', (req, res) => {
+    console.log(`Getting ${req.params.top} ${req.params.limit}`);
+
+    let order = (req.params.top === 'bottom') ? 'ASC' : 'DESC';
+    db.query(`SELECT
+                Username,
+                Balance,
+                (SELECT COUNT(*) FROM winner WHERE winner.UID=user.UID) as Wins,
+                (SELECT COUNT(*) FROM loser WHERE loser.UID=user.UID) as Losses
+             FROM user
+             ORDER BY Balance ${order} 
+             LIMIT ${req.params.limit}`)
+         .then(ans => {
+             let users = [];
+             for (let i = 0; i < ans.length; i++) {
+                users.push(ans[i]);
+             }
+             res.send({express: JSON.stringify(users)});
+         })
+         .catch(err => {
+             console.log("Error getting top list");
+             res.send({express: 'Error getting top list'});
+         });
 
 })
 
