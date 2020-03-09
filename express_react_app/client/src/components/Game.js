@@ -5,7 +5,7 @@ class BetChoice extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            amount: 0
+            amount: 10
         }
         this.handleClick = this.handleClick.bind(this);
     }
@@ -37,22 +37,17 @@ class Game extends React.Component {
         if (response.status !== 200) {
             throw Error(body.message);
         }
+        console.log(body);
         return body.express;
-    }
-
-    handleClick(suit, amount) {
-        let res = this.placeBet(suit, amount);
-        console.log(res);
-
     }
 
     render() {
         return (
             <div className="App-game">
                 <div>
-                    <BetChoice suit="Heads" onClick={this.handleClick} />
+                    <BetChoice suit="Heads" onClick={this.placeBet} />
                     <img src={logo} className="App-logo" alt="logo" />
-                    <BetChoice suit="Tails" onClick={this.handleClick} />
+                    <BetChoice suit="Tails" onClick={this.placeBet} />
                 </div>
             </div>
         );
