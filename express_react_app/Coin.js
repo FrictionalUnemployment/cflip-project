@@ -80,7 +80,7 @@ class Coin {
         db.query(`SELECT FID from flip WHERE Date_time=${datetime};`)
             .then(ans => {
                 let FID = ans[0].FID;
-                console.log(`Flip ID: ${FId}`);
+                console.log(`Flip ID: ${FID}`);
                 console.log(`Pot size: ${totalPot}`);
                 process.stdout.write('Winners: ');
                 console.dir(winners)
@@ -158,14 +158,12 @@ class Coin {
         this.betHeads.push(user);
         this.allBets[user] = amount
         this.potsizeHeads += amount;
-        console.log(`pot heads: ${this.potsizeHeads}`);
     }
 
     betOnTails(user, amount) {
         this.betTails.push(user);
         this.allBets[user] = amount;
         this.potsizeTails += amount;
-        console.log(`pot tails: ${this.potsizeTails}`);
     }
 
     hasExistingBet(user) {
