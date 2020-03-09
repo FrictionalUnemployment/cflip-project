@@ -112,7 +112,7 @@ app.post('/login', (req, res) => {
 app.post('/place_bet', (req, res) => {
     const bet = String(req.body.bet); // 'heads' eller 'tails'
     const user = String(req.body.username);
-    const amount = req.body.amount;
+    let amount = req.body.amount;
     
     console.log(`\nPlacing bet for ${user}, for ${amount}, on ${bet}`);
     if (!coin.hasExistingBet(user)) {
