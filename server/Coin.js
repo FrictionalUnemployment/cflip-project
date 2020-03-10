@@ -37,23 +37,6 @@ class Coin {
             // Finns ingen tid kvar, kommer att sätta en vinnare
             coinStatus.winner = this.getWinner();
             res = coinStatus.winner[0];
-        } else {
-            let seconds = Math.floor(coinStatus.timeleft / 1000).toString();
-            if (seconds.length < 2) {
-                seconds = '0' + seconds;
-            }
-
-            // / - \ |
-            let coolAnimation = ['/', '-', '\\', '|']
-            let index = coolAnimation.indexOf(this.animationChar);
-            if (index !== 3) {
-                index++;
-            }else{
-                index = 0;
-            }
-            this.animationChar = coolAnimation[index];
-            let string = this.animationChar + this.animationChar;
-            process.stdout.write(`\r${string} ${seconds}s ${string}`);
         }
         this.wss.clients.forEach(function each(client) {
             if (client.readyState === WebSocket.OPEN) {
@@ -61,6 +44,20 @@ class Coin {
             }
         })
         return res;
+    }
+     
+    updateTimer() {
+        let seconds = Math.floor(this.timeLeft/1000).toString();
+        while (seconds.length < 2) {
+            seconds = '0' + seconds;
+        }
+        let coolAnimation = ['/', '-', '\\', '|'];
+        let index = coolAnimation.indexOf(this.animationChar);
+        if (index !== 3) index++;
+        else index = 0;
+        this.animationChar = coolAnimation[index];
+        let string = this.animationChar + this.animationChar;
+        process.stdout.write(`\r${string} ${seconds}s ${string}`);
     }
 
 

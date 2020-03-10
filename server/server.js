@@ -44,6 +44,8 @@ function updateCoin() {
         } else {
             console.log("No bets placed on this flip.\n")
         }
+    } else {
+        coin.updateTimer();
     }
 }
 
@@ -72,11 +74,11 @@ app.post('/register_user', (req, res) => {
     db.query('INSERT INTO user (Username, Password, Balance) ' + 
              `VALUES ("${user}", "${hash}", 50);`)
                 .then(ans => {
-                    res.send({express: user});
+                    res.send(user);
                     console.log(`Registered ${user}`);
                 })
                 .catch(err => {
-                    res.send({express: null});
+                    res.send(null);
                     console.log('error registering user:' + err);
                 })
 })
@@ -95,15 +97,15 @@ app.post('/login', (req, res) => {
                 .then(ans => {
                     let stored_hash = ans[0].Password;
                     if (stored_hash === hash) {
-                        res.send({express: user});
+                        res.send(user);
                         console.log('logged in ' + user);
                     } else {
-                        res.send({express: 'false'});
+                        res.send(JSON.stringify(null));
                         console.log('incorrect password: ' + user);
                     }
                 })
                 .catch(err => {
-                    res.send({express: null})
+                    res.send(JSON.stringify(null))
                     console.log('error logging in: ' + err);
                 })
 })
@@ -125,20 +127,20 @@ app.post('/place_bet', (req, res) => {
                 } else if (bet === 'tails') {
                     coin.betOnTails(user, amount);
                 }
-                res.send({express: `Bet placed by ${user} on ${bet} for ${amount}.`});
+                res.send(`Bet placed by ${user} on ${bet} for ${amount}.`);
                 console.log(`Bet placed by ${user} on ${bet} for ${amount}.`);
             })
             .catch(err => {
                 console.log('Erro getting user balance: ' + err);
-                res.send({express: 'Error getting user balance, unable to place bet.'});
+                res.send('Error getting user balance, unable to place bet.');
             });
     } else {
-        res.send({express: `${user} has already bet on this flip.`});
+        res.send(`${user} has already bet on this flip.`);
         console.log(`${user} has existing bet on this flip. Cancelling bet.`);
     }
 })
 
-app.get('/stats/all/:top/:limit', (req, res) => {
+app.get('/stats/toplist/:top/:limit', (req, res) => {
     console.log(`Getting ${req.params.top} ${req.params.limit}`);
 
     let order = (req.params.top === 'bottom') ? 'ASC' : 'DESC';
@@ -151,23 +153,35 @@ app.get('/stats/all/:top/:limit', (req, res) => {
              ORDER BY Balance ${order} 
              LIMIT ${req.params.limit}`)
          .then(ans => {
-             let users = [];
-             for (let i = 0; i < ans.length; i++) {
-                users.push(ans[i]);
-             }
-             res.send({express: JSON.stringify(users)});
+             res.send(JSON.stringify(ans));
          })
          .catch(err => {
              console.log("Error getting top list");
-             res.send({express: 'Error getting top list'});
+             res.send('Error getting top list');
          });
 
 })
 
 app.get('/stats/user/:user', (req, res) => {
-
+    console.log(`Getting user stats for ${req.params.user}`);
+    db.query(`SELECT
+                user.Username,
+                user.Balance,
+                (SELECT GROUP_CONCAT(DISTINCT FID) FROM winner WHERE winner.UID=user.UID) as Wins,
+                (SELECT GROUP_CONCAT(DISTINCT FID) FROM loser WHERE loser.UID=user.UID) as Losses
+             FROM user
+             WHERE Username='${req.params.user}'`)
+        .then(ans => {
+            ans[0].Wins = JSON.parse('[' + ans[0].Wins + ']');
+            ans[0].Losses = JSON.parse('[' + ans[0].Losses + ']');
+            res.send(JSON.stringify(ans[0]));
+        })
+        .catch(err => {
+            console.log('Error getting user stats ' + err);
+            res.send('Error getting user stats');
+        })
 })
 
-app.get('/user/:user', (req, res) => {
-
+app.get('/stats/flip/:FID', (req, res) => {
+    // vill ha Resultat, datum, 
 })
