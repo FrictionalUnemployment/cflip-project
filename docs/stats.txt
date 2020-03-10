@@ -1,6 +1,0 @@
-Vi vill ha antal gånger en användare har vunnit, förlorat och hur många bets
-användaren har lagt in. Hur många heads och hur många tails han har gjort.
-
-toplista
-bottomlista
-söka efter användare
