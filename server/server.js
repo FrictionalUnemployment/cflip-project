@@ -140,6 +140,7 @@ app.post('/place_bet', (req, res) => {
     }
 })
 
+// top eller bottom lista
 app.get('/stats/toplist/:top/:limit', (req, res) => {
     console.log(`Getting ${req.params.top} ${req.params.limit}`);
 
@@ -162,6 +163,7 @@ app.get('/stats/toplist/:top/:limit', (req, res) => {
 
 })
 
+// Hämtar statistik om en användare
 app.get('/stats/user/:user', (req, res) => {
     console.log(`Getting user stats for ${req.params.user}`);
     db.query(`SELECT
@@ -182,6 +184,63 @@ app.get('/stats/user/:user', (req, res) => {
         })
 })
 
+// Hämtar statistic om en flip
 app.get('/stats/flip/:FID', (req, res) => {
-    // vill ha Resultat, datum, 
+    let FID = req.params.FID;
+
+    // Om du lyckas få ihop alla 3 queries här i en är du en gud
+    // Jag försökte i en hel dag innan jag gav upp
+    
+    // Query för att hämta alla vinnare och hur mycket dom har satsat
+    db.query(`SELECT DISTINCT
+    CONCAT('{', '"', user.Username, '"', ':', winner.Winnings, '}')
+    FROM user
+        JOIN winner
+        ON user.UID=winner.UID
+    WHERE FID=${FID}`)
+        .then(ans => {
+            let winners = [];
+            for (let i = 0; i < ans.length; i++) {
+                for (let prop in ans[i]) {
+                    winners.push(JSON.parse(ans[i][prop]));
+                }
+            }
+            // Query för att hämta alla förlorare och hur mycket dom har satsat
+            db.query(`SELECT DISTINCT
+            CONCAT('{', '"', user.Username, '"', ':', loser.losses, '}')
+            FROM user
+                JOIN loser
+                ON user.UID=loser.UID
+            WHERE FID=${FID}`)
+                .then(ans => {
+                    let losers = [];
+                    for (let i = 0; i < ans.length; i++) {
+                        for (let prop in ans[i]) {
+                            losers.push(JSON.parse(ans[i][prop]));
+                        }
+                    }
+                    // Query för att hämta resultat och tid för flippen
+                    db.query(`SELECT Result, Date_time FROM flip WHERE FID=${FID}`)
+                        .then(ans => {
+                            let flip = {results: null, time: null, winners: winners, losers: losers};
+                            flip.results = ans[0].Result;
+                            flip.time = ans[0].Date_time;
+                            res.send(JSON.stringify(flip));
+                        })
+                        .catch(err => {
+                            console.log('Error getting flip: ' + err);
+                            res.send(null);
+                        })
+
+                })
+                .catch(err => {
+                    console.log('Error getting flip losers: ' + err);
+                    res.send(null);
+                })
+        })
+        .catch(err => {
+            console.log('Error getting flip winners: ' + err);
+            res.send(null);
+        })
+
 })

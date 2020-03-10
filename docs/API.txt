@@ -126,3 +126,58 @@ POST /place_bet
             }
             return body.express;
         }
+
+
+GET /stats/toplist/:top/:limit
+    Detta används för att visa top eller bottom lista.
+    Där det står :top ska det stå antingen 'top' eller 'bottom'
+    Där det står :limit ska det stå hur många resultat du vill få tillbaks
+
+    Returnerar en json sträng som innehåller en lista.
+    Varje object i listan har Username, Balance, Wins, Losses där Wins och Losses
+    är antalet vinster eller förluster.
+    Det går att nå detta med t.ex ret[i].Username
+
+    Exempel kod för att se top 10
+        // Jag har inte ens kollat om detta funkar
+        top10 = async () => {
+            const response = await fetch('/stats/all/top/10')
+            const body = await response.json();
+            if (response.status !== 200) {
+                throw Error(body.message);
+            }
+            return body.express;
+        }
+
+
+GET /stats/user/:user
+    Detta används för att få information om en användare.
+    Där det står :user ska det stå användarnamnet.
+
+    Returnerar en json sträng av ett object med följande properties:
+        Username, Balance, Wins, Losses
+    Där Username är användarnamnet, Balance är hur mycket pengar användaren har på kontot,
+    Wins är en lista som innehåller alla FID som användaren har förlorat på,
+    Losses är en lista som innehåller alla FID som användaren har vunnit på.
+    
+    Exempel kod
+        Skriv själv lata fan
+
+
+GET /stats/flip/:FID
+    Detta används för att få statistik om en flip.
+    Där det står :FID ska det stå Flip id.
+
+    Returnerar en json sträng av ett object med följande properties:
+        result, time, winners, losers
+    Där result är 'heads' eller 'tails', time är UNIX tidstämpel för när flippen
+    utfördes, winners och losers är en lista av object.
+
+    Properties för object i winners och losers listorna är användarnamnet,
+    value för den property är hur mycket användaren har förlorat eller vunnit.
+
+    För att ta fram användarnamnet kan man göra till ex:
+        for (let prop in ans.winners) { // Kollar alla props som winners har
+            let username = prop; // prop är användarnamnet
+            let bet_value = ans.winners[prop]; // Hur mycket denna användaren har satsat
+        }
