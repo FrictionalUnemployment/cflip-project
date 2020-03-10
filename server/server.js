@@ -3,6 +3,7 @@ const express = require('express');
 const mariadb = require('mariadb');
 const crypto = require('crypto');
 const bodyParser = require('body-parser');
+const {check, oneOf, validationResult} = require('express-validator');
 
 // Connectar mot våran databas
 let databaseInfo = {
@@ -22,6 +23,7 @@ mariadb.createConnection(databaseInfo)
     .then(conn => {
         console.log(`Connected to database. Connection id is ${conn.threadId}\n`);
         db = conn;
+        updateuserWhitelist();
     })
     .catch(err => {
         console.log(`Error connecting to database: ${err}`);
@@ -41,6 +43,7 @@ function updateCoin() {
         console.log(`Results: ${flipped}`);
         if (coin.potsizeTails + coin.potsizeHeads > 0) {
             coin.logChanges(flipped, db);
+            updateflipWhitelist();
         } else {
             console.log("No bets placed on this flip.\n")
         }
@@ -51,40 +54,74 @@ function updateCoin() {
 
 // Startar webservern och lyssnar
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false}))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
 const port = 5000;
 app.listen(port, () => console.log('Express is listening on port ' + port));
 
 
+// Skapar listor som kollar user input så att inget ingen gör nåt dumt
+let userWhitelist = [];
+function updateuserWhitelist() {
+    userWhitelist = [];
+    db.query('SELECT Username FROM user;')
+        .then(ans => {
+            for (let i = 0; i < ans.length; i++) {
+                userWhitelist.push(ans[i].Username);
+            }
+        });
+}
 
 
 // ==========================================================
 // Här finns alla API som går att nå från frontend
 
-// Lägg till användare
-app.post('/register_user', (req, res) => {
-    const user = String(req.body.username);
 
+function checkUser(value, {req}) {
+    // Funktion för att se om användare finns, för att undvika SQL injections
+    if (!userWhitelist.includes(value)) {
+        throw new Error('User does not exist');
+    }
+    return true;
+}
+
+// Lägg till användare
+app.post('/register_user', [
+    check('username').isLength({ min: 1, max: 18 }).trim()
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array() });
+    }
+
+    const user = String(req.body.username);
     const hash = crypto.createHash('sha256')
-                    .update(req.body.password)
-                    .digest('hex');
-    
+        .update(req.body.password)
+        .digest('hex');
+
     console.log(`\nRegistering user: ${user}\nHash: ${hash}`);
-    db.query('INSERT INTO user (Username, Password, Balance) ' + 
-             `VALUES ("${user}", "${hash}", 50);`)
-                .then(ans => {
-                    res.send(user);
-                    console.log(`Registered ${user}`);
-                })
-                .catch(err => {
-                    res.send(null);
-                    console.log('error registering user:' + err);
-                })
+    db.query('INSERT INTO user (Username, Password, Balance) ' +
+        `VALUES ("${user}", "${hash}", 50);`)
+        .then(ans => {
+            res.send(user);
+            console.log(`Registered ${user}`);
+            updateuserWhitelist();
+        })
+        .catch(err => {
+            res.send(null);
+            console.log('error registering user:' + err);
+        });
 })
 
 // Logga in användare
-app.post('/login', (req, res) => {
+app.post('/login', [
+    check('username').custom(checkUser)
+],(req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array() });
+    }
+
     const pwd = String(req.body.password);
     const user = String(req.body.username);
 
@@ -111,7 +148,16 @@ app.post('/login', (req, res) => {
 })
 
 // Satsa på heads eller tails
-app.post('/place_bet', (req, res) => {
+app.post('/place_bet', [
+    check('bet').isIn(['heads', 'tails']),
+    check('user').custom(checkUser),
+    check('amount').isInt()
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array() });
+    }
+
     const bet = String(req.body.bet); // 'heads' eller 'tails'
     const user = String(req.body.username);
     let amount = req.body.amount;
@@ -141,7 +187,15 @@ app.post('/place_bet', (req, res) => {
 })
 
 // top eller bottom lista
-app.get('/stats/toplist/:top/:limit', (req, res) => {
+app.get('/stats/toplist/:top/:limit', [
+    check('top').isIn(['top', 'bottom']),
+    check('limit').isInt()
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array() });
+    }
+
     console.log(`Getting ${req.params.top} ${req.params.limit}`);
 
     let order = (req.params.top === 'bottom') ? 'ASC' : 'DESC';
@@ -164,7 +218,14 @@ app.get('/stats/toplist/:top/:limit', (req, res) => {
 })
 
 // Hämtar statistik om en användare
-app.get('/stats/user/:user', (req, res) => {
+app.get('/stats/user/:user', [
+    check('user').custom(checkUser)
+],(req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array() });
+    }
+
     console.log(`Getting user stats for ${req.params.user}`);
     db.query(`SELECT
                 user.Username,
@@ -185,7 +246,14 @@ app.get('/stats/user/:user', (req, res) => {
 })
 
 // Hämtar statistic om en flip
-app.get('/stats/flip/:FID', (req, res) => {
+app.get('/stats/flip/:FID', [
+    check('FID').isInt()
+],(req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({errors: errors.array() });
+    }
+    
     let FID = req.params.FID;
 
     // Om du lyckas få ihop alla 3 queries här i en är du en gud
