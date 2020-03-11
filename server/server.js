@@ -147,6 +147,18 @@ app.post('/login', [
                 })
 })
 
+// Hämta lista av alla användarnamn
+app.get('/Userlist', (req, res) => {
+    db.query('SELECT Username FROM user')
+        .then(ans => {
+            let usernames = ans.map(x => x.Username);
+            res.json(usernames);
+        })
+        .catch(err => {
+            res.status(500).json({error: err});
+        })
+})
+
 // Satsa på heads eller tails
 app.post('/place_bet', [
     check('bet').isIn(['heads', 'tails']),

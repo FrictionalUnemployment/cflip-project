@@ -81,7 +81,7 @@ class Coin {
                 console.log(`Pot size: ${totalPot}`);
                 process.stdout.write('Winners: ');
                 console.dir(winners)
-                process.stdout.write('Losers: ');
+                process.stdout.write('\nLosers: ');
                 console.dir(losers);
                 console.log();
 
