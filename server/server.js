@@ -63,12 +63,9 @@ app.listen(port, () => console.log('Express is listening on port ' + port));
 // Skapar listor som kollar user input så att inget ingen gör nåt dumt
 let userWhitelist = [];
 function updateuserWhitelist() {
-    userWhitelist = [];
     db.query('SELECT Username FROM user;')
         .then(ans => {
-            for (let i = 0; i < ans.length; i++) {
-                userWhitelist.push(ans[i].Username);
-            }
+            userWhitelist = ans.map(user => user.Username);
         });
 }
 
@@ -85,9 +82,21 @@ function checkUser(value, {req}) {
     return true;
 }
 
+function checkNewUser(value, {req}) {
+    // Regex som säger att strängen får bara innehålla
+    // a-z, A-Z, 0-9, _, -
+    // Strängen måste vara mellan 3-15 långt
+    let re = /^[a-zA-Z0-9_-]{3,15}$/;
+    if (!re.test(value)) {
+        throw new Error('Illegal username');
+    }
+    return true;
+}
+
+
 // Lägg till användare
 app.post('/register_user', [
-    check('username').isLength({ min: 1, max: 18 }).trim()
+    check('username').custom(checkNewUser)
 ], (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -113,6 +122,18 @@ app.post('/register_user', [
         });
 })
 
+app.get('/test/:user', (req, res) => {
+    db.query(`select Password from user where Username='${req.params.user}'`)
+        .then(ans => {
+            if (!ans[0]) {
+                console.log(ans[0]);
+            } else {
+                console.log('here');
+            }
+            res.json(ans);
+        })
+})
+
 // Logga in användare
 app.post('/login', [
     check('username').custom(checkUser)
@@ -132,12 +153,29 @@ app.post('/login', [
     console.log(`\nLogging in ${user}`);
     db.query(`SELECT Password FROM user WHERE Username="${user}";`)
                 .then(ans => {
+
+                    if (!ans[0]) {
+                        let errmsg = {
+                            value: user,
+                            msg: 'Incorrect username',
+                            param: 'username',
+                            location: 'body'
+                        }
+                        res.status(401).json({errors: errmsg});
+                    }
+
                     let stored_hash = ans[0].Password;
                     if (stored_hash === hash) {
                         res.json(user);
                         console.log('logged in ' + user);
                     } else {
-                        res.status(401).json({errors: 'incorrect password'});
+                        let errmsg = {
+                            value: pwd,
+                            msg: 'Incorrect password',
+                            param: 'password',
+                            location: 'body'
+                        }
+                        res.status(401).json({errors: errmsg});
                         console.log('incorrect password: ' + user);
                     }
                 })
@@ -193,7 +231,7 @@ app.post('/place_bet', [
                 res.status(400).json({errors: err});
             });
     } else {
-        res.status(403).json({errors: `${user} has already bet on this flip.`});
+        res.status(403).json({errors: {msg: `${user} has already bet on this flip.`}});
         console.log(`${user} has existing bet on this flip. Cancelling bet.`);
     }
 })

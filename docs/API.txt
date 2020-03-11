@@ -45,6 +45,8 @@ COIN
 
 POST /register_user
     Detta används för att registrera nya användare.
+    Ett användarnamn får bara innehålla a-z, A-Z, 0-9, - och _
+    den för vara mellan 3-15 långt
 
     Returnerar användarnamnet om registering lyckades, annars null.
 
@@ -181,3 +183,8 @@ GET /stats/flip/:FID
             let username = prop; // prop är användarnamnet
             let bet_value = ans.winners[prop]; // Hur mycket denna användaren har satsat
         }
+
+
+GET /Userlist
+    Returnerar en json lista av alla avnändare i alfabetisk ordning
+    Inget att Konfigurera
