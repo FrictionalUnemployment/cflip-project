@@ -126,7 +126,7 @@ POST /place_bet
             if (response.status !== 200) {
                 throw Error(body.message);
             }
-            return body.express;
+            return body;
         }
 
 
@@ -148,7 +148,7 @@ GET /stats/toplist/:top/:limit
             if (response.status !== 200) {
                 throw Error(body.message);
             }
-            return body.express;
+            return body;
         }
 
 
@@ -188,3 +188,27 @@ GET /stats/flip/:FID
 GET /Userlist
     Returnerar en json lista av alla avnändare i alfabetisk ordning
     Inget att Konfigurera
+
+
+GET /captcha
+    Returnerar en svg sträng som webbläsaren kan visa. Du måste skapa nåt sätt för
+    usern att göra en input och posta den till /captcha
+
+POST /captcha
+    Returnerar sant om captcha stämde med user input, annars returnerar den falsk
+    Userinput sätts till body.input
+
+    Exempel kod:
+        captcha = async () => {
+            const response = await fetch('/captcha', {
+                method: 'POST',
+                body: JSON.stringify({input: detanvänderanharlagtin}),
+                headrs: {'Accept':'application/json', 'Content-Type': 'application/json'}
+            });
+
+            const body = await response.json();
+            if (response.status !== 200) {
+                throw Error(body.message);
+            }
+            return body;
+        })

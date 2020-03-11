@@ -4,6 +4,8 @@ const mariadb = require('mariadb');
 const crypto = require('crypto');
 const bodyParser = require('body-parser');
 const {check, oneOf, validationResult} = require('express-validator');
+const session = require('express-session');
+const svgCaptcha = require('svg-captcha');
 
 // Connectar mot våran databas
 let databaseInfo = {
@@ -56,6 +58,7 @@ function updateCoin() {
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
+app.use(session({secret: 'coinflipper', cookie: {} }));
 const port = 5000;
 app.listen(port, () => console.log('Express is listening on port ' + port));
 
@@ -93,6 +96,18 @@ function checkNewUser(value, {req}) {
     return true;
 }
 
+app.get('/captcha', (req, res) => {
+    let captcha = svgCaptcha.create();
+    req.session.captcha = captcha.text;
+    console.log(captcha.data);
+    res.type('svg');
+    res.status(200).send(captcha.data);
+});
+
+app.post('/captcha', (req, res) => {
+    const input = String(req.body.input);
+    req.session.human = (input === req.session.captcha);
+})
 
 // Lägg till användare
 app.post('/register_user', [
@@ -166,6 +181,7 @@ app.post('/login', [
 
                     let stored_hash = ans[0].Password;
                     if (stored_hash === hash) {
+                        req.session.loggedIn = true;
                         res.json(user);
                         console.log('logged in ' + user);
                     } else {
