@@ -103,12 +103,12 @@ app.post('/register_user', [
     db.query('INSERT INTO user (Username, Password, Balance) ' +
         `VALUES ("${user}", "${hash}", 50);`)
         .then(ans => {
-            res.send(user);
+            res.json(user);
             console.log(`Registered ${user}`);
             updateuserWhitelist();
         })
         .catch(err => {
-            res.send(null);
+            res.status(400).json({errors: err});
             console.log('error registering user:' + err);
         });
 })
@@ -134,15 +134,15 @@ app.post('/login', [
                 .then(ans => {
                     let stored_hash = ans[0].Password;
                     if (stored_hash === hash) {
-                        res.send(user);
+                        res.json(user);
                         console.log('logged in ' + user);
                     } else {
-                        res.send(JSON.stringify(null));
+                        res.status(401).json({errors: 'incorrect password'});
                         console.log('incorrect password: ' + user);
                     }
                 })
                 .catch(err => {
-                    res.send(JSON.stringify(null))
+                    res.status(400).json({errors: err});
                     console.log('error logging in: ' + err);
                 })
 })
@@ -173,15 +173,15 @@ app.post('/place_bet', [
                 } else if (bet === 'tails') {
                     coin.betOnTails(user, amount);
                 }
-                res.send(`Bet placed by ${user} on ${bet} for ${amount}.`);
+                res.json(`Bet placed by ${user} on ${bet} for ${amount}`);
                 console.log(`Bet placed by ${user} on ${bet} for ${amount}.`);
             })
             .catch(err => {
                 console.log('Erro getting user balance: ' + err);
-                res.send('Error getting user balance, unable to place bet.');
+                res.status(400).json({errors: err});
             });
     } else {
-        res.send(`${user} has already bet on this flip.`);
+        res.status(403).json({errors: `${user} has already bet on this flip.`});
         console.log(`${user} has existing bet on this flip. Cancelling bet.`);
     }
 })
@@ -208,11 +208,11 @@ app.get('/stats/toplist/:top/:limit', [
              ORDER BY Balance ${order} 
              LIMIT ${req.params.limit}`)
          .then(ans => {
-             res.send(JSON.stringify(ans));
+             res.json(ans);
          })
          .catch(err => {
              console.log("Error getting top list");
-             res.send('Error getting top list');
+             res.status(500).json({errors: err});
          });
 
 })
@@ -237,11 +237,11 @@ app.get('/stats/user/:user', [
         .then(ans => {
             ans[0].Wins = JSON.parse('[' + ans[0].Wins + ']');
             ans[0].Losses = JSON.parse('[' + ans[0].Losses + ']');
-            res.send(JSON.stringify(ans[0]));
+            res.json(ans[0]);
         })
         .catch(err => {
             console.log('Error getting user stats ' + err);
-            res.send('Error getting user stats');
+            res.status(400).json({errors: err});
         })
 })
 
@@ -293,22 +293,22 @@ app.get('/stats/flip/:FID', [
                             let flip = {results: null, time: null, winners: winners, losers: losers};
                             flip.results = ans[0].Result;
                             flip.time = ans[0].Date_time;
-                            res.send(JSON.stringify(flip));
+                            res.json(flip);
                         })
                         .catch(err => {
                             console.log('Error getting flip: ' + err);
-                            res.send(null);
+                            res.status(400).json({errors: err});
                         })
 
                 })
                 .catch(err => {
                     console.log('Error getting flip losers: ' + err);
-                    res.send(null);
+                    res.status(400).json({errors: err});
                 })
         })
         .catch(err => {
             console.log('Error getting flip winners: ' + err);
-            res.send(null);
+            res.status(400).json({errors: err});
         })
 
 })
