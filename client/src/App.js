@@ -14,7 +14,6 @@ class Header extends Component {
         super(props);
         this.state = {
             showPopup: false,
-
             isLoggedin: false,
             loginPage: false,
             passwordsMatch: null,
@@ -89,34 +88,52 @@ class Header extends Component {
         // data innehåller informationen som behövs i header
 
         const data = { username: `${this.state.username}`, password: `${this.state.password}` };
-
+      
         // gör förfrågningen med fetch functionen.
         const response = await fetch('/register_user', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
         });
-        // Här kollar vi på svaret som vi får av servern
+       //  Här kollar vi på svaret som vi får av servern
         const body = await response.json();
+    
+        
         if (response.status !== 200) {
             // Någon har gått fel
-            throw Error(body.message)
+          throw Error(body.message)
         }
-        //returnerar svar från backend vilket är användarnamnet
         
-        return this.setState({ registeredUsername: body.express})
+      
+        //returnerar svar från backend vilket är användarnamnet
+        return this.setState({ registeredUsername: body, 
+                isLoggedin: true})
     }
-
+ 
    
 
+    logOut() {
+        return this.setState({isLoggedin: false, registeredUsername: '' })
+    }
+  
 
     render() {
+     
+        let button;
+
+        if(this.state.isLoggedin === false) {
+            button = <button onClick={this.togglePopup.bind(this)}>Login/Register</button>;
+        } else if(this.state.isLoggedin === true) {
+            button = <button onClick={this.logOut.bind(this)}>Logout</button>;
+            
+        }
+
         return (
             <header className="App-header">
 
-        
-
-                <button onClick={this.togglePopup.bind(this)}>Login/register</button>
+            
+            {button}
+              
 
                 {this.state.showPopup && !this.state.Login ?
                     <Popup
@@ -148,6 +165,8 @@ class Header extends Component {
         );
     }
 }
+
+
 class App extends Component {
 
     render() {
