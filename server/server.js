@@ -99,7 +99,6 @@ function checkNewUser(value, {req}) {
 app.get('/captcha', (req, res) => {
     let captcha = svgCaptcha.create();
     req.session.captcha = captcha.text;
-    console.log(captcha.data);
     res.type('svg');
     res.status(200).send(captcha.data);
 });
@@ -107,6 +106,7 @@ app.get('/captcha', (req, res) => {
 app.post('/captcha', (req, res) => {
     const input = String(req.body.input);
     req.session.human = (input === req.session.captcha);
+    res.send(req.session.human);
 })
 
 // Lägg till användare
