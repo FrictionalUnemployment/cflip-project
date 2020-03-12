@@ -1,6 +1,6 @@
 const WebSocket = require('ws')
 
-const FLIPTIME = 10 * 1000;
+const FLIPTIME = 30 * 1000;
 
 class Coin {
     constructor() {

@@ -113,12 +113,10 @@ app.post('/captcha', (req, res) => {
 app.post('/register_user', [
     check('username').custom(checkNewUser)
 ], (req, res) => {
-
     // Kollar så att clienten har klarat captcha
     /*if (!req.session.human) {
         return res.status(403).json({errors: 'client has not completed captcha'});
     }*/
-
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -151,12 +149,10 @@ app.post('/register_user', [
 app.post('/login', [
     check('username').custom(checkUser)
 ],(req, res) => {
-
     // Kollar om clienten har klarat captcha
     /*if (!req.session.human) {
         return res.status(403).json({errors: 'client has not completed captcha'});
     }*/
-
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
