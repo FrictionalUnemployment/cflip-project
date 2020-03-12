@@ -113,6 +113,13 @@ app.post('/captcha', (req, res) => {
 app.post('/register_user', [
     check('username').custom(checkNewUser)
 ], (req, res) => {
+
+    // Kollar så att clienten har klarat captcha
+    /*if (!req.session.human) {
+        return res.status(403).json({errors: 'client has not completed captcha'});
+    }*/
+
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({errors: errors.array() });
@@ -130,6 +137,8 @@ app.post('/register_user', [
             res.json(user);
             console.log(`Registered ${user}`);
             updateuserWhitelist();
+            req.session.loggedIn = true;
+            req.session.Username = user;
         })
         .catch(err => {
             res.status(400).json({errors: err});
@@ -142,6 +151,13 @@ app.post('/register_user', [
 app.post('/login', [
     check('username').custom(checkUser)
 ],(req, res) => {
+
+    // Kollar om clienten har klarat captcha
+    /*if (!req.session.human) {
+        return res.status(403).json({errors: 'client has not completed captcha'});
+    }*/
+
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({errors: errors.array() });
@@ -171,6 +187,7 @@ app.post('/login', [
                     let stored_hash = ans[0].Password;
                     if (stored_hash === hash) {
                         req.session.loggedIn = true;
+                        req.session.Username = user;
                         res.json(user);
                         console.log('logged in ' + user);
                     } else {
@@ -203,9 +220,8 @@ app.get('/Userlist', (req, res) => {
 })
 
 // Satsa på heads eller tails
-app.post('/place_bet', [
+app.post('/place_bet/:bet/:amount', [
     check('bet').isIn(['heads', 'tails']),
-    check('user').custom(checkUser),
     check('amount').isInt()
 ], (req, res) => {
     const errors = validationResult(req);
@@ -213,9 +229,13 @@ app.post('/place_bet', [
         return res.status(422).json({errors: errors.array() });
     }
 
-    const bet = String(req.body.bet); // 'heads' eller 'tails'
-    const user = String(req.body.username);
-    let amount = req.body.amount;
+    if (!req.session.loggedIn) {
+        return res.status(401).json({errors: 'client is not logged in'});
+    }
+
+    const bet = String(req.params.bet); // 'heads' eller 'tails'
+    const user = req.session.Username;
+    let amount = req.params.amount;
     
     console.log(`\nPlacing bet for ${user}, for ${amount}, on ${bet}`);
     if (!coin.hasExistingBet(user)) {
