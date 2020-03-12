@@ -65,8 +65,6 @@ app.listen(port, () => console.log('Express is listening on port ' + port));
 // ==========================================================
 // Här finns alla API som går att nå från frontend
 
-app.get('/testing', handleReq.testing);
-
 // Skickar svg av captcha
 app.get('/captcha', handleReq.captchaImage);
 

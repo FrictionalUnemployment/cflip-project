@@ -142,12 +142,14 @@ function login(req, res) {
 } module.exports.login = login;
 
 function userList(req, res) {
+    console.log('\nGetting User list');
     db.query('SELECT Username FROM user')
         .then(ans => {
             let usernames = ans.map(x => x.Username);
             res.json(usernames);
         })
         .catch(err => {
+            console.log('error getting user list' + err);
             res.status(500).json({ error: err });
         })
 } module.exports.userList = userList;
@@ -196,7 +198,7 @@ function userStatsList(req, res) {
         return res.status(422).json({ errors: errors.array() });
     }
 
-    console.log(`Getting ${req.params.top} ${req.params.limit}`);
+    console.log(`\nGetting ${req.params.top} ${req.params.limit}`);
 
     let order = (req.params.top === 'bottom') ? 'ASC' : 'DESC';
     db.query(`SELECT
@@ -222,7 +224,7 @@ function userStat(req, res) {
         return res.status(422).json({ errors: errors.array() });
     }
 
-    console.log(`Getting user stats for ${req.params.user}`);
+    console.log(`\nGetting user stats for ${req.params.user}`);
     db.query(`SELECT
                 user.Username,
                 user.Balance,
@@ -248,6 +250,7 @@ function flipStat(req, res) {
     }
 
     let FID = req.params.FID;
+    console.log('\nGetting stats for flip: ' + FID);
 
     // Om du lyckas få ihop alla 3 queries här i en är du en gud
     // Jag försökte i en hel dag innan jag gav upp
@@ -304,10 +307,3 @@ function flipStat(req, res) {
             res.status(400).json({ errors: err });
         })
 } module.exports.flipStat = flipStat;
-
-function testing(req, res) {
-    db.query('SELECT * FROM user;')
-        .then(ans => {
-            res.json(ans);
-        })
-} module.exports.testing = testing;
