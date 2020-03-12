@@ -3,7 +3,7 @@ const express = require('express');
 const mariadb = require('mariadb');
 const crypto = require('crypto');
 const bodyParser = require('body-parser');
-const {check, oneOf, validationResult} = require('express-validator');
+const {check, validationResult} = require('express-validator');
 const session = require('express-session');
 const svgCaptcha = require('svg-captcha');
 
@@ -97,10 +97,10 @@ function checkNewUser(value, {req}) {
 }
 
 app.get('/captcha', (req, res) => {
-    let captcha = svgCaptcha.create();
+    let captcha = svgCaptcha.create({noise: 4, size: 5});
     req.session.captcha = captcha.text;
     res.type('svg');
-    res.status(200).send(captcha.data);
+    res.send(captcha.data);
 });
 
 app.post('/captcha', (req, res) => {
@@ -137,17 +137,6 @@ app.post('/register_user', [
         });
 })
 
-app.get('/test/:user', (req, res) => {
-    db.query(`select Password from user where Username='${req.params.user}'`)
-        .then(ans => {
-            if (!ans[0]) {
-                console.log(ans[0]);
-            } else {
-                console.log('here');
-            }
-            res.json(ans);
-        })
-})
 
 // Logga in användare
 app.post('/login', [
