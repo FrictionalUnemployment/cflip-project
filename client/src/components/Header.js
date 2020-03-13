@@ -39,13 +39,14 @@ class Header extends Component {
         const data = { username: `${this.state.username}`, password: `${this.state.password}` };
 
         // gör förfrågningen med fetch functionen.
-        const response = await fetch('/user/login', {
+        const response = await fetch('/login', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
         });
         // Här kollar vi på svaret som vi får av servern
-        const body = await response.json();
+        const body = await response.text();
+        console.log(body);
         if (response.status !== 200) {
             // Någon har gått fel
             throw Error(body.message)
@@ -84,7 +85,7 @@ class Header extends Component {
         const data = { username: `${this.state.username}`, password: `${this.state.password}` };
       
         // gör förfrågningen med fetch functionen.
-        const response = await fetch('/user/register', {
+        const response = await fetch('/register', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
