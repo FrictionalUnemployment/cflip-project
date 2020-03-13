@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     const input = String(req.body.input);
     req.session.human = (input === req.session.captcha);
-    res.send(req.session.human);
-})
+    res.json(req.session.human);
+});
 
 module.exports = router;
