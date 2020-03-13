@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const bodyParser = require('body-parser');
 const stats = require('./routers/stats');
 const user = require('./routers/user');
 const captcha = require('./routers/captcha');
@@ -9,6 +10,8 @@ const middleware = require('./middleware');
 // Startar webservern och lyssnar
 const app = express();
 app.use(session({ secret: 'coinflipper', cookie: {} }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(middleware);
 
 app.use('/stats', stats);

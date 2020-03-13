@@ -1,10 +1,7 @@
 const express = require('express');
 const svgCaptcha = require('svg-captcha');
-const bodyParser = require('body-parser');
 
 const router = express.Router();
-router.use(bodyParser.urlencoded({ extended: false }));
-router.use(bodyParser.json());
 
 router.get('/', (req, res) => {
     let captcha = svgCaptcha.create({ noise: 4, size: 5, background: '#282c34' });

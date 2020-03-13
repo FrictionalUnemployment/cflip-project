@@ -1,12 +1,19 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const { checkUser, checkNewUser } = require('./validator');
 const { check, validationResult } = require('express-validator');
 
 const router = express.Router()
-router.use(bodyParser.urlencoded({ extended: false }));
-router.use(bodyParser.json());
+
+router.get('/test/:user', [
+    check('user').custom(checkNewUser)
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+    res.send('you made it here!');
+})
 
 
 router.post('/register', [
