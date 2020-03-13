@@ -11,12 +11,11 @@ router.use(bodyParser.json());
 router.post('/register', [
     check('Username').custom(checkNewUser)
 ], (req, res) => {
-    // Ta bort detta när amir är klar med captcha
-    /*
+    
     if (!req.session.human) {
         return res.status(403).json({errors: 'client has not completed captcha'});
     }
-    */
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
@@ -47,12 +46,10 @@ router.post('/register', [
 router.post('/login', [
     check('username').custom(checkUser)
 ], (res, req) => {
-    //Lägg till detta när amir är klar med captcha
-    /*
+    
     if (!req.session.human) {
         return res.status(403).json({errors: 'client has not completed captcha});
     }
-    */
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
