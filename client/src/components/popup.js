@@ -44,6 +44,7 @@ render() {
 onClick={this.props.handleSubmit}>
   Submit
 </button>
+<img src="http://193.10.236.94:5000/captcha" />
 <h3>{this.props.message}</h3>
 </form>
 </div>

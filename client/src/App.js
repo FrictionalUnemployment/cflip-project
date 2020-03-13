@@ -122,17 +122,23 @@ class Header extends Component {
         let button;
 
         if(this.state.isLoggedin === false) {
+            //this.togglePopup.bind(this)
             button = <button onClick={this.togglePopup.bind(this)}>Login/Register</button>;
         } else if(this.state.isLoggedin === true) {
             button = <button onClick={this.logOut.bind(this)}>Logout</button>;
             
         }
+      
 
         return (
             <header className="App-header">
 
-            
+            <div style={{position: 'absolute', top: '8px', right: '16px'}}>
             {button}
+            
+
+            </div>
+            
               
 
                 {this.state.showPopup && !this.state.Login ?
