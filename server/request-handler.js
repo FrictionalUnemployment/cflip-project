@@ -38,11 +38,17 @@ function checkNewUser(value, { req }) {
     return true;
 } module.exports.checkNewUser = checkNewUser;
 
+function test(req, res) {
+    console.log(req);
+    console.log('here');
+    res.send('hello there');
+} module.exports.test = test;
+
 function captchaImage(req, res) {
     let captcha = svgCaptcha.create({ noise: 4, size: 5 });
     req.session.captcha = captcha.text;
     res.type('svg');
-    res.send(captcha.data);
+    res.send(toString(captcha.data));
 } module.exports.captchaImage = captchaImage;
 
 function captchaParse(req, res) {

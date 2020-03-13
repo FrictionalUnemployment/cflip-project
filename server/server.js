@@ -5,6 +5,7 @@ const mariadb = require('mariadb');
 const bodyParser = require('body-parser');
 const { check } = require('express-validator');
 const session = require('express-session');
+//const mustacheExpress = require('mustache-express');
 
 // Skapar Coin object
 const coin = new Coin();
@@ -33,7 +34,8 @@ let databaseInfo = {
     user: 'coinflip',
     password: 'amirphilip9896',
     database: 'coinflip',
-    host: '193.10.236.94'
+    host: '193.10.236.94',
+    connectionLimit: 50
 };
 if (process.env.local) {
     console.log("Attempting to connecect to local database.")
@@ -41,26 +43,30 @@ if (process.env.local) {
 } else {
     console.log("Attempting to connect to remote database.")
 }
-let db;
-mariadb.createConnection(databaseInfo)
+const db = mariadb.createPool(databaseInfo);
+db.getConnection()
     .then(conn => {
-        console.log(`Connected to database. Connection id is ${conn.threadId}\n`);
-        db = conn;
-        handleReq.init(db, coin)
+        console.log("Connected to database!");
+        conn.release();
     })
     .catch(err => {
-        console.log(`Error connecting to database: ${err}`);
-    });
-
+        console.log("Not connected to database: " + err);
+    })
 
 // Startar webservern och lyssnar
 const app = express();
+//app.engine('mustache', mustacheExpress());
+//app.set('mustache', mustacheExpress());
+//app.set('view engine', 'mustache');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(session({ secret: 'coinflipper', cookie: {} }));
 const port = 5000;
 app.listen(port, () => console.log('Express is listening on port ' + port));
 
+handleReq.init(db, coin);
+
+app.get('/test', handleReq.test);
 
 // ==========================================================
 // Här finns alla API som går att nå från frontend
