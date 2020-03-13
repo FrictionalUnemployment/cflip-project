@@ -39,7 +39,7 @@ class Header extends Component {
         const data = { username: `${this.state.username}`, password: `${this.state.password}` };
 
         // gör förfrågningen med fetch functionen.
-        const response = await fetch('/login', {
+        const response = await fetch('/user/login', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
@@ -79,11 +79,12 @@ class Header extends Component {
 
     register_user = async () => {
         // data innehåller informationen som behövs i header
-
+        // Ett användarnamn får bara innehålla a-z, A-Z, 0-9, - och _
+        // den för vara mellan 3-15 långt
         const data = { username: `${this.state.username}`, password: `${this.state.password}` };
       
         // gör förfrågningen med fetch functionen.
-        const response = await fetch('/register_user', {
+        const response = await fetch('/user/register', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
