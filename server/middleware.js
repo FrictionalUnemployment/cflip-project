@@ -1,5 +1,5 @@
 const mariadb = require('mariadb');
-const requestHelper = require('./routers/request-helper');
+const validator = require('./routers/validator');
 const Coin = require('./Coin');
 
 // Skapar databas pool och testar uppkopplingen
@@ -49,8 +49,8 @@ function updateCoin() {
     }
 }
 
-// Skickar databsen till request helper
-requestHelper.init(db);
+// Skickar databsen till validator
+validator.init(db);
 
 // Lägger till databasen och coinen till request
 let middleware = function (req, res, next) {

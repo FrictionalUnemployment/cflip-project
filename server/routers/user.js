@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const { checkUser, checkNewUser } = require('./request-helper');
+const { checkUser, checkNewUser } = require('./validator');
 const { check, validationResult } = require('express-validator');
 
 const router = express.Router()

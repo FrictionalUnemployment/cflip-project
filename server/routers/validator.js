@@ -29,5 +29,6 @@ function checkNewUser(value, { req }) {
     if (!re.test(value)) {
         throw new Error('Illegal username');
     }
+    setTimeout(updateUserWhitelist, 100);
     return true;
 } module.exports.checkNewUser = checkNewUser;
