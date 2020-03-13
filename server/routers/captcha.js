@@ -9,6 +9,7 @@ router.use(bodyParser.json());
 router.get('/', (req, res) => {
     let captcha = svgCaptcha.create({ noise: 4, size: 5, background: '#282c34' });
     req.session.captcha = captcha.text;
+    console.log('get id: ' + req.session.id);
     res.type('svg');
     res.send(captcha.data);
 });
@@ -16,6 +17,7 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
     const input = String(req.body.input);
     req.session.human = (input === req.session.captcha);
+    console.log('post id: ' + req.session.id)
     res.json({ robot: req.session.human });
 });
 

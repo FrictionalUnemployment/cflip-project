@@ -192,7 +192,7 @@ GET /captcha
     usern att göra en input och posta den till /captcha
 
 POST /captcha
-    Returnerar sant om captcha stämde med user input, annars returnerar den falsk
+    Retrunerar en JSON object { robot: sant/falskt}
     Om falskt bör man köra GET på /captcha igen och hämta en ny bild
     Userinput sätts till body.input
 
