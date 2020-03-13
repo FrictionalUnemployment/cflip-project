@@ -10,6 +10,7 @@ router.get('/', (req, res) => {
     let captcha = svgCaptcha.create({ noise: 4, size: 5, background: '#282c34' });
     req.session.captcha = captcha.text;
     console.log('get id: ' + req.session.id);
+    console.log(captcha.text);
     res.type('svg');
     res.send(unescape(captcha.data));
 });
@@ -18,6 +19,7 @@ router.post('/', (req, res) => {
     const input = String(req.body.input);
     req.session.human = (input === req.session.captcha);
     console.log('post id: ' + req.session.id)
+    console.log(input);
     res.json({ robot: req.session.human });
 });
 
