@@ -1,16 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { checkUser, checkNewUser } = require('./requestHelper');
+const { checkUser, checkNewUser } = require('./request-helper');
 const { check, validationResult } = require('express-validator');
 
 const router = express.Router()
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-let db;
-router.init = function (database) {
-    db = database;
-}
 
 router.post('/register', [
     check('Username').custom(checkNewUser)
@@ -33,7 +29,7 @@ router.post('/register', [
 
     console.log(`\nRegistering user: ${user}\nHash: ${hash}`);
 
-    db.query('INSERT INTO user (Username, Password, Balance) ' +
+    req.db.query('INSERT INTO user (Username, Password, Balance) ' +
         `VALUES ("${user}", "${hash}", 50);`)
         .then(ans => {
             console.log(`Registered ${user}`);
@@ -69,7 +65,7 @@ router.post('/login', [
         .digest('hex');
 
     console.log(`\nLogging in ${user}`);
-    db.query(`SELECT Password FROM user WHERE Username="${user}";`)
+    req.db.query(`SELECT Password FROM user WHERE Username="${user}";`)
         .then(ans => {
 
             if (!ans[0]) {
@@ -107,7 +103,7 @@ router.post('/login', [
 
 router.get('/list', (req, res) => {
     console.log('\nGetting User list');
-    db.query('SELECT Username FROM user')
+    req.db.query('SELECT Username FROM user')
         .then(ans => {
             let usernames = ans.map(x => x.Username);
             res.json(usernames);

@@ -1,12 +1,9 @@
 const express = require('express');
-const { checkUser } = require('./requestHelper');
+const { checkUser } = require('./request-helper');
 const { check, validationResult } = require('express-validator');
 
 const router = express.Router();
-let db;
-router.init = function (database) {
-    db = database;
-}
+
 
 router.get('/toplist/:top/:limit', [
     check('top').isIn(['top', 'bottom']),
@@ -20,7 +17,7 @@ router.get('/toplist/:top/:limit', [
     console.log(`\nGetting ${req.params.top} ${req.params.limit}`);
 
     let order = (req.params.top === 'bottom') ? 'ASC' : 'DESC';
-    db.query(`SELECT
+    req.db.query(`SELECT
                 Username,
                 Balance,
                 (SELECT COUNT(*) FROM winner WHERE winner.UID=user.UID) as Wins,
@@ -46,7 +43,7 @@ router.get('/user/:user', [
     }
 
     console.log(`\nGetting user stats for ${req.params.user}`);
-    db.query(`SELECT
+    req.db.query(`SELECT
                 user.Username,
                 user.Balance,
                 (SELECT
@@ -85,7 +82,7 @@ router.get('/flip/:FID', [
     // Jag försökte i en hel dag innan jag gav upp
 
     // Query för att hämta alla vinnare och hur mycket dom har satsat
-    db.query(`SELECT DISTINCT
+    req.db.query(`SELECT DISTINCT
     CONCAT('{', '"', user.Username, '"', ':', winner.Winnings, '}')
     FROM user
         JOIN winner
@@ -99,7 +96,7 @@ router.get('/flip/:FID', [
                 }
             }
             // Query för att hämta alla förlorare och hur mycket dom har satsat
-            db.query(`SELECT DISTINCT
+            req.db.query(`SELECT DISTINCT
             CONCAT('{', '"', user.Username, '"', ':', loser.losses, '}')
             FROM user
                 JOIN loser
@@ -113,7 +110,7 @@ router.get('/flip/:FID', [
                         }
                     }
                     // Query för att hämta resultat och tid för flippen
-                    db.query(`SELECT Result, Date_time FROM flip WHERE FID=${FID}`)
+                    req.db.query(`SELECT Result, Date_time FROM flip WHERE FID=${FID}`)
                         .then(ans => {
                             let flip = { results: null, time: null, winners: winners, losers: losers };
                             flip.results = ans[0].Result;

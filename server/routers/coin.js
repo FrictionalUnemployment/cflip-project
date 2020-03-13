@@ -3,13 +3,6 @@ const { check, validationResult } = require('express-validator')
 
 const router = express.Router();
 
-let coin;
-let db;
-router.init = function (database, flipper) {
-    db = database;
-    coin = flipper;
-}
-
 router.post('/bet/:bet/:amount', [
     check('bet').isIn(['heads', 'tails']),
     check('amount').isInt()
@@ -28,15 +21,15 @@ router.post('/bet/:bet/:amount', [
     let amount = req.params.amount;
 
     console.log(`\nPlacing bet for ${user}, for ${amount}, on ${bet}`);
-    if (!coin.hasExistingBet(user)) {
-        db.query(`SELECT Balance FROM user WHERE Username="${user}"`)
+    if (!req.coin.hasExistingBet(user)) {
+        req.db.query(`SELECT Balance FROM user WHERE Username="${user}"`)
             .then(ans => {
                 if (amount > ans[0].Balance) amount = ans[0].Balance;
 
                 if (bet === 'heads') {
-                    coin.betOnHeads(user, amount);
+                    req.coin.betOnHeads(user, amount);
                 } else if (bet === 'tails') {
-                    coin.betOnTails(user, amount);
+                    req.coin.betOnTails(user, amount);
                 }
                 res.json(`Bet placed by ${user} on ${bet} for ${amount}`);
                 console.log(`Bet placed by ${user} on ${bet} for ${amount}.`);
