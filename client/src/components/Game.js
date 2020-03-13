@@ -12,7 +12,7 @@ class BetChoice extends React.Component {
     }
 
     handleClick() {
-        this.props.onClick(this.props.suit, this.state.amount, this.props.username);
+        this.props.onClick(this.props.suit, this.state.amount);
     }
 
     render() {
@@ -42,13 +42,13 @@ class Game extends React.Component {
         //alert(data.data);
     }
 
-    placeBet = async (suit, amount, name) => {
+    placeBet = async (suit, amount) => {
         // Här sätts vad, vem och hur mycket
-        const data = {bet: suit, username: name, amount: amount};
+        //const data = {bet: suit, username: name, amount: amount};
 
-        const response = await fetch('/place_bet', {
+        const response = await fetch(`/coin/bet/${suit}/${amount}`, {
             method: 'POST',
-            body: JSON.stringify(data),
+            //body: JSON.stringify(data),
             headers: {'Accept':'application/json', 'Content-Type': 'application/json'}
         });
 
@@ -64,10 +64,10 @@ class Game extends React.Component {
         return (
             <div className="App-game">
                 <div>
-                    <BetChoice suit="heads" onClick={this.placeBet} username="test_user" />
+                    <BetChoice suit="heads" onClick={this.placeBet} />
                     <img src={logo} className="App-logo" alt="logo" />
                         <label>{this.state.coinStatus}</label>
-                    <BetChoice suit="tails" onClick={this.placeBet} username="asd" />
+                    <BetChoice suit="tails" onClick={this.placeBet} />
                 </div>
             </div>
         );
