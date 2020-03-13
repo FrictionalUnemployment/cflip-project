@@ -10,7 +10,7 @@ router.init = function (database, flipper) {
     coin = flipper;
 }
 
-router.post('/:bet/:amount', [
+router.post('/bet/:bet/:amount', [
     check('bet').isIn(['heads', 'tails']),
     check('amount').isInt()
 ], (req, res) => {
