@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const input = String(req.body.input);
+    const input = toString(req.body.input);
     req.session.human = (input === req.session.captcha);
     console.log('post id: ' + req.session.id)
     console.log(input);
