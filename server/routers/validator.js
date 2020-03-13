@@ -6,7 +6,7 @@ function init(database) {
     updateUserWhitelist();
 } module.exports.init = init;
 
-async function updateUserWhitelist(db) {
+async function updateUserWhitelist() {
         let ans = await db.query('SELECT Username FROM user;')
         userWhitelist = ans.map(user => user.Username);
 }
