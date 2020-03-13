@@ -48,7 +48,7 @@ router.post('/login', [
 ], (res, req) => {
     
     if (!req.session.human) {
-        return res.status(403).json({errors: 'client has not completed captcha});
+        return res.status(403).json({errors: 'client has not completed captcha'});
     }
 
     const errors = validationResult(req);
