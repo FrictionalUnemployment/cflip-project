@@ -98,7 +98,7 @@ POST /user/login
 
 
 
-POST /coin/:bet/:amount
+POST /coin/bet/:bet/:amount
     Detta används för att satsa på 'heads' eller 'tails'.
     Där det står :bet ska det stå 'heads' eller 'tails'.
     Där det står :amount ska det vara beloppet att satsa.

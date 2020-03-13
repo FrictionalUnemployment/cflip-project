@@ -1,7 +1,8 @@
 const mariadb = require('mariadb');
-const handleReq = require('./routers/request-helper');
+const requestHelper = require('./routers/request-helper');
 const Coin = require('./Coin');
 
+// Skapar databas pool och testar uppkopplingen
 let databaseInfo = {
     user: 'coinflip',
     password: 'amirphilip9896',
@@ -15,7 +16,9 @@ if (process.env.local) {
 } else {
     console.log("Attempting to connect to remote database");
 }
+
 const db = mariadb.createPool(databaseInfo);
+
 db.getConnection()
     .then(conn => {
         console.log("Connected to database!");
@@ -25,6 +28,7 @@ db.getConnection()
         console.log("Not connected to database: " + err);
     });
 
+// Skapar coin object och funktion som uppdaterar den
 const coin = new Coin();
 intervalID = setInterval(updateCoin, 100);
 
@@ -45,7 +49,8 @@ function updateCoin() {
     }
 }
 
-handleReq.init(db);
+// Skickar databsen till request helper
+requestHelper.init(db);
 
 // Lägger till databasen och coinen till request
 let middleware = function (req, res, next) {
