@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     req.session.captcha = captcha.text;
     console.log('get id: ' + req.session.id);
     res.type('svg');
-    res.send(captcha.data);
+    res.send(unescape(captcha.data));
 });
 
 router.post('/', (req, res) => {
