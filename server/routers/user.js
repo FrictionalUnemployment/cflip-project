@@ -40,7 +40,6 @@ router.post('/register', [
         `VALUES ("${user}", "${hash}", 50);`)
         .then(ans => {
             console.log(`Registered ${user}`);
-            updateUserWhitelist();
             req.session.loggedIn = true;
             req.session.Username = user;
             res.json(user);
