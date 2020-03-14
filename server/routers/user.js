@@ -17,7 +17,7 @@ router.get('/test/:user', [
 
 
 router.post('/register', [
-    check('Username').custom(checkNewUser)
+    check('username').custom(checkNewUser)
 ], (req, res) => {
     
     if (!req.session.human) {
@@ -115,7 +115,7 @@ router.get('/list', (req, res) => {
         })
         .catch(err => {
             console.log('error getting user list' + err);
-            res.status(500).json({ error: err });
+            res.status(400).json({ error: err });
         });
 });
 

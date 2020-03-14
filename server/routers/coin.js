@@ -42,7 +42,7 @@ router.post('/bet/:bet/:amount', [
                 console.log(`Bet placed by ${user} on ${bet} for ${amount}.`);
             })
             .catch(err => {
-                console.log('Erro getting user balance: ' + err);
+                console.log('Error getting user balance: ' + err);
                 res.status(400).json({ errors: err });
             });
     } else {

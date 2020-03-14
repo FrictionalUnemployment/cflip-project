@@ -7,13 +7,13 @@ class Coin {
         this.timeLeft = FLIPTIME;
         this.betHeads = [];
         this.betTails = [];
-        this.allBets = {}; 
+        this.allBets = {};
         this.potsizeHeads = 0;
         this.potsizeTails = 0;
         this.animationChar = '|';
-        
+
         // Web socket server, denna ska klienten koppla upp sig till
-        this.wss = new WebSocket.Server({port: 5001});
+        this.wss = new WebSocket.Server({ port: 5001 });
         this.wss.on('connection', function connection(ws) {
             console.log('\nclient connected to coin');
         });
@@ -57,7 +57,7 @@ class Coin {
     }
 
     updateCoin() {
-        let coinStatus = {timeleft: null, winner: null};
+        let coinStatus = { timeleft: null, winner: null };
         coinStatus.timeleft = this.decreaseTime();
         let res = null;
         if (!coinStatus.timeleft) {
@@ -72,9 +72,9 @@ class Coin {
         })
         return res;
     }
-     
+
     updateTimer() {
-        let seconds = Math.floor(this.timeLeft/1000).toString();
+        let seconds = Math.floor(this.timeLeft / 1000).toString();
         while (seconds.length < 2) {
             seconds = '0' + seconds;
         }
@@ -98,8 +98,8 @@ class Coin {
 
         console.log(`Time: ${datetime}`)
 
-        db.query('INSERT INTO flip (Result, Date_time, Pot_size) ' + 
-                 `VALUES ("${result}", ${datetime}, ${totalPot});`);
+        db.query('INSERT INTO flip (Result, Date_time, Pot_size) ' +
+            `VALUES ("${result}", ${datetime}, ${totalPot});`);
 
         db.query(`SELECT FID from flip WHERE Date_time=${datetime};`)
             .then(ans => {
@@ -118,12 +118,12 @@ class Coin {
                 //Kör reset efter 100ms. Pajade hela skiten annars och tog mig
                 //evigheter att lösa problemet. Finns förmodligen bättre sätt att
                 //göra detta
-                setTimeout(function() {this.reset; }, 100);
+                setTimeout(function () { this.reset; }, 100);
             })
-            .catch (err => {
+            .catch(err => {
                 console.log('Error getting flip id ' + err);
                 this.reset();
-        });
+            });
     }
 
     logUsers(userlist, db, winner, opponents, loserpot, FID) {
@@ -144,7 +144,7 @@ class Coin {
                         }
                     } else {
                         let totalpot = this.potsizeHeads + this.potsizeTails;
-                        balanceChange = Math.floor((amountBet / (totalpot-loserpot)) * loserpot);
+                        balanceChange = Math.floor((amountBet / (totalpot - loserpot)) * loserpot);
                         losses = balanceChange;
                     }
 
@@ -165,7 +165,7 @@ class Coin {
         if (this.timeLeft > 100) {
             this.timeLeft = this.timeLeft - 100;
             return this.timeLeft;
-        }else {
+        } else {
             this.timeLeft = FLIPTIME;
             return null;
         }
