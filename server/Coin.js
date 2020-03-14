@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-const FLIPTIME = 30 * 1000;
+const FLIPTIME = 10 * 1000;
 
 class Coin {
     constructor() {
@@ -88,20 +88,25 @@ class Coin {
     logChanges(result, db) {
         let totalpot = 0;
         let winnerpot = 0;
+        let winners = []
+        let losers = []
         for (let i = 0; i < this.bets.length; i++) {
             totalpot += this.bets[i].amount;
             if (this.bets[i].bet === result) {
                 winnerpot += this.bets[i].amount;
+                winners.push(this.bets[i].user);
+            } else {
+                losers.push(this.bets[i].user);
             }
         }
         let loserpot = totalpot - winnerpot;
         let datetime = + new Date();
         db.query(`INSERT INTO flip (Result, Date_time, Pot_size)
-             VALUES ('${result}', ${datetime}, ${totalPot});`)
+             VALUES ('${result}', ${datetime}, ${totalpot});`)
             .then(ans => {
-                const FID = ans.InsertId;
+                const FID = ans.insertId;
                 console.log(`Flip ID: ${FID}`);
-                console.log(`Pot size: ${totalPot}`);
+                console.log(`Pot size: ${totalpot}`);
                 process.stdout.write('Winners: ');
                 console.dir(winners)
                 process.stdout.write('\nLosers: ');
@@ -135,13 +140,13 @@ class Coin {
                 setTimeout(function () { this.reset; }, 100);
             })
             .catch(err => {
-                console.log('Error inserting flip');
+                console.log('Error inserting flip' + err);
                 this.reset();
             })
     }
 
     logWinner(winnings, UID, FID, db) {
-        db.query(`INSERT INTO winner (Winnings, UID, FID),
+        db.query(`INSERT INTO winner (Winnings, UID, FID)
                   VALUES (${winnings}, ${UID}, ${FID});`)
             .then(ans => {
                 db.query(`UPDATE user
@@ -151,7 +156,7 @@ class Coin {
     }
 
     logLoser(losses, UID, FID, db) {
-        db.query(`INSERT INTO loser (Losses, UID, FID),
+        db.query(`INSERT INTO loser (Losses, UID, FID)
                   VALUES (${losses}, ${UID}, ${FID});`)
             .then(ans => {
                 db.query(`UPDATE user
