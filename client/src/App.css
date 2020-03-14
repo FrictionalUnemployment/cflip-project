@@ -60,7 +60,7 @@
 }
 
 .betchoice {
-  width: 10%;
+  width: 20%;
 }
 
 .footer {
@@ -87,4 +87,12 @@
 
 ol {
   background: #282c34
+}
+
+#urgenttimer {
+  color: red;
+}
+
+#normaltimer {
+  color: white;
 }

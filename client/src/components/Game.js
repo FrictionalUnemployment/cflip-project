@@ -24,6 +24,24 @@ class BetChoice extends React.Component {
     }
 }
 
+class BetTimer extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        if (this.props.coinStatus <= 5) {
+            return (
+                <label id="urgenttimer">{this.props.coinStatus}</label>
+            );
+        } else {
+            return (
+                <label id="normaltimer">{this.props.coinStatus}</label>
+            );
+        }
+    }
+}
+
 class Game extends React.Component {
 
     constructor(props) {
@@ -40,7 +58,7 @@ class Game extends React.Component {
     coinStatus(data) {
         
         // Här är data.data JSON strängen
-        this.setState({coinStatus: JSON.parse(data.data).timeleft});
+        this.setState({coinStatus: JSON.parse(data.data).timeleft/1000.0});
         //alert(data.data);
     }
 
@@ -68,7 +86,7 @@ class Game extends React.Component {
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
                     <img src={logo} className="App-logo" alt="logo" />
-                    <label>{this.state.coinStatus}</label>
+                    <BetTimer {...this.state} />
                 </div>
                 <BetChoice suit="tails" onClick={this.placeBet} />
             </div>
