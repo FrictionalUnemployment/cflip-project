@@ -86,17 +86,18 @@ class Coin {
     }
 
     logChanges(result, db) {
+        let bets = this.bets.slice();
         let totalpot = 0;
         let winnerpot = 0;
         let winners = []
         let losers = []
-        for (let i = 0; i < this.bets.length; i++) {
-            totalpot += this.bets[i].amount;
-            if (this.bets[i].bet === result) {
-                winnerpot += this.bets[i].amount;
-                winners.push(this.bets[i].user);
+        for (let i = 0; i < bets.length; i++) {
+            totalpot += bets[i].amount;
+            if (bets[i].bet === result) {
+                winnerpot += bets[i].amount;
+                winners.push(bets[i].user);
             } else {
-                losers.push(this.bets[i].user);
+                losers.push(bets[i].user);
             }
         }
         let loserpot = totalpot - winnerpot;
@@ -112,11 +113,11 @@ class Coin {
                 process.stdout.write('\nLosers: ');
                 console.dir(losers);
 
-                for (let i = 0; i < this.bets.length; i++) {
-                    let user = this.bets[i].user;
-                    if (this.bets[i].bet === result) {
+                for (let i = 0; i < bets.length; i++) {
+                    let user = bets[i].user;
+                    if (bets[i].bet === result) {
                         // Winners
-                        let winnings = Math.floor((this.bets[i].amount / winnerpot) * loserpot);
+                        let winnings = Math.floor((bets[i].amount / winnerpot) * loserpot);
                         db.query(`SELECT UID from user WHERE Username='${user}';`)
                             .then(ans => {
                                 let UID = ans[0].UID;
@@ -124,7 +125,7 @@ class Coin {
                             })
                     } else {
                         // Losers
-                        let losses = this.bets[i].amount;
+                        let losses = bets[i].amount;
                         if (winnerpot === 0) {
                             // Inga vinnare, förlorar inga pengar
                             losses = 0;
@@ -136,11 +137,11 @@ class Coin {
                             })
                     }
                 }
-                setTimeout(function () { this.reset; }, 100);
+                this.bets = [];
             })
             .catch(err => {
                 console.log('Error inserting flip' + err);
-                this.reset();
+                this.bets = [];
             })
     }
 
@@ -162,10 +163,6 @@ class Coin {
                           SET Balance=Balance-${losses}
                           WHERE UID=${UID};`);
             });
-    }
-
-    reset() {
-        this.bets = [];
     }
 }
 
