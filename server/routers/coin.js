@@ -3,6 +3,13 @@ const { check, validationResult } = require('express-validator')
 
 const router = express.Router();
 
+router.get('/info', (req, res) => {
+    let coinInfo = {timeleft: null, bets: null};
+    coinInfo.timeleft = req.coin.getTimeleft();
+    coinInfo.bets = req.coin.getBetHeads().concat(req.coin.getBetTails());
+    res.json(coinInfo);
+})
+
 router.post('/bet/:bet/:amount', [
     check('bet').isIn(['heads', 'tails']),
     check('amount').isInt()

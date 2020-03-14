@@ -20,6 +20,34 @@ class Coin {
 
     }
 
+    getTimeleft() {
+        return this.timeLeft;
+    }
+
+    getBetHeads() {
+        let betheads = []
+        for (let i = 0; i < this.betHeads.length; i++) {
+            betheads.push({
+                player: this.betHeads[i],
+                bet: 'heads',
+                amount: this.allBets[this.betHeads[i]]
+            });
+        }
+        return betheads;
+    }
+
+    getBetTails() {
+        let bettails = []
+        for (let i = 0; i < this.betTails.length; i++) {
+            bettails.push({
+                player: this.betTails[i],
+                bet: 'tails',
+                amount: this.allBets[this.betHeads[i]]
+            });
+        }
+        return bettails;
+    }
+
     reset() {
         this.betHeads = [];
         this.betTails = [];
