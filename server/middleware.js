@@ -37,7 +37,7 @@ function updateCoin() {
     let flipped = coin.updateCoin();
     if (flipped) {
         console.log('\r         ');
-        console.log('\nCoin has flipped!');
+        console.log('Coin has flipped!');
         console.log(`Flips since server start: ${++flipsSinceStart}`);
         console.log(`Results: ${flipped}`);
         if (coin.bets.length > 0) {
