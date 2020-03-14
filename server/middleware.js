@@ -36,13 +36,13 @@ let flipsSinceStart = 0;
 function updateCoin() {
     let flipped = coin.updateCoin();
     if (flipped) {
-        process.stdout.write('\rCoin has flipped!\n')
+        console.log('\n\nCoin has flipped!');
         console.log(`Flips since server start: ${++flipsSinceStart}`);
         console.log(`Results: ${flipped}`);
         if (coin.bets.length > 0) {
             coin.logChanges(flipped, db);
         } else {
-            console.log("No bets placed on this flip.\n")
+            console.log("No bets placed on this flip.")
         }
     } else {
         coin.updateTimer();

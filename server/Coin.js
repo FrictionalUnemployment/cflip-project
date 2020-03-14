@@ -111,7 +111,6 @@ class Coin {
                 console.dir(winners)
                 process.stdout.write('\nLosers: ');
                 console.dir(losers);
-                console.log();
 
                 for (let i = 0; i < this.bets.length; i++) {
                     let user = this.bets[i].user;
