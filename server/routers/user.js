@@ -5,17 +5,6 @@ const { check, validationResult } = require('express-validator');
 
 const router = express.Router()
 
-router.get('/test/:user', [
-    check('user').custom(checkNewUser)
-], (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() })
-    }
-    res.send('you made it here!');
-})
-
-
 router.post('/register', [
     check('username').custom(checkNewUser)
 ], (req, res) => {
