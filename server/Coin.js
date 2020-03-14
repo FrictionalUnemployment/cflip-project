@@ -128,7 +128,7 @@ class Coin {
                             })
                     }
                 }
-                setTimeout(function () {this.reset; }, 100);
+                setTimeout(function () { this.reset; }, 100);
             })
             .catch(err => {
                 console.log('Error inserting flip');
@@ -139,21 +139,21 @@ class Coin {
     logWinner(winnings, UID, FID, db) {
         db.query(`INSERT INTO winner (Winnings, UID, FID),
                   VALUES (${winnings}, ${UID}, ${FID});`)
-                  .then(ans => {
-                      db.query(`UPDATE user
+            .then(ans => {
+                db.query(`UPDATE user
                                 SET Balance=Balance+${winnings}
                                 WHERE UID=${UID};`);
-                  });
+            });
     }
 
     logLoser(losses, UID, FID, db) {
         db.query(`INSERT INTO loser (Losses, UID, FID),
                   VALUES (${losses}, ${UID}, ${FID});`)
-                  .then(ans => {
-                      db.query(`UPDATE user
+            .then(ans => {
+                db.query(`UPDATE user
                                 SET Balance=Balance-${losses}
                                 WHERE UID=${UID};`);
-                  });
+            });
     }
 
     reset() {

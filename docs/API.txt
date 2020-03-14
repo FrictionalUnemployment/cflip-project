@@ -146,18 +146,10 @@ POST /coin/bet/:bet/:amount
 
 
 GET /coin/info
-    Denna används för att se alla bets som finns på denna coin, finns också
-    tiden kvar ifall websocket stängs ner så kan man änvända denna fast den
-    skickar inte heads eller tails när någon har vunnit.
-    Retrunerar en json object:
-        {timeleft: , bets: []}
-    Där timeleft är tiden kvar i ms och bets är en lista av object.
-        Object som finns i bets listan är:
-            {
-                player: användarnamn,
-                bet: 'heads eller tails
-                amount: hur mycket användaren har satsat
-            }
+    Denna används för att se alla bets som finns på denna coin
+    Retrunerar en json lista av object:
+        [{user: användarnamn, amount: antal tokens satsat, bet: 'heads' eller 'tails' }]
+ 
 
 GET /stats/toplist/:top/:limit
     Detta används för att visa top eller bottom lista.
