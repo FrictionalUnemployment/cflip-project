@@ -52,7 +52,7 @@ router.post('/register', [
 
 router.post('/login', [
     check('username').custom(checkUser)
-], (res, req) => {
+], (req, res) => {
     
     if (!req.session.human) {
         return res.status(403).json({errors: 'client has not completed captcha'});
