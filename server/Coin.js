@@ -136,7 +136,7 @@ class Coin {
                             })
                     }
                 }
-                setTimeout(function () { this.reset; }, 100);
+                setTimeout(function () { this.reset(); }, 100);
             })
             .catch(err => {
                 console.log('Error inserting flip' + err);
