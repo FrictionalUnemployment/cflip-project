@@ -48,6 +48,11 @@ POST /user/register
     Ett användarnamn får bara innehålla a-z, A-Z, 0-9, - och _
     den för vara mellan 3-15 långt
 
+    Fel koder:
+        403: Har inte klarat captcha
+        422: Fel användarnamn
+        400: Kunde inte sätta in i databasen
+
     Returnerar användarnamnet om registering lyckades, annars null.
 
     För att registrera nya användare behöver man ange användernamn och lösenord
@@ -87,6 +92,12 @@ POST /user/register
 POST /user/login
     Detta används för att logga in.
     
+    Fel koder:
+        403: Inte klarat captcha
+        422: Fel användarnamn
+        401: Fel användarnamn eller lösenord 
+        400: Kunde inte läsa från databasen
+
     Returnerar användarnamnet om inloggning lyckades, annars false.
 
     Ange användarnamn och lösenord på samma sätt
@@ -102,6 +113,13 @@ POST /coin/bet/:bet/:amount
     Detta används för att satsa på 'heads' eller 'tails'.
     Där det står :bet ska det stå 'heads' eller 'tails'.
     Där det står :amount ska det vara beloppet att satsa.
+
+    Fel koder:
+        422: Fel bet eller antal. Måste stå 'heads' eller 'tails' antal måste vara siffra
+        401: Klienten är inte inloggad
+        403: Användaren har redan satsat på denna flippen
+        400: Kunde inte läsa från databasen
+
 
     Returnerar en sträng som säger 'Bet placed by ${user} on ${heads/tails} for ${amount}'
     Om användaren redan har lagt ett bet på denn flip returnerar den:
@@ -126,6 +144,12 @@ POST /coin/bet/:bet/:amount
             return body;
         }
 
+
+GET /coin/info
+    Denna används för att se alla bets som finns på denna coin
+    Retrunerar en json lista av object:
+        [{user: användarnamn, amount: antal tokens satsat, bet: 'heads' eller 'tails' }]
+ 
 
 GET /stats/toplist/:top/:limit
     Detta används för att visa top eller bottom lista.
@@ -153,6 +177,10 @@ GET /stats/user/:user
     Detta används för att få information om en användare.
     Där det står :user ska det stå användarnamnet.
 
+    Fel koder:
+        422: Användare finns inte
+        400: Kunde inte läsa från databasen
+
     Returnerar en json sträng av ett object med följande properties:
         Username, Balance, Wins, Losses
     Där Username är användarnamnet, Balance är hur mycket pengar användaren har på kontot,
@@ -166,6 +194,10 @@ GET /stats/user/:user
 GET /stats/flip/:FID
     Detta används för att få statistik om en flip.
     Där det står :FID ska det stå Flip id.
+
+    Fel koder:
+        422: FID är inte en siffra
+        400: Kunde inte läsa från databasen
 
     Returnerar en json sträng av ett object med följande properties:
         result, time, winners, losers
@@ -186,6 +218,9 @@ GET /user/list
     Returnerar en json lista av alla avnändare i alfabetisk ordning
     Inget att Konfigurera
 
+    Fel koder:
+        400: Kunde inte läsa från databasen
+
 
 GET /captcha
     Returnerar en svg sträng som webbläsaren kan visa. Du måste skapa nåt sätt för
@@ -195,6 +230,9 @@ POST /captcha
     Retrunerar en JSON object { robot: sant/falskt}
     Om falskt bör man köra GET på /captcha igen och hämta en ny bild
     Userinput sätts till body.input
+
+    Fel koder:
+        400: Captcha stämmer inte;
 
     Exempel kod:
         captcha = async () => {

@@ -5,19 +5,8 @@ const { check, validationResult } = require('express-validator');
 
 const router = express.Router()
 
-router.get('/test/:user', [
-    check('user').custom(checkNewUser)
-], (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() })
-    }
-    res.send('you made it here!');
-})
-
-
 router.post('/register', [
-    check('Username').custom(checkNewUser)
+    check('username').custom(checkNewUser)
 ], (req, res) => {
     
     if (!req.session.human) {
@@ -40,7 +29,6 @@ router.post('/register', [
         `VALUES ("${user}", "${hash}", 50);`)
         .then(ans => {
             console.log(`Registered ${user}`);
-            updateUserWhitelist();
             req.session.loggedIn = true;
             req.session.Username = user;
             res.json(user);
@@ -53,7 +41,7 @@ router.post('/register', [
 
 router.post('/login', [
     check('username').custom(checkUser)
-], (res, req) => {
+], (req, res) => {
     
     if (!req.session.human) {
         return res.status(403).json({errors: 'client has not completed captcha'});
@@ -115,7 +103,7 @@ router.get('/list', (req, res) => {
         })
         .catch(err => {
             console.log('error getting user list' + err);
-            res.status(500).json({ error: err });
+            res.status(400).json({ error: err });
         });
 });
 
