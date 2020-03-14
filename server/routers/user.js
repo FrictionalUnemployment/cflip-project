@@ -29,7 +29,7 @@ router.post('/register', [
         .update(req.body.password)
         .digest('hex');
 
-    console.log(`\nRegistering user: ${user}\nHash: ${hash}`);
+    console.log(`\rRegistering user: ${user}\nHash: ${hash}\n`);
 
     req.db.query('INSERT INTO user (Username, Password, Balance) ' +
         `VALUES ("${user}", "${hash}", 50);`)
@@ -63,7 +63,7 @@ router.post('/login', [
         .update(req.body.password)
         .digest('hex');
 
-    console.log(`\nLogging in ${user}`);
+    console.log(`\rLogging in ${user}\n`);
     req.db.query(`SELECT Password FROM user WHERE Username="${user}";`)
         .then(ans => {
 
@@ -101,7 +101,7 @@ router.post('/login', [
 });
 
 router.get('/list', (req, res) => {
-    console.log('\nGetting User list');
+    console.log('\rGetting User list\n');
     req.db.query('SELECT Username FROM user')
         .then(ans => {
             let usernames = ans.map(x => x.Username);

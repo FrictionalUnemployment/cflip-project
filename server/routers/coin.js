@@ -24,7 +24,7 @@ router.post('/bet/:bet/:amount', [
     const user = req.session.Username;
     let amount = req.params.amount;
 
-    console.log(`\nPlacing bet for ${user}, for ${amount}, on ${bet}`);
+    console.log(`\rPlacing bet for ${user}, for ${amount}, on ${bet}\n`);
     if (!req.coin.hasExistingBet(user)) {
         req.db.query(`SELECT Balance FROM user WHERE Username="${user}"`)
             .then(ans => {

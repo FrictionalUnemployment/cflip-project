@@ -14,7 +14,7 @@ router.get('/toplist/:top/:limit', [
         return res.status(422).json({ errors: errors.array() });
     }
 
-    console.log(`\nGetting ${req.params.top} ${req.params.limit}`);
+    console.log(`\rGetting ${req.params.top} ${req.params.limit}\n`);
 
     let order = (req.params.top === 'bottom') ? 'ASC' : 'DESC';
     req.db.query(`SELECT
@@ -42,7 +42,7 @@ router.get('/user/:user', [
         return res.status(422).json({ errors: errors.array() });
     }
 
-    console.log(`\nGetting user stats for ${req.params.user}`);
+    console.log(`\rGetting user stats for ${req.params.user}\n`);
     req.db.query(`SELECT
                 user.Username,
                 user.Balance,
@@ -76,7 +76,7 @@ router.get('/flip/:FID', [
     }
 
     let FID = req.params.FID;
-    console.log('\nGetting stats for flip: ' + FID);
+    console.log(`\rGetting stats for flip: ${FID}\n`);
 
     // Om du lyckas få ihop alla 3 queries här i en är du en gud
     // Jag försökte i en hel dag innan jag gav upp
