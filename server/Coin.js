@@ -141,8 +141,8 @@ class Coin {
                   VALUES (${winnings}, ${UID}, ${FID});`)
             .then(ans => {
                 db.query(`UPDATE user
-                                SET Balance=Balance+${winnings}
-                                WHERE UID=${UID};`);
+                          SET Balance=Balance+${winnings}
+                          WHERE UID=${UID};`);
             });
     }
 
@@ -151,8 +151,8 @@ class Coin {
                   VALUES (${losses}, ${UID}, ${FID});`)
             .then(ans => {
                 db.query(`UPDATE user
-                                SET Balance=Balance-${losses}
-                                WHERE UID=${UID};`);
+                          SET Balance=Balance-${losses}
+                          WHERE UID=${UID};`);
             });
     }
 
