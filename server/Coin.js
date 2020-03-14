@@ -136,11 +136,11 @@ class Coin {
                             })
                     }
                 }
-                setTimeout(function () { this.reset(); }, 100);
+                setTimeout(function () {this.bets = []}, 100);
             })
             .catch(err => {
                 console.log('Error inserting flip' + err);
-                this.reset();
+                this.bets = [];
             })
     }
 
@@ -162,10 +162,6 @@ class Coin {
                           SET Balance=Balance-${losses}
                           WHERE UID=${UID};`);
             });
-    }
-
-    reset() {
-        this.bets = [];
     }
 }
 
