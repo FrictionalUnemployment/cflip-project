@@ -11,6 +11,7 @@
     "isomorphic-ws": "^4.0.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
+    "react-html-parser": "^2.0.2",
     "react-scripts": "3.4.0",
     "whatwg-fetch": "^3.0.0",
     "ws": "^7.2.1"

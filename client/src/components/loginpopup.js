@@ -1,12 +1,29 @@
 import React from 'react';  
 import './style.css';  
-
+import ReactHtmlParser from 'react-html-parser'; 
 class Loginpopup extends React.Component {  
+
+  constructor(props){
+    super(props)
+      this.state = {svgData: ''}
+  }
+
+  componentDidMount(){
+    this.getCaptcha();
+    }
 
   handleChange = event => {
     event.preventDefault()
     this.props.handleOnChange(event)
 }
+
+getCaptcha = async () => {  
+  const response = await fetch('/captcha')
+  const data = await response.text();
+ 
+  this.setState({svgData: data });
+}
+
 
 render() {
 return(
@@ -29,10 +46,19 @@ return(
     name="password"
     onChange={this.handleChange}
     /><br />
-    <button 
+     <div> { ReactHtmlParser (this.state.svgData) } </div>
+     <div style={{display: 'flex'}}>
+    <input
+    type="text"
+    name="captcha"
+    placeholder="Enter captcha code"
+    onChange={this.handleChange}
+    /><br/>
+     <button 
     onClick={this.props.handleLoginSubmit}>
      Submit
-    </button>
+    </button></div>
+   
 
     </form>
     </div>
