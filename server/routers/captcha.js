@@ -19,7 +19,7 @@ router.post('/', (req, res) => {
         res.json({robot: true});
     } else {
         req.session.human = false;
-        res.status(400).json({errors: 'incorrect captcha'});
+        res.status(400).json({robot: false});
     }
 });
 
