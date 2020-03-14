@@ -168,10 +168,6 @@ class Coin {
     reset() {
         this.bets = [];
     }
-
-    getBets() {
-        return this.bets;
-    }
 }
 
 module.exports = Coin;

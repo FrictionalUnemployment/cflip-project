@@ -4,7 +4,7 @@ const { check, validationResult } = require('express-validator')
 const router = express.Router();
 
 router.get('/info', (req, res) => {
-    res.json(req.coin.getBets());
+    res.json(req.coin.bets);
 })
 
 router.post('/bet/:bet/:amount', [
