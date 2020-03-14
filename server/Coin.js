@@ -1,15 +1,11 @@
-const WebSocket = require('ws')
+const WebSocket = require('ws');
 
 const FLIPTIME = 30 * 1000;
 
 class Coin {
     constructor() {
         this.timeLeft = FLIPTIME;
-        this.betHeads = [];
-        this.betTails = [];
-        this.allBets = {};
-        this.potsizeHeads = 0;
-        this.potsizeTails = 0;
+        this.bets = [];
         this.animationChar = '|';
 
         // Web socket server, denna ska klienten koppla upp sig till
@@ -17,43 +13,20 @@ class Coin {
         this.wss.on('connection', function connection(ws) {
             console.log('\nclient connected to coin');
         });
-
     }
 
-    getTimeleft() {
-        return this.timeLeft;
-    }
-
-    getBetHeads() {
-        let betheads = []
-        for (let i = 0; i < this.betHeads.length; i++) {
-            betheads.push({
-                player: this.betHeads[i],
-                bet: 'heads',
-                amount: this.allBets[this.betHeads[i]]
-            });
+    hasExistingBet(user) {
+        for (let i = 0; i < this.bets.length; i++) {
+            if (this.bets[i].user === user) {
+                return true;
+            }
         }
-        return betheads;
+        return false;
     }
 
-    getBetTails() {
-        let bettails = []
-        for (let i = 0; i < this.betTails.length; i++) {
-            bettails.push({
-                player: this.betTails[i],
-                bet: 'tails',
-                amount: this.allBets[this.betHeads[i]]
-            });
-        }
-        return bettails;
-    }
-
-    reset() {
-        this.betHeads = [];
-        this.betTails = [];
-        this.allBets = {};
-        this.potsizeHeads = 0;
-        this.potsizeTails = 0;
+    placeBet(user, amount, bet) {
+        let thisbet = { user: user, amount: amount, bet: bet };
+        this.bets.push(thisbet);
     }
 
     updateCoin() {
@@ -61,7 +34,6 @@ class Coin {
         coinStatus.timeleft = this.decreaseTime();
         let res = null;
         if (!coinStatus.timeleft) {
-            // Finns ingen tid kvar, kommer att sätta en vinnare
             coinStatus.winner = this.getWinner();
             res = coinStatus.winner[0];
         }
@@ -71,6 +43,32 @@ class Coin {
             }
         })
         return res;
+    }
+
+    decreaseTime() {
+        if (this.timeLeft > 100) {
+            this.timeLeft = this.timeLeft - 100;
+            return this.timeLeft;
+        } else {
+            this.timeLeft = FLIPTIME;
+            return null;
+        }
+    }
+
+    getWinner() {
+        let flip_result = this.randomChoice(['heads', 'tails']);
+        let winners = []
+        for (let i = 0; i < this.bets.length; i++) {
+            if (this.bets[i].bet === flip_result) {
+                winners.push(this.bets[i].user);
+            }
+        }
+        return [flip_result, winners];
+    }
+
+    randomChoice(choices) {
+        let i = Math.floor(Math.random() * choices.length);
+        return choices[i];
     }
 
     updateTimer() {
@@ -87,23 +85,21 @@ class Coin {
         process.stdout.write(`\r${string} ${seconds}s ${string}`);
     }
 
-
     logChanges(result, db) {
-        // Denna funktionen blev skitful men den funkar   ...typ
-        let totalPot = this.potsizeHeads + this.potsizeTails;
-        let winners = (result === 'heads') ? this.betHeads : this.betTails;
-        let losers = (result === 'heads') ? this.betTails : this.betHeads;
-        let loserpot = (result === 'tails') ? this.potsizeHeads : this.potsizeTails;
+        let totalpot = 0;
+        let winnerpot = 0;
+        for (let i = 0; i < this.bets.length; i++) {
+            totalpot += this.bets[i].amount;
+            if (this.bets[i].bet === result) {
+                winnerpot += this.bets[i].amount;
+            }
+        }
+        let loserpot = totalpot - winnerpot;
         let datetime = + new Date();
-
-        console.log(`Time: ${datetime}`)
-
-        db.query('INSERT INTO flip (Result, Date_time, Pot_size) ' +
-            `VALUES ("${result}", ${datetime}, ${totalPot});`);
-
-        db.query(`SELECT FID from flip WHERE Date_time=${datetime};`)
+        db.query(`INSERT INTO flip (Result, Date_time, Pot_size)
+             VALUES ('${result}', ${datetime}, ${totalPot});`)
             .then(ans => {
-                let FID = ans[0].FID;
+                const FID = ans.InsertId;
                 console.log(`Flip ID: ${FID}`);
                 console.log(`Pot size: ${totalPot}`);
                 process.stdout.write('Winners: ');
@@ -112,93 +108,61 @@ class Coin {
                 console.dir(losers);
                 console.log();
 
-                this.logUsers(losers, db, false, winners.length, loserpot, FID);
-                this.logUsers(winners, db, true, losers.length, loserpot, FID);
-
-                //Kör reset efter 100ms. Pajade hela skiten annars och tog mig
-                //evigheter att lösa problemet. Finns förmodligen bättre sätt att
-                //göra detta
-                setTimeout(function () { this.reset; }, 100);
+                for (let i = 0; i < this.bets.length; i++) {
+                    let user = this.bets[i].user;
+                    if (this.bets[i].bet === result) {
+                        // Winners
+                        let winnings = Math.floor((this.bets[i].amount / winnerpot) * loserpot);
+                        db.query(`SELECT UID from user WHERE Username='${user}';`)
+                            .then(ans => {
+                                let UID = ans[0].UID;
+                                this.logWinner(winnings, UID, FID, db);
+                            })
+                    } else {
+                        // Losers
+                        let losses = this.bets[i].amount;
+                        db.query(`SELECT UID from user WHERE Username='${user}';`)
+                            .then(ans => {
+                                let UID = ans[0].UID;
+                                this.logLoser(losses, UID, FID, db);
+                            })
+                    }
+                }
+                setTimeout(function () {this.reset; }, 100);
             })
             .catch(err => {
-                console.log('Error getting flip id ' + err);
+                console.log('Error inserting flip');
                 this.reset();
-            });
+            })
     }
 
-    logUsers(userlist, db, winner, opponents, loserpot, FID) {
-        for (let i = 0; i < userlist.length; i++) {
-            let currentUser = userlist[i];
-            db.query(`SELECT UID from user WHERE Username="${currentUser}";`)
-                .then(ans => {
-                    let amountBet = this.allBets[currentUser];
-                    let balanceChange;
-                    let losses;
-                    if (!winner) {
-                        if (opponents < 1) {
-                            balanceChange = 0;
-                            losses = 0
-                        } else {
-                            balanceChange = amountBet * -1;
-                            losses = amountBet;
-                        }
-                    } else {
-                        let totalpot = this.potsizeHeads + this.potsizeTails;
-                        balanceChange = Math.floor((amountBet / (totalpot - loserpot)) * loserpot);
-                        losses = balanceChange;
-                    }
-
-                    let UID = ans[0].UID;
-                    let winner_loser = winner ? 'winner' : 'loser';
-                    let Winnings_Losses = winner ? 'Winnings' : 'Losses';
-
-                    db.query(`INSERT INTO ${winner_loser} (${Winnings_Losses}, UID, FID) VALUES (${losses}, ${UID}, ${FID});`);
-                    db.query(`UPDATE user SET Balance=Balance+${balanceChange} WHERE UID=${UID};`);
-                })
-                .catch(err => {
-                    console.log('Error getting user id ' + err);
-                });
-        }
+    logWinner(winnings, UID, FID, db) {
+        db.query(`INSERT INTO winner (Winnings, UID, FID),
+                  VALUES (${winnings}, ${UID}, ${FID});`)
+                  .then(ans => {
+                      db.query(`UPDATE user
+                                SET Balance=Balance+${winnings}
+                                WHERE UID=${UID};`);
+                  });
     }
 
-    decreaseTime() {
-        if (this.timeLeft > 100) {
-            this.timeLeft = this.timeLeft - 100;
-            return this.timeLeft;
-        } else {
-            this.timeLeft = FLIPTIME;
-            return null;
-        }
+    logLoser(losses, UID, FID, db) {
+        db.query(`INSERT INTO loser (Losses, UID, FID),
+                  VALUES (${losses}, ${UID}, ${FID});`)
+                  .then(ans => {
+                      db.query(`UPDATE user
+                                SET Balance=Balance-${losses}
+                                WHERE UID=${UID};`);
+                  });
     }
 
-    getWinner() {
-        let flip_result = this.randomChoice(['heads', 'tails']);
-        let winners = (flip_result === 'heads') ? this.betHeads : this.betTails;
-        let ret = [flip_result, winners];
-        return ret;
+    reset() {
+        this.bets = [];
     }
 
-    betOnHeads(user, amount) {
-        this.betHeads.push(user);
-        this.allBets[user] = amount
-        this.potsizeHeads += amount;
+    getBets() {
+        return this.bets;
     }
-
-    betOnTails(user, amount) {
-        this.betTails.push(user);
-        this.allBets[user] = amount;
-        this.potsizeTails += amount;
-    }
-
-    hasExistingBet(user) {
-        if (this.allBets[user]) return true;
-        return false;
-    }
-    randomChoice(choices) {
-        let i = Math.floor(Math.random() * choices.length);
-        return choices[i];
-    }
-
 }
 
 module.exports = Coin;

@@ -4,10 +4,7 @@ const { check, validationResult } = require('express-validator')
 const router = express.Router();
 
 router.get('/info', (req, res) => {
-    let coinInfo = {timeleft: null, bets: null};
-    coinInfo.timeleft = req.coin.getTimeleft();
-    coinInfo.bets = req.coin.getBetHeads().concat(req.coin.getBetTails());
-    res.json(coinInfo);
+    res.json(req.coin.getBets());
 })
 
 router.post('/bet/:bet/:amount', [
@@ -33,11 +30,7 @@ router.post('/bet/:bet/:amount', [
             .then(ans => {
                 if (amount > ans[0].Balance) amount = ans[0].Balance;
 
-                if (bet === 'heads') {
-                    req.coin.betOnHeads(user, amount);
-                } else if (bet === 'tails') {
-                    req.coin.betOnTails(user, amount);
-                }
+                req.coin.placeBet(user, amount, bet);
                 res.json(`Bet placed by ${user} on ${bet} for ${amount}`);
                 console.log(`Bet placed by ${user} on ${bet} for ${amount}.`);
             })
