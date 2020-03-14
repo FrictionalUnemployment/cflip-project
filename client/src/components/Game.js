@@ -73,8 +73,18 @@ class Game extends React.Component {
         });
 
         const body = await response.json();
-        if (response.status !== 200) {
-            throw Error(body.message);
+        if (response.status == 400) {
+            alert("Database read/write error!");
+        }
+        else if (response.status == 401) {
+            alert("You are not logged in!");
+        }
+        else if (response.status == 403) {
+            //throw Error(body.message);
+            alert("Already put a bet on this flip!");
+        }
+        else if (response.status == 422) {
+            alert("Illegal value for bet!");
         }
         console.log(body);
         return body.express;
