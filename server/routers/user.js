@@ -5,6 +5,12 @@ const { check, validationResult } = require('express-validator');
 
 const router = express.Router()
 
+router.get('/logout', (req, res) => {
+    req.session.loggedIn = false;
+    req.session.Username = null;
+    res.send('logged out.');
+})
+
 router.post('/register', [
     check('username').custom(checkNewUser)
 ], (req, res) => {
