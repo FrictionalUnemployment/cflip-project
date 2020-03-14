@@ -121,6 +121,10 @@ class Coin {
                     } else {
                         // Losers
                         let losses = this.bets[i].amount;
+                        if (winnerpot === 0) {
+                            // Inga vinnare, förlorar inga pengar
+                            losses = 0;
+                        }
                         db.query(`SELECT UID from user WHERE Username='${user}';`)
                             .then(ans => {
                                 let UID = ans[0].UID;
