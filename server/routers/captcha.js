@@ -1,26 +1,26 @@
 const express = require('express');
 const svgCaptcha = require('svg-captcha');
-const bodyParser = require('body-parser');
 
 const router = express.Router();
-router.use(bodyParser.urlencoded({ extended: false }));
-router.use(bodyParser.json());
 
 router.get('/', (req, res) => {
-    let captcha = svgCaptcha.create({ noise: 4, size: 5, background: '#282c34' });
+    let captcha = svgCaptcha.create({ noise: 2, size: 4, background: '#282c34' });
     req.session.captcha = captcha.text;
-    console.log('get id: ' + req.session.id);
-    console.log(captcha.text);
     res.type('svg');
     res.send(unescape(captcha.data));
 });
 
 router.post('/', (req, res) => {
-    const input = String(req.body.input);
-    req.session.human = (input === req.session.captcha);
-    console.log('post id: ' + req.session.id)
-    console.log(input);
-    res.json({ robot: req.session.human });
+    const input = req.body.input;
+    //req.session.human = (input === req.session.captcha);
+    //res.json({ robot: req.session.human });
+    if (input === req.session.captcha) {
+        req.session.human = true;
+        res.json({robot: true});
+    } else {
+        req.session.human = false;
+        res.status(400).json({robot: false});
+    }
 });
 
 module.exports = router;

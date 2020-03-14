@@ -1,22 +1,18 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const { checkUser, checkNewUser } = require('./request-helper');
+const crypto = require('crypto');
+const { checkUser, checkNewUser } = require('./validator');
 const { check, validationResult } = require('express-validator');
 
 const router = express.Router()
-router.use(bodyParser.urlencoded({ extended: false }));
-router.use(bodyParser.json());
-
 
 router.post('/register', [
-    check('Username').custom(checkNewUser)
+    check('username').custom(checkNewUser)
 ], (req, res) => {
-    // Ta bort detta när amir är klar med captcha
-    /*
+    
     if (!req.session.human) {
         return res.status(403).json({errors: 'client has not completed captcha'});
     }
-    */
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
@@ -33,7 +29,6 @@ router.post('/register', [
         `VALUES ("${user}", "${hash}", 50);`)
         .then(ans => {
             console.log(`Registered ${user}`);
-            updateUserWhitelist();
             req.session.loggedIn = true;
             req.session.Username = user;
             res.json(user);
@@ -46,13 +41,11 @@ router.post('/register', [
 
 router.post('/login', [
     check('username').custom(checkUser)
-], (res, req) => {
-    //Lägg till detta när amir är klar med captcha
-    /*
+], (req, res) => {
+    
     if (!req.session.human) {
-        return res.status(403).json({errors: 'client has not completed captcha});
+        return res.status(403).json({errors: 'client has not completed captcha'});
     }
-    */
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -110,7 +103,7 @@ router.get('/list', (req, res) => {
         })
         .catch(err => {
             console.log('error getting user list' + err);
-            res.status(500).json({ error: err });
+            res.status(400).json({ error: err });
         });
 });
 

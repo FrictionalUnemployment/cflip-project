@@ -1,13 +1,6 @@
 import React, { Component, useImperativeHandle } from 'react';
-
-import './App.css';
-import Header from './components/Header.js';
-import TopList from './components/TopList.js'
-import Game from './components/Game.js'
-import 'whatwg-fetch'
-
-<<<<<<< HEAD
-
+import Popup from './popup.js';
+import Loginpopup from './loginpopup.js';
 
 class Header extends Component {
     constructor(props) {
@@ -20,10 +13,7 @@ class Header extends Component {
             username: '',
             password: '',
             checkpassword: '',
-            registeredUsername: '',
-            captcha: '',
-            svgData: ''
-
+            registeredUsername: ''
         };
 
     }
@@ -43,14 +33,6 @@ class Header extends Component {
 
     }
 
-    handleLoginCaptcha() {
-        this.checkCaptcha()
-        .then(result => {
-       if(result === true) this.handleLogin();
-       });
-
-    }
-
     handleLogin = async () => {
         // data innehåller informationen som behövs i header
 
@@ -63,7 +45,8 @@ class Header extends Component {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
         });
         // Här kollar vi på svaret som vi får av servern
-        const body = await response.json();
+        const body = await response.text();
+        console.log(body);
         if (response.status !== 200) {
             // Någon har gått fel
             throw Error(body.message)
@@ -74,7 +57,6 @@ class Header extends Component {
     }
 
     comparePassword() {
-       
         if (this.state.password !== this.state.checkpassword) {
 
             this.setState({ passwordsMatch: false })
@@ -85,14 +67,8 @@ class Header extends Component {
 
         else
             this.setState({ passwordsMatch: true })
-            
-            this.checkCaptcha()
-             .then(result => {
-            if(result === true) this.register_user();
-            });
-     
-      
-
+        this.register_user()
+        return true; // The form will submit
     }
 
     togglePopup() {
@@ -102,25 +78,10 @@ class Header extends Component {
         });
     }
 
-    checkCaptcha = async () => {
-       
-        const captchatext = { input: `${this.state.captcha}` };
-        const response = await fetch('/captcha', {
-            method: 'POST',
-            body: JSON.stringify(captchatext),
-            headers: {'Accept':'application/json', 'Content-Type': 'application/json'}
-        });
-       const data = await response.json();
-    //   if(data.robot) {
-        //return this.register_user();
-        
-        return data.robot
-      // }
-    }
-
     register_user = async () => {
         // data innehåller informationen som behövs i header
-       
+        // Ett användarnamn får bara innehålla a-z, A-Z, 0-9, - och _
+        // den för vara mellan 3-15 långt
         const data = { username: `${this.state.username}`, password: `${this.state.password}` };
       
         // gör förfrågningen med fetch functionen.
@@ -131,12 +92,14 @@ class Header extends Component {
         });
        //  Här kollar vi på svaret som vi får av servern
         const body = await response.json();
+    
         
         if (response.status !== 200) {
             // Någon har gått fel
           throw Error(body.message)
         }
         
+      
         //returnerar svar från backend vilket är användarnamnet
         return this.setState({ registeredUsername: body, 
                 isLoggedin: true})
@@ -147,41 +110,24 @@ class Header extends Component {
     logOut() {
         return this.setState({isLoggedin: false, registeredUsername: '' })
     }
-
-    async getUserBalance(user)  {  
-       
-        const response = await fetch('/stats/user/' + user)
-        const data = await response.json();
-        
-        const balance = JSON.stringify(data.Balance);
-        return balance
-      }
   
 
     render() {
-       
-        
+     
         let button;
 
         if(this.state.isLoggedin === false) {
-            //this.togglePopup.bind(this)
             button = <button onClick={this.togglePopup.bind(this)}>Login/Register</button>;
         } else if(this.state.isLoggedin === true) {
             button = <button onClick={this.logOut.bind(this)}>Logout</button>;
-            const balanceofLoggedin = this.getUserBalance(this.state.registeredUsername);
+            
         }
-      
 
         return (
             <header className="App-header">
 
-            <div style={{position: 'absolute', top: '8px', right: '16px'}}>
-            <h1>{this.balanceofLoggedin}</h1>
+            
             {button}
-            
-
-            </div>
-            
               
 
                 {this.state.showPopup && !this.state.Login ?
@@ -190,6 +136,7 @@ class Header extends Component {
                         closePopup={this.togglePopup.bind(this)}
                         handleOnChange={this.handleOnChange.bind(this)}
                         changeLogin={this.changeLogin.bind(this)}
+
                         handleSubmit={this.comparePassword.bind(this)}
                         message={this.state.passwordsMatch === false && <div>Passwords don't match!</div>
                             || this.state.passwordsMatch === true && this.state.registeredUsername !== undefined && <div>You're registered! {this.state.registeredUsername} </div>}
@@ -203,7 +150,7 @@ class Header extends Component {
                         text='Login'
                         closeLoginPopup={this.togglePopup.bind(this)}
                         handleOnChange={this.handleOnChange.bind(this)}
-                        handleLoginSubmit={this.handleLoginCaptcha.bind(this)}
+                        handleLoginSubmit={this.handleLogin.bind(this)}
                     />
                     : null
                 } 
@@ -214,21 +161,4 @@ class Header extends Component {
     }
 }
 
-
-=======
->>>>>>> ee350db613e03cb57888df24bb4f2b23916ce3a8
-class App extends Component {
-
-    render() {
-        return (
-            <div className="Site">
-                <Header />
-                <Game />
-                <TopList />
-            </div>
-
-        );
-    }
-}
-
-export default App;
+export default Header;

@@ -10,7 +10,7 @@ function updateUserWhitelist() {
     db.query('SELECT Username FROM user;')
         .then(ans => {
             userWhitelist = ans.map(user => user.Username);
-        });
+        })
 }
 
 function checkUser(value, { req }) {
@@ -25,9 +25,13 @@ function checkNewUser(value, { req }) {
     // Regex som säger att strängen får bara innehålla
     // a-z, A-Z, 0-9, _, -
     // Strängen måste vara mellan 3-15 långt
+    if (userWhitelist.includes(value)) {
+        throw new Error('Username is already in use');
+    }
     let re = /^[a-zA-Z0-9_-]{3,15}$/;
     if (!re.test(value)) {
         throw new Error('Illegal username');
     }
+    setTimeout(updateUserWhitelist, 100);
     return true;
 } module.exports.checkNewUser = checkNewUser;

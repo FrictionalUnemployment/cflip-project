@@ -1,5 +1,5 @@
 const mariadb = require('mariadb');
-const requestHelper = require('./routers/request-helper');
+const validator = require('./routers/validator');
 const Coin = require('./Coin');
 
 // Skapar databas pool och testar uppkopplingen
@@ -39,7 +39,7 @@ function updateCoin() {
         process.stdout.write('\rCoin has flipped!\n')
         console.log(`Flips since server start: ${++flipsSinceStart}`);
         console.log(`Results: ${flipped}`);
-        if (coin.potsizeTails + coin.potsizeHeads > 0) {
+        if (coin.bets.length > 0) {
             coin.logChanges(flipped, db);
         } else {
             console.log("No bets placed on this flip.\n")
@@ -49,8 +49,8 @@ function updateCoin() {
     }
 }
 
-// Skickar databsen till request helper
-requestHelper.init(db);
+// Skickar databsen till validator
+validator.init(db);
 
 // Lägger till databasen och coinen till request
 let middleware = function (req, res, next) {
