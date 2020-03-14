@@ -49,6 +49,17 @@
   flex: 1;
 }
 
+.footer {
+  display: flex;
+  flex-direction: row;
+}
+
+.toplist {
+  background-color: #282c34;
+  min-height: 10vh;
+  color: white;
+}
+
 .toplist {
   background-color: #282c34;
   min-height: 10vh;

@@ -27,7 +27,7 @@ class BotList extends React.Component {
 
     fetchUsers = async () => {
         this.setState({isFetching: true});
-        const response = await fetch('/stats/toplist/top/5');
+        const response = await fetch('/stats/toplist/bottom/5');
         const body = await response.json();
         for (let i =0; i < body.length; i++) {
             console.log(body[i]);
