@@ -17,7 +17,9 @@ class BetChoice extends React.Component {
 
     render() {
         return (
-            <button className="s" onClick={this.handleClick}>Bet {this.props.suit}!</button>
+            <div className="betchoice">
+                <button className="s" onClick={this.handleClick}>Bet {this.props.suit}!</button>
+            </div>
         )
     }
 }
@@ -63,12 +65,12 @@ class Game extends React.Component {
     render() {
         return (
             <div className="App-game">
-                <div>
-                    <BetChoice suit="heads" onClick={this.placeBet} />
+                <BetChoice suit="heads" onClick={this.placeBet} />
+                <div className="gameboard">
                     <img src={logo} className="App-logo" alt="logo" />
-                        <label>{this.state.coinStatus}</label>
-                    <BetChoice suit="tails" onClick={this.placeBet} />
+                    <label>{this.state.coinStatus}</label>
                 </div>
+                <BetChoice suit="tails" onClick={this.placeBet} />
             </div>
         );
     }

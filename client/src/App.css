@@ -45,8 +45,22 @@
   background-color: #3f434a;
   align-items: center;
   justify-content: center;
+  display: flex;
   flex-direction: row;
-  flex: 1;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.gameboard {
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.betchoice {
+  width: 10%;
 }
 
 .footer {
