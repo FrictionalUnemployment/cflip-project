@@ -6,6 +6,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
     let captcha = svgCaptcha.create({ noise: 4, size: 5, background: '#282c34' });
     req.session.captcha = captcha.text;
+    console.log('session id: ' + req.session.id);
     res.type('svg');
     res.send(unescape(captcha.data));
 });
