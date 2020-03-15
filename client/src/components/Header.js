@@ -17,8 +17,12 @@ class Header extends Component {
             checkpassword: '',
             registeredUsername: '',
             captcha: '',
+<<<<<<< HEAD
             svgData: '',
             balance: ''
+=======
+            svgData: ''
+>>>>>>> 4554e3a9227e407aad3ae52a083ea9bc370bf6dd
 
         };
 
@@ -165,11 +169,15 @@ class Header extends Component {
             button = <button onClick={this.togglePopup.bind(this)}>Login/Register</button>;
         } else if(this.state.isLoggedin === true) {
             button = <button onClick={this.logOut.bind(this)}>Logout</button>;
+<<<<<<< HEAD
            this.getUserBalance(this.state.registeredUsername)
             .then(result => {
             this.setState({balance : result})
             
             });
+=======
+            const balanceofLoggedin = this.getUserBalance(this.state.registeredUsername);
+>>>>>>> 4554e3a9227e407aad3ae52a083ea9bc370bf6dd
         }
       
 
@@ -177,10 +185,20 @@ class Header extends Component {
             <header className="App-header">
 
             <div style={{position: 'absolute', top: '8px', right: '16px'}}>
+<<<<<<< HEAD
             <h1>{this.state.balance}</h1>
             <h1>{this.state.registeredUsername}</h1>
             {button}
             
+=======
+            <h1>{this.balanceofLoggedin}</h1>
+            {button}
+            
+
+            </div>
+            
+              
+>>>>>>> 4554e3a9227e407aad3ae52a083ea9bc370bf6dd
 
             </div>
 
