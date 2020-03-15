@@ -22,7 +22,6 @@
     
     background: white;  
   }
-<<<<<<< HEAD
   body {
     background-color: #666;
     font-family: "PT Sans", sans-serif;
@@ -51,7 +50,7 @@
   th {
     background-color: rgb(255, 253, 253);
     color: rgb(8, 0, 0);
-=======
+  }
 
   .login {
     border: none;
@@ -59,5 +58,4 @@
     font-size: 2em;
     align-self: right;
     color: white;
->>>>>>> 55faeffdb69ba28756f9e3f8d16bf0a70fbf9ee2
   }
