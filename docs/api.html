@@ -2971,7 +2971,7 @@ public class UserApiExample {
         
         UserApi apiInstance = new UserApi();
         try {
-            array[Username] result = apiInstance.userListGet();
+            array['String'] result = apiInstance.userListGet();
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UserApi#userListGet");
@@ -2989,7 +2989,7 @@ public class UserApiExample {
     public static void main(String[] args) {
         UserApi apiInstance = new UserApi();
         try {
-            array[Username] result = apiInstance.userListGet();
+            array['String'] result = apiInstance.userListGet();
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling UserApi#userListGet");
@@ -3008,7 +3008,7 @@ UserApi *apiInstance = [[UserApi alloc] init];
 
 // List of users
 [apiInstance userListGetWithCompletionHandler: 
-              ^(array[Username] output, NSError* error) {
+              ^(array['String'] output, NSError* error) {
                             if (output) {
                                 NSLog(@"%@", output);
                             }
@@ -3057,7 +3057,7 @@ namespace Example
             try
             {
                 // List of users
-                array[Username] result = apiInstance.userListGet();
+                array['String'] result = apiInstance.userListGet();
                 Debug.WriteLine(result);
             }
             catch (Exception e)
@@ -3147,7 +3147,8 @@ except ApiException as e:
   "schema" : {
     "type" : "array",
     "items" : {
-      "$ref" : "#/definitions/Username"
+      "type" : "string",
+      "example" : "example_user"
     }
   }
 };
