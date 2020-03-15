@@ -40,9 +40,9 @@ class Popup extends React.Component {
             <div>
               <h2>{this.props.text}</h2>
               <div style={{ color: "blue" }}>
-                <h3 onClick={this.props.changeLogin}>
+                <button id='login' onClick={this.props.changeLogin}>
                   Already registered? login!
-                </h3>
+                </button>
               </div>
 
               <form onSubmit={e => e.preventDefault()}>
