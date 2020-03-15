@@ -19,7 +19,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #121212;
   min-height: 10vh;
   display: flex;
   flex-direction: column;
@@ -43,7 +43,7 @@
 }
 
 .App-game {
-  background-color: #3f434a;
+  background-color: #1c1c1c;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -73,21 +73,21 @@
 }
 
 .toplist {
-  background-color: #282c34;
+  background-color: #121212;
   min-height: 10vh;
   color: white;
   width: 100%;
 }
 
 .botlist {
-  background-color: #282c34;
+  background-color: #121212;
   min-height: 10vh;
   color: white;
   width: 100%;
 }
 
 ol {
-  background: #282c34
+  background: #121212
 }
 
 #urgenttimer {
