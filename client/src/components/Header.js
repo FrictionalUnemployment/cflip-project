@@ -141,7 +141,10 @@ class Header extends Component {
    
 
     logOut() {
-        return this.setState({isLoggedin: false, registeredUsername: '', balance: '' })
+        fetch('/users/logout')
+            .then(ans => {
+                return this.setState({isLoggedin: false, registeredUsername: '', balance: '' })
+            })
     }
 
     async getUserBalance(user)  {  
