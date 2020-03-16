@@ -1,4 +1,6 @@
 const WebSocket = require('ws');
+const https = require('https');
+const fs = require('fs');
 
 const FLIPTIME = 30 * 1000;
 
@@ -9,10 +11,15 @@ class Coin {
         this.animationChar = '|';
 
         // Web socket server, denna ska klienten koppla upp sig till
-        this.wss = new WebSocket.Server({ port: 5001 });
+        const privatekey = fs.readFileSync('ssl/privkey.pem');
+        const cert = fs.readFileSync('ssl/fullchain.pem');
+        const credentials = {key: privatekey, cert: cert};
+        let httpsServer = https.createServer(credentials);
+        this.wss = new WebSocket.Server({ httpsServer });
         this.wss.on('connection', function connection(ws) {
             console.log('\rclient connected to coin');
         });
+        httpsServer.listen(5001);
     }
 
     hasExistingBet(user) {

@@ -29,9 +29,6 @@ class BotList extends React.Component {
         this.setState({isFetching: true});
         const response = await fetch('/stats/toplist/bottom/5');
         const body = await response.json();
-        for (let i =0; i < body.length; i++) {
-            console.log(body[i]);
-        }
         if (response.status !== 200) {
             throw Error(body.message);
         }

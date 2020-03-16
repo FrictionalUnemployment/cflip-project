@@ -45,8 +45,7 @@ COIN
 
 POST /user/register
     Detta används för att registrera nya användare.
-    Ett användarnamn får bara innehålla a-z, A-Z, 0-9, - och _
-    den för vara mellan 3-15 långt
+
 
     Fel koder:
         403: Har inte klarat captcha
@@ -106,6 +105,10 @@ POST /user/login
         {username: användare, password: lösenord}
 
     Kod för /user/login ser nästan likadan ut som för /user/register
+
+GET /user/logout
+    Detta används för att logga ut.
+    Returnerar strängen 'logged out'.
 
 
 
