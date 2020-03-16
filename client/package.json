@@ -21,7 +21,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start": "HTTPS=true Local=true SSL_CRT_FILE=./ssl/fullchain.pem SSL_KEY_FILE=./ssl/privkey.pem react-scripts start"
+    "start": "HOST=cflip.app HTTPS=true Local=true SSL_CRT_FILE=./ssl/fullchain.pem SSL_KEY_FILE=./ssl/privkey.pem react-scripts start"
   },
   "eslintConfig": {
     "extends": "react-app"
