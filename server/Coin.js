@@ -19,6 +19,7 @@ class Coin {
         this.wss.on('connection', function connection(ws) {
             console.log('\rclient connected to coin');
         });
+        httpsServer.listen(5001);
     }
 
     hasExistingBet(user) {
