@@ -14,12 +14,15 @@ class Coin {
         const privatekey = fs.readFileSync('ssl/privkey.pem');
         const cert = fs.readFileSync('ssl/fullchain.pem');
         const credentials = {key: privatekey, cert: cert};
-        let httpsServer = https.createServer(credentials);
-        this.wss = new WebSocket.Server({ httpsServer });
-        this.wss.on('connection', function connection(ws) {
-            console.log('\rclient connected to coin');
+        this.httpsServer = https.createServer(credentials);
+        this.wss = new WebSocket.Server({ server: this.httpsServer });
+        this.wss.on('connection', function connection(ws, req) {
+            console.log('\rclient connected to coin: ' + req.connection.remoteAddress);
         });
-        httpsServer.listen(5001);
+        this.wss.on('error', function error(err) {
+            console.log('websocket server error: ' + err);
+        });
+        this.httpsServer.listen(5001);
     }
 
     hasExistingBet(user) {
