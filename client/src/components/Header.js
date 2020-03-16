@@ -18,7 +18,12 @@ class Header extends Component {
             registeredUsername: '',
             captcha: '',
             svgData: '',
+<<<<<<< HEAD
+            balance: '',
+            svgData: ''
+=======
             balance: ''
+>>>>>>> 985e4d7578ff88db1b844f7ad34d1d6b22d21ab3
 
         };
 
@@ -173,6 +178,10 @@ class Header extends Component {
             this.setState({balance : result})
             
             });
+<<<<<<< HEAD
+            
+=======
+>>>>>>> 985e4d7578ff88db1b844f7ad34d1d6b22d21ab3
         }
       
 
@@ -184,8 +193,18 @@ class Header extends Component {
             <h1>{this.state.registeredUsername}</h1>
             {button}
             
+<<<<<<< HEAD
+            <h1>{this.balanceofLoggedin}</h1>
+            {button}
+            
 
             </div>
+            
+              
+=======
+>>>>>>> 985e4d7578ff88db1b844f7ad34d1d6b22d21ab3
+
+           
 
             
                 

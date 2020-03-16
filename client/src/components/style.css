@@ -46,11 +46,38 @@
   tr:nth-child(odd) {
     background-color: rgb(99, 99, 99);
   }
+   th {
+    background-color: #ffffff;
+    color: #1b0505;
+    cursor: pointer;
+  }
   
+ th.reactable-header-sort-desc, #demo-table th.reactable-header-sort-asc {
+    background-color: #474747;
+  }
+  
+  th.reactable-header-sort-desc:after {
+    content: '\25B2';
+    font-size: 10px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+  }
+  
+   th.reactable-header-sort-asc:after {
+    content: '\25BC';
+    font-size: 10px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+  }
+  
+<<<<<<< HEAD
+
+=======
   th {
     background-color: rgb(255, 253, 253);
     color: rgb(8, 0, 0);
   }
+>>>>>>> 985e4d7578ff88db1b844f7ad34d1d6b22d21ab3
 
   .login {
     border: none;
