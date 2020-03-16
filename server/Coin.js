@@ -15,7 +15,7 @@ class Coin {
         const cert = fs.readFileSync('ssl/fullchain.pem');
         const credentials = {key: privatekey, cert: cert};
         let httpsServer = https.createServer(credentials);
-        this.wss = new WebSocket.Server({ server: httpsServer });
+        this.wss = new WebSocket.Server({ httpsServer });
         this.wss.on('connection', function connection(ws) {
             console.log('\rclient connected to coin');
         });
