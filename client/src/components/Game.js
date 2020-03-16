@@ -49,7 +49,7 @@ class Game extends React.Component {
         this.state = {
             coinStatus: 0
         }
-        const ws = new WebSocket('wss://193.10.236.94:5001'); // Kopplad mot coinen
+        const ws = new WebSocket('ws://193.10.236.94:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
         this.coinStatus = this.coinStatus.bind(this);
         ws.onmessage = this.coinStatus;
