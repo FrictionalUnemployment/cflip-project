@@ -186,18 +186,8 @@ class Header extends Component {
             {button}
             
             <h1>{this.balanceofLoggedin}</h1>
-            {button}
-            
-
             </div>
-            
-              
-
-           
-
-            
-                
-                
+    
                 
            <Statistics />
             
