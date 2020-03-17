@@ -16,12 +16,10 @@ class App extends Component {
 
     setGame = () => {
         this.setState({mode: 1});
-        console.log("CHanging mode to 1");
     }
 
     setStats = () => {
         this.setState({mode: 2});
-        console.log("Changing mode to 2");
     }
 
     render() {
