@@ -1,8 +1,7 @@
-import React, { Component, useImperativeHandle } from 'react';
+import React, { Component } from 'react';
 import Popup from './popup.js';
 import Loginpopup from './loginpopup.js';
 import 'whatwg-fetch'
-import Statistics from './Statistics.js';
 
 class Header extends Component {
     constructor(props) {

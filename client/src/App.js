@@ -1,4 +1,4 @@
-import React, { Component, useImperativeHandle } from 'react';
+import React, { Component } from 'react';
 
 import './App.css';
 import Header from './components/Header.js';
@@ -23,7 +23,7 @@ class App extends Component {
     }
 
     render() {
-        if (this.state.mode == 1) {
+        if (this.state.mode === 1) {
             return (
                 <div className="Site">
                     <Header setGame={this.setGame} setStats={this.setStats}/>
@@ -32,7 +32,7 @@ class App extends Component {
                 </div>
 
             );
-        } else if (this.state.mode == 2) {
+        } else if (this.state.mode === 2) {
             return (
                 <div className="Site">
                     <Header setGame={this.setGame} setStats={this.setStats}/>

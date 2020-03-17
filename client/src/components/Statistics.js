@@ -1,10 +1,8 @@
 import React from 'react';  
 import './style.css';  
 import {Table} from "reactable";
-import { getQueriesForElement } from '@testing-library/react';
-
-
-
+// v Denna används ej? Kommenterar ut den.
+//import { getQueriesForElement } from '@testing-library/react';
 
 class Statistics extends React.Component {  
     constructor(props) {

@@ -25,9 +25,6 @@ class BetChoice extends React.Component {
 }
 
 class BetTimer extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         if (this.props.coinStatus <= 5) {
@@ -82,17 +79,17 @@ class Game extends React.Component {
         });
 
         const body = await response.json();
-        if (response.status == 400) {
+        if (response.status === 400) {
             alert("Database read/write error!");
         }
-        else if (response.status == 401) {
+        else if (response.status === 401) {
             alert("You are not logged in!");
         }
-        else if (response.status == 403) {
+        else if (response.status === 403) {
             //throw Error(body.message);
             alert("Already put a bet on this flip!");
         }
-        else if (response.status == 422) {
+        else if (response.status === 422) {
             alert("Illegal value for bet!");
         }
         return body.express;
