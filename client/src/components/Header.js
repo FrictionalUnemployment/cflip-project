@@ -179,20 +179,20 @@ class Header extends Component {
 
         return (
             <header className="App-header">
+                <div>
+                    <button onClick={this.props.setGame}>Game</button>
+                    <button onClick={this.props.setStats}>Statistics</button>
+                </div>
 
-            <div style={{position: 'absolute', top: '8px', right: '16px'}}>
-            <h1>{this.state.balance}</h1>
-            <h1>{this.state.registeredUsername}</h1>
-            {button}
-            
-            <h1>{this.balanceofLoggedin}</h1>
-            </div>
-    
-                
-           <Statistics />
-            
+                <div style={{position: 'absolute', top: '8px', right: '16px'}}>
+                    <h1>{this.state.balance}</h1>
+                    <h1>{this.state.registeredUsername}</h1>
+                    {button}
+                    
+                    <h1>{this.balanceofLoggedin}</h1>
+                </div>
 
-                  {this.state.showPopup && !this.state.Login ?
+                {this.state.showPopup && !this.state.Login ?
                     <Popup
                         text='Registration'
                         closePopup={this.togglePopup.bind(this)}
@@ -201,10 +201,8 @@ class Header extends Component {
                         handleSubmit={this.comparePassword.bind(this)}
                         message={this.state.passwordsMatch === false && <div>Passwords don't match!</div>
                             || this.state.passwordsMatch === true && this.state.registeredUsername !== undefined && <div>You're registered! {this.state.registeredUsername} </div>}
-
-                    />
-                    : null
-                }
+                        />
+                        : null}
 
                 {this.state.registeredUsername !== undefined && this.state.Login && this.state.showPopup ?
                     <Loginpopup
