@@ -32,4 +32,3 @@ const port = 5000;
 const httpsServer = https.createServer(credentials, app);
 httpsServer.listen(port);
 console.log('Express is listening on port ' + port);
-//app.listen(port, () => console.log('Express is listening on port ' + port));
