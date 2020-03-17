@@ -43,7 +43,7 @@ class BetTimer extends React.Component {
 }
 
 class Game extends React.Component {
-
+    _isMounted = false;
     constructor(props) {
         super(props);
         this.state = {
@@ -55,11 +55,20 @@ class Game extends React.Component {
         ws.onmessage = this.coinStatus;
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     coinStatus(data) {
         
         // Här är data.data JSON strängen
-        this.setState({coinStatus: JSON.parse(data.data).timeleft/1000.0});
-        //alert(data.data);
+        if (this._isMounted) {
+            this.setState({coinStatus: JSON.parse(data.data).timeleft/1000.0});
+        }
     }
 
     placeBet = async (suit, amount) => {
@@ -86,7 +95,6 @@ class Game extends React.Component {
         else if (response.status == 422) {
             alert("Illegal value for bet!");
         }
-        console.log(body);
         return body.express;
     }
 
