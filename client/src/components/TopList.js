@@ -2,7 +2,7 @@ import React from 'react'
 
 function TopItem(props) {
     return (
-    <li className="topitem">{props.value}</li>
+        <li className="topitem">{props.value}</li>
     );
 }
 
@@ -40,19 +40,14 @@ class TopList extends React.Component {
         this.setState({isFetching: false, topFive: a});
     }
 
-    renderItem(itm) {
-        return <TopItem value={this.state.topFive[itm]} />;
-    }
-
     render() {
+        var listItems = this.state.topFive.map(function(item) {
+            return <TopItem key={item} value={item} />;
+        });
         return (
             <div className="toplist">
                 <ol>
-                    {this.renderItem(0)}
-                    {this.renderItem(1)}
-                    {this.renderItem(2)}
-                    {this.renderItem(3)}
-                    {this.renderItem(4)}
+                    {listItems}
                 </ol>       
             </div>
         );

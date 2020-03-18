@@ -45,14 +45,13 @@ class BotList extends React.Component {
     }
 
     render() {
+        var listItems = this.state.topFive.map(function(item) {
+            return <BotItem key={item} value={item} />;
+        });
         return (
             <div className="botlist">
                 <ol>
-                    {this.renderItem(0)}
-                    {this.renderItem(1)}
-                    {this.renderItem(2)}
-                    {this.renderItem(3)}
-                    {this.renderItem(4)}
+                    {listItems}
                 </ol>       
             </div>
         );
