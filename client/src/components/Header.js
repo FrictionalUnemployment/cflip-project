@@ -22,6 +22,10 @@ class Header extends Component {
         };
 
     }
+    componentWillUnmount() {
+        clearInterval(this.timer);
+        this.timer = null;
+    }
 
     handleOnChange(event) {
        
@@ -65,7 +69,9 @@ class Header extends Component {
         }
         //returnerar svar från backend vilket är användarnamnet
        
-        return this.setState({ registeredUsername: body, isLoggedin: true })
+        this.setState({ registeredUsername: body, isLoggedin: true });
+        this.getUserBalance(this.state.registeredUsername);
+        this.timer = setInterval(() => this.getUserBalance(this.state.registeredUsername), 30000);
     }
 
     comparePassword() {
@@ -140,6 +146,8 @@ class Header extends Component {
    
 
     logOut() {
+        clearInterval(this.timer);
+        this.timer = null;
         fetch('/user/logout')
             .then(ans => {
                 return this.setState({isLoggedin: false, registeredUsername: '', balance: '' })
@@ -152,7 +160,7 @@ class Header extends Component {
         const data = await response.json();
         
         const balance = JSON.stringify(data.Balance);
-        return balance
+        this.setState({balance: balance});
       }
   
 
@@ -167,13 +175,8 @@ class Header extends Component {
             button = <button onClick={this.togglePopup.bind(this)}>Login/Register</button>;
         } else if(this.state.isLoggedin === true) {
             button = <button onClick={this.logOut.bind(this)}>Logout</button>;
-           this.getUserBalance(this.state.registeredUsername)
-            .then(result => {
-            this.setState({balance : result})
-            
-            });
-            
         }
+            
       
 
         return (
