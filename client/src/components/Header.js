@@ -72,6 +72,7 @@ class Header extends Component {
         this.setState({ registeredUsername: body, isLoggedin: true });
         this.getUserBalance(this.state.registeredUsername);
         this.timer = setInterval(() => this.getUserBalance(this.state.registeredUsername), 30000);
+        this.togglePopup();
     }
 
     comparePassword() {
