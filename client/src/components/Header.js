@@ -198,8 +198,8 @@ class Header extends Component {
                         handleOnChange={this.handleOnChange.bind(this)}
                         changeLogin={this.changeLogin.bind(this)}
                         handleSubmit={this.comparePassword.bind(this)}
-                        message={this.state.passwordsMatch === false && <div>Passwords don't match!</div>
-                            || this.state.passwordsMatch === true && this.state.registeredUsername !== undefined && <div>You're registered! {this.state.registeredUsername} </div>}
+                        message={(this.state.passwordsMatch === false && <div>Passwords don't match!</div>)
+                            || (this.state.passwordsMatch === true && this.state.registeredUsername !== undefined && <div>You're registered! {this.state.registeredUsername} </div>)}
                         />
                         : null}
 
