@@ -9,16 +9,14 @@ class Header extends Component {
         this.state = {
             showPopup: false,
             isLoggedin: false,
-            loginPage: false,
+            loginPage: true,
             passwordsMatch: null,
             username: '',
             password: '',
             checkpassword: '',
             registeredUsername: '',
             captcha: '',
-            svgData: '',
-            
-
+            svgData: ''
         };
 
     }
@@ -37,7 +35,7 @@ class Header extends Component {
 
     changeLogin() {
         this.setState({
-            Login: !this.state.loginPage
+            loginPage: !this.state.loginPage
         });
 
     }
@@ -78,29 +76,29 @@ class Header extends Component {
     comparePassword() {
        
         if (this.state.password !== this.state.checkpassword) {
-
             this.setState({ passwordsMatch: false })
 
             //alert(this.props.passwordsMatch)
             return false; // The form won't submit
-        }
-
-        else
+        } else
             this.setState({ passwordsMatch: true })
             
             this.checkCaptcha()
              .then(result => {
             if(result === true) this.register_user();
             });
-     
-      
+    }
 
+    execPopup() {
+        this.setState({
+            loginPage: true
+        });
+        this.togglePopup();
     }
 
     togglePopup() {
         this.setState({
             showPopup: !this.state.showPopup,
-            Login: this.state.LoginPage
         });
     }
 
@@ -115,7 +113,6 @@ class Header extends Component {
        const data = await response.json();
     //   if(data.robot) {
         //return this.register_user();
-        
         return data.robot
       // }
     }
@@ -144,8 +141,6 @@ class Header extends Component {
                 isLoggedin: true})
     }
  
-   
-
     logOut() {
         clearInterval(this.timer);
         this.timer = null;
@@ -164,21 +159,16 @@ class Header extends Component {
         this.setState({balance: balance});
       }
   
-
     render() {
-       
-        
         let button;
         
-        
-        if(this.state.isLoggedin === false) {
+        if(!this.state.isLoggedin && !this.state.showPopup) {
             //this.togglePopup.bind(this)
-            button = <button onClick={this.togglePopup.bind(this)}>Login/Register</button>;
+            button = <button onClick={this.execPopup.bind(this)}>Login/Register</button>;
         } else if(this.state.isLoggedin === true) {
             button = <button onClick={this.logOut.bind(this)}>Logout</button>;
         }
             
-      
         // style={{position: 'absolute', top: '8px', right: '16px'}}
         return (
             <header className="App-header">
@@ -193,7 +183,7 @@ class Header extends Component {
                     {button}
                 </div>
 
-                {this.state.showPopup && !this.state.Login ?
+                {this.state.showPopup && !this.state.loginPage ?
                     <Popup
                         text='Registration'
                         closePopup={this.togglePopup.bind(this)}
@@ -205,10 +195,11 @@ class Header extends Component {
                         />
                         : null}
 
-                {this.state.registeredUsername !== undefined && this.state.Login && this.state.showPopup ?
+                {this.state.registeredUsername !== undefined && this.state.loginPage && this.state.showPopup ?
                     <Loginpopup
                         text='Login'
                         closeLoginPopup={this.togglePopup.bind(this)}
+                        changeLogin={this.changeLogin.bind(this)}
                         handleOnChange={this.handleOnChange.bind(this)}
                         handleLoginSubmit={this.handleLoginCaptcha.bind(this)}
                     />

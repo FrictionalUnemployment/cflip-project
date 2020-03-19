@@ -37,6 +37,11 @@ class Loginpopup extends React.Component {
               >
                 <div>
                   <h2>{this.props.text}</h2>
+                  <div style={{ color: "blue" }}>
+                    <button id='register' onClick={this.props.changeLogin}>
+                      Not registered? register here!
+                    </button>
+                  </div>
                   <form onSubmit={e => e.preventDefault()}>
                     <input
                       placeholder="Enter username"
