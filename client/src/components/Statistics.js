@@ -1,10 +1,10 @@
-import React from 'react';  
-import './style.css';  
-import {Table} from "reactable";
-// v Denna används ej? Kommenterar ut den.
-//import { getQueriesForElement } from '@testing-library/react';
+import React from 'react';
+import './style.css';
+import ReactTable from 'react-table-6'
+import 'react-table-6/react-table.css'
 
-class Statistics extends React.Component {  
+
+class Statistics extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
