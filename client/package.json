@@ -13,6 +13,8 @@
     "react-dom": "^16.13.0",
     "react-html-parser": "^2.0.2",
     "react-scripts": "3.4.0",
+    "react-table": "^6.6.0",
+    "react-table-6": "^6.11.0",
     "reactable": "^1.1.0",
     "whatwg-fetch": "^3.0.0",
     "ws": "^7.2.1"
