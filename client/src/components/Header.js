@@ -179,7 +179,7 @@ class Header extends Component {
         }
             
       
-
+        // style={{position: 'absolute', top: '8px', right: '16px'}}
         return (
             <header className="App-header">
                 <div>
@@ -187,12 +187,10 @@ class Header extends Component {
                     <button onClick={this.props.setStats}>Statistics</button>
                 </div>
 
-                <div style={{position: 'absolute', top: '8px', right: '16px'}}>
-                    <h1>{this.state.balance}</h1>
-                    <h1>{this.state.registeredUsername}</h1>
+                <div>
+                    <p>{this.state.balance}</p>
+                    <p>{this.state.registeredUsername}</p>
                     {button}
-                    
-                    <h1>{this.balanceofLoggedin}</h1>
                 </div>
 
                 {this.state.showPopup && !this.state.Login ?
