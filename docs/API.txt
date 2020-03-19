@@ -205,10 +205,9 @@ GET /stats/flip/:FID
     Returnerar en json sträng av ett object med följande properties:
         result, time, winners, losers
     Där result är 'heads' eller 'tails', time är UNIX tidstämpel för när flippen
-    utfördes, winners och losers är en lista av object.
-
-    Properties för object i winners och losers listorna är användarnamnet,
-    value för den property är hur mycket användaren har förlorat eller vunnit.
+    utfördes, winners och losers object med alla namn som properties.
+    Value för den property är hur mycket den specifika användaren har
+    vunnit eller förlorat.
 
     För att ta fram användarnamnet kan man göra till ex:
         for (let prop in ans.winners) { // Kollar alla props som winners har
