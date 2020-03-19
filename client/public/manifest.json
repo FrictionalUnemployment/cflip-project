@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "cflip.app",
+  "name": "cflip.app betting game",
   "icons": [
     {
       "src": "favicon.ico",

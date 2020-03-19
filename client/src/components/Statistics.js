@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 import './style.css';
 import ReactTable from 'react-table-6'
@@ -5,6 +6,15 @@ import 'react-table-6/react-table.css'
 
 
 class Statistics extends React.Component {
+=======
+import React from 'react';  
+import './style.css';  
+import {Table} from "reactable";
+// v Denna används ej? Kommenterar ut den.
+//import { getQueriesForElement } from '@testing-library/react';
+
+class Statistics extends React.Component {  
+>>>>>>> 4e602aae4bcb3d2e009b3d0a027772834819d45b
     constructor(props) {
         super(props);
         this.state = {

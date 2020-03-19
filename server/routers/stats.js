@@ -89,10 +89,11 @@ router.get('/flip/:FID', [
         ON user.UID=winner.UID
     WHERE FID=${FID}`)
         .then(ans => {
-            let winners = [];
+            let winners = {};
             for (let i = 0; i < ans.length; i++) {
                 for (let prop in ans[i]) {
-                    winners.push(JSON.parse(ans[i][prop]));
+                    //winners.push(JSON.parse(ans[i][prop]));
+                    winners = {...winners, ...JSON.parse(ans[i][prop])};
                 }
             }
             // Query för att hämta alla förlorare och hur mycket dom har satsat
@@ -101,20 +102,22 @@ router.get('/flip/:FID', [
             FROM user
                 JOIN loser
                 ON user.UID=loser.UID
-            WHERE FID=${FID}`)
+            WHERE FID=${FID};`)
                 .then(ans => {
-                    let losers = [];
+                    let losers = {};
                     for (let i = 0; i < ans.length; i++) {
                         for (let prop in ans[i]) {
-                            losers.push(JSON.parse(ans[i][prop]));
+                            //losers.push(JSON.parse(ans[i][prop]));
+                            losers = {...losers, ...JSON.parse(ans[i][prop])};
                         }
                     }
                     // Query för att hämta resultat och tid för flippen
-                    req.db.query(`SELECT Result, Date_time FROM flip WHERE FID=${FID}`)
+                    req.db.query(`SELECT Result, Date_time FROM flip WHERE FID=${FID};`)
                         .then(ans => {
                             let flip = { results: null, time: null, winners: winners, losers: losers };
                             flip.results = ans[0].Result;
                             flip.time = ans[0].Date_time;
+                            console.log(flip);
                             res.json(flip);
                         })
                         .catch(err => {

@@ -25,9 +25,6 @@ class BetChoice extends React.Component {
 }
 
 class BetTimer extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         if (this.props.coinStatus <= 5) {
@@ -43,23 +40,32 @@ class BetTimer extends React.Component {
 }
 
 class Game extends React.Component {
-
+    _isMounted = false;
     constructor(props) {
         super(props);
         this.state = {
             coinStatus: 0
         }
-        const ws = new WebSocket('wss://193.10.236.94:5001'); // Kopplad mot coinen
+        const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
         this.coinStatus = this.coinStatus.bind(this);
         ws.onmessage = this.coinStatus;
     }
 
+    componentDidMount() {
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     coinStatus(data) {
         
         // Här är data.data JSON strängen
-        this.setState({coinStatus: JSON.parse(data.data).timeleft/1000.0});
-        //alert(data.data);
+        if (this._isMounted) {
+            this.setState({coinStatus: JSON.parse(data.data).timeleft/1000.0});
+        }
     }
 
     placeBet = async (suit, amount) => {
@@ -73,20 +79,19 @@ class Game extends React.Component {
         });
 
         const body = await response.json();
-        if (response.status == 400) {
+        if (response.status === 400) {
             alert("Database read/write error!");
         }
-        else if (response.status == 401) {
+        else if (response.status === 401) {
             alert("You are not logged in!");
         }
-        else if (response.status == 403) {
+        else if (response.status === 403) {
             //throw Error(body.message);
             alert("Already put a bet on this flip!");
         }
-        else if (response.status == 422) {
+        else if (response.status === 422) {
             alert("Illegal value for bet!");
         }
-        console.log(body);
         return body.express;
     }
 

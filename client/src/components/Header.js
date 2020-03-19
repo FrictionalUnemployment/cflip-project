@@ -1,8 +1,7 @@
-import React, { Component, useImperativeHandle } from 'react';
+import React, { Component } from 'react';
 import Popup from './popup.js';
 import Loginpopup from './loginpopup.js';
 import 'whatwg-fetch'
-import Statistics from './Statistics.js';
 
 class Header extends Component {
     constructor(props) {
@@ -10,18 +9,20 @@ class Header extends Component {
         this.state = {
             showPopup: false,
             isLoggedin: false,
-            loginPage: false,
+            loginPage: true,
             passwordsMatch: null,
             username: '',
             password: '',
             checkpassword: '',
             registeredUsername: '',
             captcha: '',
-            svgData: '',
-            
-
+            svgData: ''
         };
 
+    }
+    componentWillUnmount() {
+        clearInterval(this.timer);
+        this.timer = null;
     }
 
     handleOnChange(event) {
@@ -34,7 +35,7 @@ class Header extends Component {
 
     changeLogin() {
         this.setState({
-            Login: !this.state.loginPage
+            loginPage: !this.state.loginPage
         });
 
     }
@@ -66,35 +67,38 @@ class Header extends Component {
         }
         //returnerar svar från backend vilket är användarnamnet
        
-        return this.setState({ registeredUsername: body, isLoggedin: true })
+        this.setState({ registeredUsername: body, isLoggedin: true });
+        this.getUserBalance(this.state.registeredUsername);
+        this.timer = setInterval(() => this.getUserBalance(this.state.registeredUsername), 30000);
+        this.togglePopup();
     }
 
     comparePassword() {
        
         if (this.state.password !== this.state.checkpassword) {
-
             this.setState({ passwordsMatch: false })
 
             //alert(this.props.passwordsMatch)
             return false; // The form won't submit
-        }
-
-        else
+        } else
             this.setState({ passwordsMatch: true })
             
             this.checkCaptcha()
              .then(result => {
             if(result === true) this.register_user();
             });
-     
-      
+    }
 
+    execPopup() {
+        this.setState({
+            loginPage: true
+        });
+        this.togglePopup();
     }
 
     togglePopup() {
         this.setState({
             showPopup: !this.state.showPopup,
-            Login: this.state.LoginPage
         });
     }
 
@@ -109,7 +113,6 @@ class Header extends Component {
        const data = await response.json();
     //   if(data.robot) {
         //return this.register_user();
-        
         return data.robot
       // }
     }
@@ -138,9 +141,9 @@ class Header extends Component {
                 isLoggedin: true})
     }
  
-   
-
     logOut() {
+        clearInterval(this.timer);
+        this.timer = null;
         fetch('/user/logout')
             .then(ans => {
                 return this.setState({isLoggedin: false, registeredUsername: '', balance: '' })
@@ -153,73 +156,50 @@ class Header extends Component {
         const data = await response.json();
         
         const balance = JSON.stringify(data.Balance);
-        return balance
+        this.setState({balance: balance});
       }
   
-
     render() {
-       
-        
         let button;
         
-        
-        if(this.state.isLoggedin === false) {
+        if(!this.state.isLoggedin && !this.state.showPopup) {
             //this.togglePopup.bind(this)
-            button = <button onClick={this.togglePopup.bind(this)}>Login/Register</button>;
+            button = <button onClick={this.execPopup.bind(this)}>Login/Register</button>;
         } else if(this.state.isLoggedin === true) {
             button = <button onClick={this.logOut.bind(this)}>Logout</button>;
-           this.getUserBalance(this.state.registeredUsername)
-            .then(result => {
-            this.setState({balance : result})
-            
-            });
-            
         }
-      
-
+            
+        // style={{position: 'absolute', top: '8px', right: '16px'}}
         return (
             <header className="App-header">
+                <div>
+                    <button onClick={this.props.setGame}>Game</button>
+                    <button onClick={this.props.setStats}>Statistics</button>
+                </div>
 
-            <div style={{position: 'absolute', top: '8px', right: '16px'}}>
-            <h1>{this.state.balance}</h1>
-            <h1>{this.state.registeredUsername}</h1>
-            {button}
-            
-            <h1>{this.balanceofLoggedin}</h1>
-            {button}
-            
+                <div>
+                    <p>{this.state.balance}</p>
+                    <p>{this.state.registeredUsername}</p>
+                    {button}
+                </div>
 
-            </div>
-            
-              
-
-           
-
-            
-                
-                
-                
-           <Statistics />
-            
-
-                  {this.state.showPopup && !this.state.Login ?
+                {this.state.showPopup && !this.state.loginPage ?
                     <Popup
                         text='Registration'
                         closePopup={this.togglePopup.bind(this)}
                         handleOnChange={this.handleOnChange.bind(this)}
                         changeLogin={this.changeLogin.bind(this)}
                         handleSubmit={this.comparePassword.bind(this)}
-                        message={this.state.passwordsMatch === false && <div>Passwords don't match!</div>
-                            || this.state.passwordsMatch === true && this.state.registeredUsername !== undefined && <div>You're registered! {this.state.registeredUsername} </div>}
+                        message={(this.state.passwordsMatch === false && <div>Passwords don't match!</div>)
+                            || (this.state.passwordsMatch === true && this.state.registeredUsername !== undefined && <div>You're registered! {this.state.registeredUsername} </div>)}
+                        />
+                        : null}
 
-                    />
-                    : null
-                }
-
-                {this.state.registeredUsername !== undefined && this.state.Login && this.state.showPopup ?
+                {this.state.registeredUsername !== undefined && this.state.loginPage && this.state.showPopup ?
                     <Loginpopup
                         text='Login'
                         closeLoginPopup={this.togglePopup.bind(this)}
+                        changeLogin={this.changeLogin.bind(this)}
                         handleOnChange={this.handleOnChange.bind(this)}
                         handleLoginSubmit={this.handleLoginCaptcha.bind(this)}
                     />

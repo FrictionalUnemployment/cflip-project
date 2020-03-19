@@ -4,7 +4,7 @@ import ReactHtmlParser from 'react-html-parser';
 class Popup extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { svgData: '' }
+    this.state = { svgData: '' };
   }
 
   componentDidMount() {
