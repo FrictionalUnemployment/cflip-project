@@ -76,7 +76,6 @@ router.get('/flip/:FID', [
     }
 
     let FID = req.params.FID;
-    console.log(`\rGetting stats for flip: ${FID}`);
 
     // Om du lyckas få ihop alla 3 queries här i en är du en gud
     // Jag försökte i en hel dag innan jag gav upp
@@ -117,7 +116,6 @@ router.get('/flip/:FID', [
                             let flip = { results: null, time: null, winners: winners, losers: losers };
                             flip.results = ans[0].Result;
                             flip.time = ans[0].Date_time;
-                            console.log(flip);
                             res.json(flip);
                         })
                         .catch(err => {
