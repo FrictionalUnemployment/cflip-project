@@ -13,12 +13,12 @@ class Statistics extends React.Component {
             array: [],
             userInfo: '',
             winsInfo: [],
+            loseInfo: [],
             showStats: false,
             userArray: [],
             expanded: {}
-
         };
-        this.filterArray = this.filterArray.bind(this);
+       
     }
 
 
@@ -67,36 +67,84 @@ class Statistics extends React.Component {
 
         }
     }
+    async getLosses() {
+        const userInfo = this.state.userInfo;
+        console.log(userInfo)
+        for (var i = 0; i < userInfo.Losses.length; i++) {
+
+            const response = await fetch('/stats/flip/' + userInfo.Losses[i]);
+
+            const body = await response.json();
+            if (response.status !== 200) {
+                throw Error(body.message);
+            }
+
+            this.state.loseInfo.push(body)
+
+        }
+    }
 
     handleUserQuery = user => {
 
         this.getUser(user)
-            .then(() => this.getWID()).then(() => this.showUserStats());
+            .then(() => this.getWID()).then(() => this.getLosses()).then(() => this.showUserStats());
     }
 
     showUserStats() {
 
         const userInfo = this.state.userInfo;
         const userWID = this.state.winsInfo;
-        console.log(userInfo, userWID)
-       
-        for (var i = 0; i < userInfo.Wins.length; i++) {
-            for (var j = 0; j < userWID[i].winners.length; j++) {
-                console.log(userWID[i].winners[j], userInfo.Wins[i])
-               
-                    var obj = {
-                        "WinnerWID": userInfo.Wins[i],
-                        "FlipTime": userWID[i].time,
-                        "Results": userWID[i].results,
-                        "Winners": Object.keys(userWID[i].winners[j])[0],
-                        "winTrue":  userWID[i].winners[j][userInfo.Username] 
-                        
-                    };
-                
+        const loseInfo = this.state.loseInfo;
+        console.log(userInfo)
+        for (var i = 0; i < userInfo.Losses.length; i++) {
+            var unixTime = new Date(loseInfo[i].time).toLocaleTimeString("en-US")
+            var unixDate = new Date(loseInfo[i].time).toLocaleDateString("en-US")
+            var winKeys = Object.keys(loseInfo[i].winners);
+            var loseKeys = Object.keys(loseInfo[i].losers);
 
-                
-
+            if (winKeys.length > 1) {
+                var winKeys = Object.keys(loseInfo[i].winners) + ",";
             }
+
+            if (loseKeys.length > 1) {
+                var loseKeys = Object.keys(loseInfo[i].losers) + ",";
+            }
+
+
+            var obj = {
+                "FlipTime": unixTime + " " + unixDate,
+                "Results": loseInfo[i].results,
+                "Winners": winKeys,
+                "Losers": loseKeys,
+                "winTrue": "Lost" + " " + loseInfo[i].losers[userInfo.Username]
+
+            };
+            this.state.userArray.push(obj);
+        }
+
+        for (var i = 0; i < userInfo.Wins.length; i++) {
+            var unixTime = new Date(userWID[i].time).toLocaleTimeString("en-US")
+            var unixDate = new Date(userWID[i].time).toLocaleDateString("en-US")
+            var winKeys = Object.keys(userWID[i].winners);
+            var loseKeys = Object.keys(userWID[i].losers);
+
+            if (winKeys.length > 1) {
+                var winKeys = Object.keys(userWID[i].winners) + ",";
+            }
+
+            if (loseKeys.length > 1) {
+                var loseKeys = Object.keys(userWID[i].losers) + ",";
+            }
+
+
+            var obj = {
+                "FlipTime": unixTime + " " + unixDate,
+                "Results": userWID[i].results,
+                "Winners": winKeys,
+                "Losers": loseKeys,
+                "winTrue": "Won" + " " + userWID[i].winners[userInfo.Username]
+
+            };
             this.state.userArray.push(obj);
         }
 
@@ -106,16 +154,14 @@ class Statistics extends React.Component {
     }
 
 
-
-    filterArray(e) {
-
-
-        console.log(e)
-
+    closeStatistics = event => {
+       
+        this.setState({
+            showStats: false, userInfo: '', winsInfo: [], loseInfo: [], userArray: [], array: []
+        });
+        this.props.closeStats(event)
     }
-    expand_row(info) {
-        console.log(info);
-    }
+    
 
 
 
@@ -141,6 +187,8 @@ class Statistics extends React.Component {
             },
             {
                 Header: "User",
+                accessor: "Username",
+                filterable: true,
 
                 Cell: props => {
                     return (
@@ -150,6 +198,7 @@ class Statistics extends React.Component {
                         </button>
                     )
                 }
+                
             },
             {
                 Header: "Balance",
@@ -178,7 +227,8 @@ class Statistics extends React.Component {
                     {
                         Header: "Time",
                         accessor: "FlipTime",
-                        
+                        width: 300
+
                     },
                     {
                         Header: "Results",
@@ -196,14 +246,16 @@ class Statistics extends React.Component {
                 Header: "Win Results",
                 accessor: "Results"
             },
-            {
-                Header: "Win Time",
-                accessor: "FlipTime"
-            },
+
             {
                 Header: "Winners",
                 accessor: "Winners"
+            },
+            {
+                Header: "Losers",
+                accessor: "Losers"
             }
+
         ]
 
 
@@ -214,15 +266,20 @@ class Statistics extends React.Component {
 
         return (
             <div className='popup'>
-
+                <button onClick={this.closeStatistics}>X</button>
                 {!this.state.showStats ?
-                    <ReactTable data={this.state.array} columns={columnsDefault} filterable={["Username"]}
+                    <ReactTable data={this.state.array} columns={columnsDefault} filterable={["USERID"]}
                         showPageSizeOptions={false} defaultPageSize={10}
 
                     />
                     : null
                 }
-                {"Statistics for user: " + this.state.userInfo.Username}
+
+                {this.state.userInfo.Username !== undefined ?
+                    "Statistics for user: " + this.state.userInfo.Username
+                    : null
+                }
+
                 {this.state.showStats ?
 
 

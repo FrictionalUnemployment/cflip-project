@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Popup from './popup.js';
 import Loginpopup from './loginpopup.js';
 import 'whatwg-fetch'
+import Statistics from './Statistics.js';
 
 class Header extends Component {
     constructor(props) {
@@ -182,7 +183,13 @@ class Header extends Component {
                     <p>{this.state.registeredUsername}</p>
                     {button}
                 </div>
-
+                {this.state.showPopup ?
+                <Statistics 
+                closeStats={this.togglePopup.bind(this)} 
+                    
+                />
+                : null
+                }
                 {this.state.showPopup && !this.state.loginPage ?
                     <Popup
                         text='Registration'
