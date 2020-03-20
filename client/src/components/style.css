@@ -23,6 +23,69 @@
     background: white;  
   }
   
+<<<<<<< HEAD
+=======
+   th.reactable-header-sort-asc:after {
+    content: '\25BC';
+    font-size: 10px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+  }
+
+body {
+  background-color: #666;
+  font-family: "PT Sans", sans-serif;
+}
+
+table {
+  border-collapse: collapse;
+  width: 50%;
+  margin: auto;
+  border-radius: 20px;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px;
+}
+
+tr:nth-child(even) {
+  background-color: #1b0505;
+}
+
+tr:nth-child(odd) {
+  background-color: rgb(99, 99, 99);
+}
+
+th {
+  background-color: #ffffff;
+  color: #1b0505;
+  cursor: pointer;
+}
+
+th.reactable-header-sort-desc, #demo-table th.reactable-header-sort-asc {
+  background-color: #474747;
+}
+
+th.reactable-header-sort-desc:after {
+  content: '\25B2';
+  font-size: 10px;
+  padding-left: 10px;
+  padding-bottom: 5px;
+}
+
+th.reactable-header-sort-asc:after {
+  content: '\25BC';
+  font-size: 10px;
+  padding-left: 10px;
+  padding-bottom: 5px;
+}
+
+th {
+  background-color: rgb(255, 253, 253);
+  color: rgb(8, 0, 0);
+}
+>>>>>>> 14ad3af11e3dccbc2f0348719b9990cdbc0ea5b1
 
 .login {
   border: none;
