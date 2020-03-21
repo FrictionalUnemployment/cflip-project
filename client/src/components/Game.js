@@ -22,6 +22,16 @@ class BetChoice extends React.Component {
             </div>
         )
     }
+    
+}
+
+class BetWinner extends React.Component {
+
+    render() {
+        return (
+            <p id="wintext">Winner is {this.props.lastWinner}</p>
+        );
+    }
 }
 
 class BetTimer extends React.Component {
@@ -44,7 +54,8 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            coinStatus: 0
+            coinStatus: 0,
+            lastWinner: false
         }
         const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
@@ -64,7 +75,11 @@ class Game extends React.Component {
         
         // Här är data.data JSON strängen
         if (this._isMounted) {
-            this.setState({coinStatus: JSON.parse(data.data).timeleft/1000.0});
+            const parsed = JSON.parse(data.data);
+            this.setState({coinStatus: parsed.timeleft/1000.0});
+            if (parsed.winner != null) {
+                this.setState({lastWinner: parsed.winner[0]});
+            }
         }
     }
 
@@ -95,6 +110,10 @@ class Game extends React.Component {
         return body.express;
     }
 
+    showWinner = () => {
+        
+    }
+
     render() {
         return (
             <div className="App-game">
@@ -102,6 +121,7 @@ class Game extends React.Component {
                 <div className="gameboard">
                     <img src={logo} className="App-logo" alt="logo" />
                     <BetTimer {...this.state} />
+                    <BetWinner {...this.state} />
                 </div>
                 <BetChoice suit="tails" onClick={this.placeBet} />
             </div>
