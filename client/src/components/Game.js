@@ -5,19 +5,19 @@ const WebSocket = require('isomorphic-ws');
 class BetChoice extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            amount: 10
-        }
         this.handleClick = this.handleClick.bind(this);
+        this.inputRef = React.createRef();
     }
 
     handleClick() {
-        this.props.onClick(this.props.suit, this.state.amount);
+        this.props.onClick(this.props.suit, this.inputRef.current.value);
+        this.inputRef.current.value = "";
     }
 
     render() {
         return (
             <div className="betchoice">
+                <input ref={this.inputRef} type="number"></input>
                 <button className="s" onClick={this.handleClick}>Bet {this.props.suit}!</button>
             </div>
         )
