@@ -113,13 +113,13 @@ class Game extends React.Component {
     showWinner = () => {
         
     }
-
+    // <img src={logo} className="App-logo" alt="logo" />  // Snurrande coinen.
     render() {
         return (
             <div className="App-game">
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
-                    <img src={logo} className="App-logo" alt="logo" />
+                    
                     <BetTimer {...this.state} />
                     <BetWinner {...this.state} />
                 </div>
