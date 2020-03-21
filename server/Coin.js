@@ -17,10 +17,10 @@ class Coin {
         this.httpsServer = https.createServer(credentials);
         this.wss = new WebSocket.Server({ server: this.httpsServer });
         this.wss.on('connection', function connection(ws, req) {
-            console.log('\rclient connected to coin: ' + req.connection.remoteAddress);
+            console.log('\rclient connected to coin');
         });
         this.wss.on('error', function error(err) {
-            console.log('websocket server error: ' + err);
+            console.error('websocket server error: ' + err);
         });
         this.httpsServer.listen(5001);
     }
@@ -150,7 +150,7 @@ class Coin {
                 this.bets = [];
             })
             .catch(err => {
-                console.log('Error inserting flip' + err);
+                console.error('Error inserting flip' + err);
                 this.bets = [];
             })
     }
