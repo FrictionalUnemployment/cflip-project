@@ -9,38 +9,17 @@ import Statistics from './components/Statistics';
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            mode: 1
-        };
-    }
-
-    setGame = () => {
-        this.setState({mode: 1});
-    }
-
-    setStats = () => {
-        this.setState({mode: 2});
     }
 
     render() {
-        if (this.state.mode === 1) {
-            return (
-                <div className="Site">
-                    <Header setGame={this.setGame} setStats={this.setStats}/>
-                    <Game />
-                    <Footer />
-                </div>
+        return (
+            <div className="Site">
+                <Header setGame={this.setGame} setStats={this.setStats} />
+                <Game />
+                <Footer />
+            </div>
 
-            );
-        } else if (this.state.mode === 2) {
-            return (
-                <div className="Site">
-                    <Header setGame={this.setGame} setStats={this.setStats}/>
-                    <Statistics />
-                    <Footer />
-                </div>
-            );
-        }
+        );
     }
 }
 
