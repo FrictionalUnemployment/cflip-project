@@ -23,6 +23,18 @@
     background: white;  
   }
   
+  .ReactTable .rt-tbody .rt-expandable {
+    cursor: pointer;
+  }
+
+  
+.ReactTable .rt-expander {
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  color: white;
+  margin: 0 10px;
+}
 
 .login {
   border: none;

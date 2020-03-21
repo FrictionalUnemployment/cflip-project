@@ -19,7 +19,7 @@ class Header extends Component {
             captcha: '',
             svgData: ''
         };
-
+            
     }
     componentWillUnmount() {
         clearInterval(this.timer);
@@ -183,6 +183,7 @@ class Header extends Component {
                     <p>{this.state.registeredUsername}</p>
                     {button}
                 </div>
+
                 {this.state.showPopup ?
                 <Statistics 
                 closeStats={this.togglePopup.bind(this)} 
@@ -190,6 +191,7 @@ class Header extends Component {
                 />
                 : null
                 }
+
                 {this.state.showPopup && !this.state.loginPage ?
                     <Popup
                         text='Registration'

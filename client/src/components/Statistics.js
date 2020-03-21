@@ -18,7 +18,6 @@ class Statistics extends React.Component {
             userArray: [],
             expanded: {}
         };
-       
     }
 
 
@@ -154,12 +153,12 @@ class Statistics extends React.Component {
     }
 
 
-    closeStatistics = event => {
+    closeStatistics() {
        
         this.setState({
             showStats: false, userInfo: '', winsInfo: [], loseInfo: [], userArray: [], array: []
         });
-        this.props.closeStats(event)
+        this.props.closeStats();
     }
     
 
