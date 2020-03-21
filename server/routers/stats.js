@@ -14,8 +14,6 @@ router.get('/toplist/:top/:limit', [
         return res.status(422).json({ errors: errors.array() });
     }
 
-    console.log(`\rGetting ${req.params.top} ${req.params.limit}`);
-
     let order = (req.params.top === 'bottom') ? 'ASC' : 'DESC';
     req.db.query(`SELECT
                 Username,
@@ -29,7 +27,7 @@ router.get('/toplist/:top/:limit', [
             res.json(ans);
         })
         .catch(err => {
-            console.log("Error getting top list");
+            console.error("Error getting top list " + err);
             res.status(500).json({ errors: err });
         });
 });
@@ -42,7 +40,6 @@ router.get('/user/:user', [
         return res.status(422).json({ errors: errors.array() });
     }
 
-    console.log(`\rGetting user stats for ${req.params.user}`);
     req.db.query(`SELECT
                 user.Username,
                 user.Balance,
@@ -62,7 +59,7 @@ router.get('/user/:user', [
             res.json(ans[0]);
         })
         .catch(err => {
-            console.log('Error getting user stats ' + err);
+            console.error('Error getting user stats ' + err);
             res.status(400).json({ errors: err });
         });
 });
@@ -119,18 +116,18 @@ router.get('/flip/:FID', [
                             res.json(flip);
                         })
                         .catch(err => {
-                            console.log('Error getting flip: ' + err);
+                            console.error('Error getting flip: ' + err);
                             res.status(400).json({ errors: err });
                         })
 
                 })
                 .catch(err => {
-                    console.log('Error getting flip losers: ' + err);
+                    console.error('Error getting flip losers: ' + err);
                     res.status(400).json({ errors: err });
                 })
         })
         .catch(err => {
-            console.log('Error getting flip winners: ' + err);
+            console.error('Error getting flip winners: ' + err);
             res.status(400).json({ errors: err });
         })
 });
