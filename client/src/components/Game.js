@@ -25,11 +25,21 @@ class BetChoice extends React.Component {
     
 }
 
+class CurrentBet extends React.Component {
+    render() {
+        const bet = this.props.suit && this.props.amount != null ? "You bet " + this.props.amount + " on " + this.props.suit + "." : null;
+        return (
+            <p id="currentbettext">{bet}</p>
+        );
+    }
+}
+
 class BetWinner extends React.Component {
 
     render() {
+        const winner = this.props.lastWinner ? "Winner is " + this.props.lastWinner : null;
         return (
-            <p id="wintext">Winner is {this.props.lastWinner}</p>
+            <p id="wintext">{winner}</p>
         );
     }
 }
@@ -55,7 +65,9 @@ class Game extends React.Component {
         super(props);
         this.state = {
             coinStatus: 0,
-            lastWinner: false
+            lastWinner: false,
+            suit: null,
+            amount: null
         }
         const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
@@ -78,7 +90,7 @@ class Game extends React.Component {
             const parsed = JSON.parse(data.data);
             this.setState({coinStatus: parsed.timeleft/1000.0});
             if (parsed.winner != null) {
-                this.setState({lastWinner: parsed.winner[0]});
+                this.setState({lastWinner: parsed.winner[0], suit: null, amount: null});
             }
         }
     }
@@ -86,6 +98,7 @@ class Game extends React.Component {
     placeBet = async (suit, amount) => {
         // Här sätts vad, vem och hur mycket
         //const data = {bet: suit, username: name, amount: amount};
+        this.setState({suit: suit, amount: amount});
 
         const response = await fetch(`/coin/bet/${suit}/${amount}`, {
             method: 'POST',
@@ -119,7 +132,7 @@ class Game extends React.Component {
             <div className="App-game">
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
-                    
+                    <CurrentBet {...this.state} />
                     <BetTimer {...this.state} />
                     <BetWinner {...this.state} />
                 </div>
