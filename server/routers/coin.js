@@ -24,7 +24,6 @@ router.post('/bet/:bet/:amount', [
     const user = req.session.Username;
     let amount = req.params.amount;
 
-    console.log(`\rPlacing bet for ${user}, for ${amount}, on ${bet}`);
     if (!req.coin.hasExistingBet(user)) {
         req.db.query(`SELECT Balance FROM user WHERE Username="${user}"`)
             .then(ans => {
@@ -32,15 +31,13 @@ router.post('/bet/:bet/:amount', [
 
                 req.coin.placeBet(user, amount, bet);
                 res.json(`Bet placed by ${user} on ${bet} for ${amount}`);
-                console.log(`Bet placed by ${user} on ${bet} for ${amount}.`);
             })
             .catch(err => {
-                console.log('Error getting user balance: ' + err);
+                console.error('Error getting user balance: ' + err);
                 res.status(400).json({ errors: err });
             });
     } else {
         res.status(403).json({ errors: { msg: `${user} has already bet on this flip.` } });
-        console.log(`${user} has existing bet on this flip. Cancelling bet.`);
     }
 });
 

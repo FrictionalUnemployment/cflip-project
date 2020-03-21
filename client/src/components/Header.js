@@ -9,6 +9,7 @@ class Header extends Component {
         super(props);
         this.state = {
             showPopup: false,
+            stats: false,
             isLoggedin: false,
             loginPage: true,
             passwordsMatch: null,
@@ -159,6 +160,16 @@ class Header extends Component {
         const balance = JSON.stringify(data.Balance);
         this.setState({balance: balance});
       }
+
+    showStats = () => {
+        this.setState({stats: true});
+        this.togglePopup();
+    }
+
+    closeStats = () => {
+        this.setState({stats: false});
+        this.togglePopup();
+    }
   
     render() {
         let button;
@@ -174,25 +185,22 @@ class Header extends Component {
         return (
             <header className="App-header">
                 <div>
-                    <button onClick={this.props.setGame}>Game</button>
-                    <button onClick={this.props.setStats}>Statistics</button>
+                    {this.state.showPopup ? null :
+                    <button onClick={this.showStats}>Statistics</button>}
                 </div>
 
-                <div>
+                <div id="userinfo">
                     <p>{this.state.balance}</p>
                     <p>{this.state.registeredUsername}</p>
-                    {button}
                 </div>
-
-                {this.state.showPopup ?
-                <Statistics 
-                closeStats={this.togglePopup.bind(this)} 
-                    
-                />
+                {button}
+                {(this.state.showPopup && this.state.stats) ?
+                    <Statistics 
+                    closeStats={this.closeStats}   
+                    />
                 : null
                 }
-
-                {this.state.showPopup && !this.state.loginPage ?
+                {this.state.showPopup && !this.state.loginPage && !this.state.stats ?
                     <Popup
                         text='Registration'
                         closePopup={this.togglePopup.bind(this)}
@@ -204,7 +212,7 @@ class Header extends Component {
                         />
                         : null}
 
-                {this.state.registeredUsername !== undefined && this.state.loginPage && this.state.showPopup ?
+                {this.state.registeredUsername !== undefined && this.state.loginPage && this.state.showPopup && !this.state.stats ?
                     <Loginpopup
                         text='Login'
                         closeLoginPopup={this.togglePopup.bind(this)}

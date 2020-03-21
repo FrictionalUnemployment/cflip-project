@@ -29,19 +29,16 @@ router.post('/register', [
         .update(req.body.password)
         .digest('hex');
 
-    console.log(`\rRegistering user: ${user}\nHash: ${hash}`);
-
     req.db.query('INSERT INTO user (Username, Password, Balance) ' +
         `VALUES ("${user}", "${hash}", 50);`)
         .then(ans => {
-            console.log(`Registered ${user}`);
             req.session.loggedIn = true;
             req.session.Username = user;
             res.json(user);
         })
         .catch(err => {
             res.status(400).json({ errors: err });
-            console.log('error registering user:' + err);
+            console.error('error registering user:' + err);
         });
 });
 
@@ -63,7 +60,6 @@ router.post('/login', [
         .update(req.body.password)
         .digest('hex');
 
-    console.log(`\rLogging in ${user}`);
     req.db.query(`SELECT Password FROM user WHERE Username="${user}";`)
         .then(ans => {
 
@@ -82,7 +78,6 @@ router.post('/login', [
                 req.session.loggedIn = true;
                 req.session.Username = user;
                 res.json(user);
-                console.log('logged in ' + user);
             } else {
                 let errmsg = {
                     value: pwd,
@@ -91,24 +86,22 @@ router.post('/login', [
                     location: 'body'
                 }
                 res.status(401).json({ errors: errmsg });
-                console.log('incorrect password: ' + user);
             }
         })
         .catch(err => {
             res.status(400).json({ errors: err });
-            console.log('error logging in: ' + err);
+            console.error('error logging in: ' + err);
         });
 });
 
 router.get('/list', (req, res) => {
-    console.log('\rGetting User list');
     req.db.query('SELECT Username FROM user')
         .then(ans => {
             let usernames = ans.map(x => x.Username);
             res.json(usernames);
         })
         .catch(err => {
-            console.log('error getting user list' + err);
+            console.error('error getting user list' + err);
             res.status(400).json({ error: err });
         });
 });

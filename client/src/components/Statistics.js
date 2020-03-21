@@ -96,52 +96,52 @@ class Statistics extends React.Component {
         const loseInfo = this.state.loseInfo;
         console.log(userInfo)
         for (var i = 0; i < userInfo.Losses.length; i++) {
-            var unixTime = new Date(loseInfo[i].time).toLocaleTimeString("en-US")
-            var unixDate = new Date(loseInfo[i].time).toLocaleDateString("en-US")
-            var winKeys = Object.keys(loseInfo[i].winners);
-            var loseKeys = Object.keys(loseInfo[i].losers);
+            let unixTime = new Date(loseInfo[i].time).toLocaleTimeString("en-US")
+            let unixDate = new Date(loseInfo[i].time).toLocaleDateString("en-US")
+            let winKeys = Object.keys(loseInfo[i].winners);
+            let loseKeys = Object.keys(loseInfo[i].losers);
 
             if (winKeys.length > 1) {
-                var winKeys = Object.keys(loseInfo[i].winners) + ",";
+                winKeys = Object.keys(loseInfo[i].winners) + ",";
             }
 
             if (loseKeys.length > 1) {
-                var loseKeys = Object.keys(loseInfo[i].losers) + ",";
+                loseKeys = Object.keys(loseInfo[i].losers) + ",";
             }
 
 
-            var obj = {
+            let obj = {
                 "FlipTime": unixTime + " " + unixDate,
                 "Results": loseInfo[i].results,
                 "Winners": winKeys,
                 "Losers": loseKeys,
-                "winTrue": "Lost" + " " + loseInfo[i].losers[userInfo.Username]
+                "winTrue": "Lost " + loseInfo[i].losers[userInfo.Username]
 
             };
             this.state.userArray.push(obj);
         }
 
-        for (var i = 0; i < userInfo.Wins.length; i++) {
-            var unixTime = new Date(userWID[i].time).toLocaleTimeString("en-US")
-            var unixDate = new Date(userWID[i].time).toLocaleDateString("en-US")
-            var winKeys = Object.keys(userWID[i].winners);
-            var loseKeys = Object.keys(userWID[i].losers);
+        for (let i = 0; i < userInfo.Wins.length; i++) {
+            let unixTime = new Date(userWID[i].time).toLocaleTimeString("en-US")
+            let unixDate = new Date(userWID[i].time).toLocaleDateString("en-US")
+            let winKeys = Object.keys(userWID[i].winners);
+            let loseKeys = Object.keys(userWID[i].losers);
 
             if (winKeys.length > 1) {
-                var winKeys = Object.keys(userWID[i].winners) + ",";
+                winKeys = Object.keys(userWID[i].winners) + ",";
             }
 
             if (loseKeys.length > 1) {
-                var loseKeys = Object.keys(userWID[i].losers) + ",";
+                loseKeys = Object.keys(userWID[i].losers) + ",";
             }
 
 
-            var obj = {
+            let obj = {
                 "FlipTime": unixTime + " " + unixDate,
                 "Results": userWID[i].results,
                 "Winners": winKeys,
                 "Losers": loseKeys,
-                "winTrue": "Won" + " " + userWID[i].winners[userInfo.Username]
+                "winTrue": "Won " + userWID[i].winners[userInfo.Username]
 
             };
             this.state.userArray.push(obj);

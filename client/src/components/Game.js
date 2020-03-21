@@ -5,22 +5,42 @@ const WebSocket = require('isomorphic-ws');
 class BetChoice extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            amount: 10
-        }
         this.handleClick = this.handleClick.bind(this);
+        this.inputRef = React.createRef();
     }
 
     handleClick() {
-        this.props.onClick(this.props.suit, this.state.amount);
+        this.props.onClick(this.props.suit, this.inputRef.current.value);
+        this.inputRef.current.value = "";
     }
 
     render() {
         return (
             <div className="betchoice">
+                <input ref={this.inputRef} type="number"></input>
                 <button className="s" onClick={this.handleClick}>Bet {this.props.suit}!</button>
             </div>
         )
+    }
+    
+}
+
+class CurrentBet extends React.Component {
+    render() {
+        const bet = this.props.suit && this.props.amount != null ? "You bet " + this.props.amount + " on " + this.props.suit + "." : null;
+        return (
+            <p id="currentbettext">{bet}</p>
+        );
+    }
+}
+
+class BetWinner extends React.Component {
+
+    render() {
+        const winner = this.props.lastWinner ? "Winner is " + this.props.lastWinner : null;
+        return (
+            <p id="wintext">{winner}</p>
+        );
     }
 }
 
@@ -44,7 +64,10 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            coinStatus: 0
+            coinStatus: 0,
+            lastWinner: false,
+            suit: null,
+            amount: null
         }
         const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
@@ -64,13 +87,18 @@ class Game extends React.Component {
         
         // Här är data.data JSON strängen
         if (this._isMounted) {
-            this.setState({coinStatus: JSON.parse(data.data).timeleft/1000.0});
+            const parsed = JSON.parse(data.data);
+            this.setState({coinStatus: parsed.timeleft/1000.0});
+            if (parsed.winner != null) {
+                this.setState({lastWinner: parsed.winner[0], suit: null, amount: null});
+            }
         }
     }
 
     placeBet = async (suit, amount) => {
         // Här sätts vad, vem och hur mycket
         //const data = {bet: suit, username: name, amount: amount};
+        this.setState({suit: suit, amount: amount});
 
         const response = await fetch(`/coin/bet/${suit}/${amount}`, {
             method: 'POST',
@@ -95,13 +123,18 @@ class Game extends React.Component {
         return body.express;
     }
 
+    showWinner = () => {
+        
+    }
+    // <img src={logo} className="App-logo" alt="logo" />  // Snurrande coinen.
     render() {
         return (
             <div className="App-game">
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
-                    <img src={logo} className="App-logo" alt="logo" />
+                    <CurrentBet {...this.state} />
                     <BetTimer {...this.state} />
+                    <BetWinner {...this.state} />
                 </div>
                 <BetChoice suit="tails" onClick={this.placeBet} />
             </div>

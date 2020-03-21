@@ -25,7 +25,7 @@ db.getConnection()
         conn.release();
     })
     .catch(err => {
-        console.log("Not connected to database: " + err);
+        console.error("Not connected to database: " + err);
     });
 
 // Skapar coin object och funktion som uppdaterar den
