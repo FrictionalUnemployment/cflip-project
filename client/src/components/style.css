@@ -44,3 +44,8 @@ header {
 #wintext {
   color: green;
 }
+
+#userinfo {
+  display: flex;
+  flex-direction: row;
+}

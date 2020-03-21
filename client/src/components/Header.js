@@ -189,11 +189,11 @@ class Header extends Component {
                     <button onClick={this.showStats}>Statistics</button>}
                 </div>
 
-                <div>
+                <div id="userinfo">
                     <p>{this.state.balance}</p>
                     <p>{this.state.registeredUsername}</p>
-                    {button}
                 </div>
+                {button}
                 {(this.state.showPopup && this.state.stats) ?
                     <Statistics 
                     closeStats={this.closeStats}   
