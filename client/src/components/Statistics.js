@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 import ReactTable from 'react-table-6'
-import 'react-table-6/react-table.css'
+import './table.css'
 
 
 class Statistics extends React.Component {
@@ -16,9 +16,10 @@ class Statistics extends React.Component {
             loseInfo: [],
             showStats: false,
             userArray: [],
-            expanded: {}
+            expanded: {},
+            errorMessage: ''
         };
-       
+    
     }
 
 
@@ -60,7 +61,10 @@ class Statistics extends React.Component {
 
             const body = await response.json();
             if (response.status !== 200) {
-                throw Error(body.message);
+
+                if (body.errors[0].msg === "Invalid value") {
+                    return this.setState({ errorMessage: body.errors[0].msg });
+                }
             }
 
             this.state.winsInfo.push(body)
@@ -76,7 +80,9 @@ class Statistics extends React.Component {
 
             const body = await response.json();
             if (response.status !== 200) {
-                throw Error(body.message);
+                if (body.errors[0].msg === "Invalid value") {
+                    return this.setState({ errorMessage: body.errors[0].msg });
+                }
             }
 
             this.state.loseInfo.push(body)
@@ -86,8 +92,14 @@ class Statistics extends React.Component {
 
     handleUserQuery = user => {
 
-        this.getUser(user)
-            .then(() => this.getWID()).then(() => this.getLosses()).then(() => this.showUserStats());
+        if (this.state.errorMessage !== "") {
+            this.setState({ errorMessage: '' });
+        } else {
+            console.log(this.btn)
+            this.btn.setAttribute("disabled", "disabled");
+            this.getUser(user)
+                .then(() => this.getWID()).then(() => this.getLosses()).then(() => this.showUserStats());
+        }
     }
 
     showUserStats() {
@@ -95,73 +107,78 @@ class Statistics extends React.Component {
         const userInfo = this.state.userInfo;
         const userWID = this.state.winsInfo;
         const loseInfo = this.state.loseInfo;
-        console.log(userInfo)
-        for (var i = 0; i < userInfo.Losses.length; i++) {
-            let unixTime = new Date(loseInfo[i].time).toLocaleTimeString("en-US")
-            let unixDate = new Date(loseInfo[i].time).toLocaleDateString("en-US")
-            let winKeys = Object.keys(loseInfo[i].winners);
-            let loseKeys = Object.keys(loseInfo[i].losers);
+        console.log(this.state.errorMessage)
+        if (this.state.errorMessage === "") {
 
-            if (winKeys.length > 1) {
-                winKeys = Object.keys(loseInfo[i].winners) + ",";
+            for (var i = 0; i < userInfo.Losses.length; i++) {
+                let unixTime = new Date(loseInfo[i].time).toLocaleTimeString("en-US")
+                let unixDate = new Date(loseInfo[i].time).toLocaleDateString("en-US")
+                let winKeys = Object.keys(loseInfo[i].winners);
+                let loseKeys = Object.keys(loseInfo[i].losers);
+
+                if (winKeys.length > 1) {
+                    winKeys = Object.keys(loseInfo[i].winners) + ",";
+                }
+
+                if (loseKeys.length > 1) {
+                    loseKeys = Object.keys(loseInfo[i].losers) + ",";
+                }
+
+
+                let obj = {
+                    "FlipTime": unixTime + " " + unixDate,
+                    "Results": loseInfo[i].results,
+                    "Winners": winKeys,
+                    "Losers": loseKeys,
+                    "winTrue": "Lost " + loseInfo[i].losers[userInfo.Username]
+
+                };
+                this.state.userArray.push(obj);
             }
 
-            if (loseKeys.length > 1) {
-                loseKeys = Object.keys(loseInfo[i].losers) + ",";
+            for (let i = 0; i < userInfo.Wins.length; i++) {
+                let unixTime = new Date(userWID[i].time).toLocaleTimeString("en-US")
+                let unixDate = new Date(userWID[i].time).toLocaleDateString("en-US")
+                let winKeys = Object.keys(userWID[i].winners);
+                let loseKeys = Object.keys(userWID[i].losers);
+
+                if (winKeys.length > 1) {
+                    winKeys = Object.keys(userWID[i].winners) + ",";
+                }
+
+                if (loseKeys.length > 1) {
+                    loseKeys = Object.keys(userWID[i].losers) + ",";
+                }
+
+
+                let obj = {
+                    "FlipTime": unixTime + " " + unixDate,
+                    "Results": userWID[i].results,
+                    "Winners": winKeys,
+                    "Losers": loseKeys,
+                    "winTrue": "Won " + userWID[i].winners[userInfo.Username]
+
+                };
+                this.state.userArray.push(obj);
             }
 
-
-            let obj = {
-                "FlipTime": unixTime + " " + unixDate,
-                "Results": loseInfo[i].results,
-                "Winners": winKeys,
-                "Losers": loseKeys,
-                "winTrue": "Lost " + loseInfo[i].losers[userInfo.Username]
-
-            };
-            this.state.userArray.push(obj);
+            this.setState({
+                showStats: true
+            });
         }
 
-        for (let i = 0; i < userInfo.Wins.length; i++) {
-            let unixTime = new Date(userWID[i].time).toLocaleTimeString("en-US")
-            let unixDate = new Date(userWID[i].time).toLocaleDateString("en-US")
-            let winKeys = Object.keys(userWID[i].winners);
-            let loseKeys = Object.keys(userWID[i].losers);
 
-            if (winKeys.length > 1) {
-                winKeys = Object.keys(userWID[i].winners) + ",";
-            }
-
-            if (loseKeys.length > 1) {
-                loseKeys = Object.keys(userWID[i].losers) + ",";
-            }
-
-
-            let obj = {
-                "FlipTime": unixTime + " " + unixDate,
-                "Results": userWID[i].results,
-                "Winners": winKeys,
-                "Losers": loseKeys,
-                "winTrue": "Won " + userWID[i].winners[userInfo.Username]
-
-            };
-            this.state.userArray.push(obj);
-        }
-
-        this.setState({
-            showStats: true
-        });
     }
 
 
-    closeStatistics = event => {
-       
+    closeStatistics() {
+
         this.setState({
             showStats: false, userInfo: '', winsInfo: [], loseInfo: [], userArray: [], array: []
         });
-        this.props.closeStats(event)
+        this.props.closeStats();
     }
-    
+
 
 
 
@@ -192,13 +209,13 @@ class Statistics extends React.Component {
 
                 Cell: props => {
                     return (
-                        <button onClick={() => {
+                        <button ref={btn => { this.btn = btn; }}  onClick={() => {
                             this.handleUserQuery(props.original.Username);
                         }}>{props.original.Username}
                         </button>
                     )
                 }
-                
+
             },
             {
                 Header: "Balance",
@@ -266,49 +283,79 @@ class Statistics extends React.Component {
 
         return (
             <div className='popup'>
-                <button onClick={this.closeStatistics}>X</button>
-                {!this.state.showStats ?
-                    <ReactTable data={this.state.array} columns={columnsDefault} filterable={["USERID"]}
-                        showPageSizeOptions={false} defaultPageSize={10}
+                <div style={{
+                    position: "relative",
+                    top: "3px",
+                    left: "678px"
+                }}>
+                    <button onClick={this.closeStatistics.bind(this)}>X</button>
+                </div>
+                <div className="popup\_inner">
 
-                    />
-                    : null
-                }
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <div style={{ color: "red" }}>
+                            {this.state.errorMessage !== "" ?
+                                "Statistics for user: " + this.state.errorMessage
+                                : null
+                            }
+                        </div>
 
-                {this.state.userInfo.Username !== undefined ?
-                    "Statistics for user: " + this.state.userInfo.Username
-                    : null
-                }
-
-                {this.state.showStats ?
+                        {this.state.userInfo.Username !== undefined && this.state.errorMessage === "" ?
+                            "Statistics for user: " + this.state.userInfo.Username
+                            : null
+                        }
 
 
-                    <ReactTable data={this.state.userArray} columns={columnsWinUser}
-                        showPageSizeOptions={false}
-                        expanded={this.state.expanded}
-                        onExpandedChange={(expanded, index, event) => {
-                            this.setState({ expanded });
+                    </div>
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center"
                         }}
-                        SubComponent={row => {
+                    >
 
-                            const temp = this.state.userArray[row.index]
-                            return (
-                                <div style={{ padding: "20px" }}>
-                                    <ReactTable
-                                        data={[temp]}
-                                        columns={subWinInfo}
-                                        showPagination={false}
-                                        defaultPageSize={1}
-                                    />
-                                </div>
-                            );
-                        }}
-                    />
-                    : null
-                }
+
+                        {!this.state.showStats ?
+                            <ReactTable data={this.state.array} columns={columnsDefault} filterable={["USERID"]}
+                                showPageSizeOptions={false} defaultPageSize={10}
+
+                            />
+                            : null
+                        }
 
 
 
+                        {this.state.showStats ?
+
+
+                            <ReactTable data={this.state.userArray} columns={columnsWinUser}
+                                showPageSizeOptions={false}
+                                defaultPageSize={12}
+                                expanded={this.state.expanded}
+                                onExpandedChange={(expanded, index, event) => {
+                                    this.setState({ expanded });
+                                }}
+                                SubComponent={row => {
+
+                                    const temp = this.state.userArray[row.index]
+                                    return (
+                                        <div style={{ padding: "20px" }}>
+                                            <ReactTable
+                                                data={[temp]}
+                                                columns={subWinInfo}
+                                                showPagination={false}
+                                                defaultPageSize={1}
+                                            />
+                                        </div>
+                                    );
+                                }}
+                            />
+                            : null
+                        }
+
+
+                    </div>
+                </div>
             </div>
 
 

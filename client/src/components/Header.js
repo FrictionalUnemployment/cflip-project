@@ -20,7 +20,7 @@ class Header extends Component {
             captcha: '',
             svgData: ''
         };
-
+            
     }
     componentWillUnmount() {
         clearInterval(this.timer);

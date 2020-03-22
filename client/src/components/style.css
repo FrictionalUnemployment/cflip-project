@@ -24,6 +24,10 @@
     background: white;  
   }
   
+ 
+  .btn:disabled{ 
+    color: red;
+  }
 
 .login {
   border: none;
