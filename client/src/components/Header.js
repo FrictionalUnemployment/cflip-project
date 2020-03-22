@@ -207,14 +207,14 @@ render() {
         button = <button onClick={this.logOut.bind(this)}>Logout</button>;
     }
 
-    let balString = "Balance: " + this.state.balance + " -|";
-    let userString = "- Logged in as: " + this.state.registeredUsername;
-
-    // style={{position: 'absolute', top: '8px', right: '16px'}}
-    return (
-        <header className="App-header">
-            <div>
-                {this.state.showPopup ? null :
+        let balString = this.state.isLoggedin ? "Balance: " + this.state.balance + " -|" : null;
+        let userString = this.state.isLoggedin ? "- Logged in as: " + this.state.registeredUsername : null;
+            
+        // style={{position: 'absolute', top: '8px', right: '16px'}}
+        return (
+            <header className="App-header">
+                <div>
+                    {this.state.showPopup ? null :
                     <button onClick={this.showStats}>Statistics</button>}
             </div>
 
