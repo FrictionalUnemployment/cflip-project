@@ -91,6 +91,9 @@ class Game extends React.Component {
             this.setState({coinStatus: parsed.timeleft/1000.0});
             if (parsed.winner != null) {
                 this.setState({lastWinner: parsed.winner[0], suit: null, amount: null});
+                setTimeout(() => {
+                    this.setState({lastWinner: false, suit: null});
+                }, 5000);
             }
         }
     }
@@ -123,7 +126,7 @@ class Game extends React.Component {
         return body.express;
     }
 
-    showWinner = () => {
+    clearWinner = () => {
         
     }
     // <img src={logo} className="App-logo" alt="logo" />  // Snurrande coinen.
