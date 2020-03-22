@@ -22,6 +22,17 @@ class Header extends Component {
         };
             
     }
+
+    componentDidMount() {
+        if (sessionStorage.getItem('username') !== null &&
+            sessionStorage.getItem('loggedIn') !== null) {
+            const username = sessionStorage.getItem('username');
+            this.setState({ registeredUsername: username, isLoggedin: true });
+            this.getUserBalance(username);
+            this.timer = setInterval(() => this.getUserBalance(username), 30000);
+        }
+    }
+
     componentWillUnmount() {
         clearInterval(this.timer);
         this.timer = null;
@@ -71,6 +82,8 @@ class Header extends Component {
        
         this.setState({ registeredUsername: body, isLoggedin: true });
         this.getUserBalance(this.state.registeredUsername);
+        sessionStorage.setItem('username', body);
+        sessionStorage.setItem('loggedIn', 'yes');
         this.timer = setInterval(() => this.getUserBalance(this.state.registeredUsername), 30000);
         this.togglePopup();
     }
@@ -150,6 +163,7 @@ class Header extends Component {
             .then(ans => {
                 return this.setState({isLoggedin: false, registeredUsername: '', balance: '' })
             })
+        sessionStorage.clear();
     }
 
     async getUserBalance(user)  {  
