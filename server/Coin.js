@@ -102,7 +102,7 @@ class Coin {
         let winners = []
         let losers = []
         for (let i = 0; i < bets.length; i++) {
-            totalpot += bets[i].amount;
+            totalpot += parseFloat(bets[i].amount);
             if (bets[i].bet === result) {
                 winnerpot += bets[i].amount;
                 winners.push(bets[i].user);
