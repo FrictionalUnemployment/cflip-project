@@ -80,7 +80,7 @@ router.post('/login', [
                 res.json(user);
             } else {
                 let errmsg = {
-                    value: pwd,
+                    value: req.body.password,
                     msg: 'Incorrect password',
                     param: 'password',
                     location: 'body'
