@@ -195,8 +195,8 @@ class Header extends Component {
             button = <button onClick={this.logOut.bind(this)}>Logout</button>;
         }
 
-        let balString = "Balance: " + this.state.balance + " -|";
-        let userString = "- Logged in as: " + this.state.registeredUsername;
+        let balString = this.state.isLoggedin ? "Balance: " + this.state.balance + " -|" : null;
+        let userString = this.state.isLoggedin ? "- Logged in as: " + this.state.registeredUsername : null;
             
         // style={{position: 'absolute', top: '8px', right: '16px'}}
         return (
