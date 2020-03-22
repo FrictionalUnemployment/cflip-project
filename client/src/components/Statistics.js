@@ -17,7 +17,8 @@ class Statistics extends React.Component {
             showStats: false,
             userArray: [],
             expanded: {},
-            errorMessage: ''
+            errorMessage: '',
+            Loading: false
         };
     
     }
@@ -93,10 +94,9 @@ class Statistics extends React.Component {
     handleUserQuery = user => {
 
         if (this.state.errorMessage !== "") {
-            this.setState({ errorMessage: '' });
-        } else {
-            console.log(this.btn)
-            this.btn.setAttribute("disabled", "disabled");
+            this.setState({ errorMessage: '', Loading: false });
+        } else if(this.state.Loading === false) {
+            this.setState({Loading: true});
             this.getUser(user)
                 .then(() => this.getWID()).then(() => this.getLosses()).then(() => this.showUserStats());
         }
@@ -107,12 +107,10 @@ class Statistics extends React.Component {
         const userInfo = this.state.userInfo;
         const userWID = this.state.winsInfo;
         const loseInfo = this.state.loseInfo;
-        console.log(this.state.errorMessage)
         if (this.state.errorMessage === "") {
 
             for (var i = 0; i < userInfo.Losses.length; i++) {
-                let unixTime = new Date(loseInfo[i].time).toLocaleTimeString("en-US")
-                let unixDate = new Date(loseInfo[i].time).toLocaleDateString("en-US")
+                let unixTime = new Date(loseInfo[i].time).toISOString();
                 let winKeys = Object.keys(loseInfo[i].winners);
                 let loseKeys = Object.keys(loseInfo[i].losers);
 
@@ -123,10 +121,11 @@ class Statistics extends React.Component {
                 if (loseKeys.length > 1) {
                     loseKeys = Object.keys(loseInfo[i].losers) + ",";
                 }
-
-
+               unixTime = unixTime.replace("T", " ")
+               unixTime = unixTime.replace("Z", "")
+                
                 let obj = {
-                    "FlipTime": unixTime + " " + unixDate,
+                    "FlipTime": unixTime,
                     "Results": loseInfo[i].results,
                     "Winners": winKeys,
                     "Losers": loseKeys,
@@ -137,8 +136,7 @@ class Statistics extends React.Component {
             }
 
             for (let i = 0; i < userInfo.Wins.length; i++) {
-                let unixTime = new Date(userWID[i].time).toLocaleTimeString("en-US")
-                let unixDate = new Date(userWID[i].time).toLocaleDateString("en-US")
+                let unixTime = new Date(userWID[i].time).toISOString();
                 let winKeys = Object.keys(userWID[i].winners);
                 let loseKeys = Object.keys(userWID[i].losers);
 
@@ -149,10 +147,11 @@ class Statistics extends React.Component {
                 if (loseKeys.length > 1) {
                     loseKeys = Object.keys(userWID[i].losers) + ",";
                 }
-
+                unixTime = unixTime.replace("T", " ")
+                unixTime = unixTime.replace("Z", "")
 
                 let obj = {
-                    "FlipTime": unixTime + " " + unixDate,
+                    "FlipTime": unixTime,
                     "Results": userWID[i].results,
                     "Winners": winKeys,
                     "Losers": loseKeys,
@@ -163,7 +162,7 @@ class Statistics extends React.Component {
             }
 
             this.setState({
-                showStats: true
+                showStats: true, Loading: false
             });
         }
 
@@ -209,7 +208,7 @@ class Statistics extends React.Component {
 
                 Cell: props => {
                     return (
-                        <button ref={btn => { this.btn = btn; }}  onClick={() => {
+                        <button onClick={() => {
                             this.handleUserQuery(props.original.Username);
                         }}>{props.original.Username}
                         </button>
@@ -244,7 +243,7 @@ class Statistics extends React.Component {
                     {
                         Header: "Time",
                         accessor: "FlipTime",
-                        width: 300
+                        width: 350
 
                     },
                     {
