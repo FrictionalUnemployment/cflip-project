@@ -50,6 +50,7 @@ class BotList extends React.Component {
         });
         return (
             <div className="botlist">
+                Bottom 5:
                 <ol>
                     {listItems}
                 </ol>       

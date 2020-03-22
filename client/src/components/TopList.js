@@ -46,6 +46,7 @@ class TopList extends React.Component {
         });
         return (
             <div className="toplist">
+                Top 5:
                 <ol>
                     {listItems}
                 </ol>       
