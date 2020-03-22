@@ -194,6 +194,9 @@ class Header extends Component {
         } else if(this.state.isLoggedin === true) {
             button = <button onClick={this.logOut.bind(this)}>Logout</button>;
         }
+
+        let balString = "Balance: " + this.state.balance + " -|";
+        let userString = "- Logged in as: " + this.state.registeredUsername;
             
         // style={{position: 'absolute', top: '8px', right: '16px'}}
         return (
@@ -204,8 +207,8 @@ class Header extends Component {
                 </div>
 
                 <div id="userinfo">
-                    <p>{this.state.balance}</p>
-                    <p>{this.state.registeredUsername}</p>
+                    <p>{balString}</p>
+                    <p>{userString}</p>
                 </div>
                 {button}
                 {(this.state.showPopup && this.state.stats) ?
