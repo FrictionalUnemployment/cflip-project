@@ -3,10 +3,18 @@
     flex: 0 1 auto;
     position: absolute;
     left: 50%;
+    top: 5%;
     transform: translate(-50%);
 }
 
 .login-button {
+    color: blueviolet;
+    background-color: inherit;
+    border: none;
     flex: 0 1 auto;
+    position: absolute;
+    top: 1%;
+    right: 0%;
     margin-left: auto;
+    text-decoration: underline;
 }

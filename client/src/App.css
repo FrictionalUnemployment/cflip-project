@@ -22,8 +22,6 @@
 
 .App-header {
   background-color: #121212;
-  min-height: 10%;
-  max-height: 10%;
   display: flex;
   justify-content: flex-start;
   position: relative;

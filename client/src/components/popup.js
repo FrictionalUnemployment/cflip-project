@@ -25,7 +25,7 @@ class Popup extends React.Component {
 
 
   render() {
-    if(this.props.refresh) {
+    if (this.props.refresh) {
       this.getCaptcha();
     }
     return (
@@ -41,14 +41,14 @@ class Popup extends React.Component {
             }}
           >
             <div>
-              <h2>{this.props.text}</h2>
+              <h3>{this.props.text}</h3>
               <div style={{ color: "blue" }}>
-                <button id='login' onClick={this.props.changeLogin}>
-                  Already registered? login!
+                <button className='login-change-button' onClick={this.props.changeLogin}>
+                  Login here!
                 </button>
               </div>
-              <div style={{color: "red"}}>
-              <h3>{this.props.displayErrorMessage}</h3>
+              <div style={{ color: "red" }}>
+                <p>{this.props.displayErrorMessage}</p>
               </div>
               <form onSubmit={e => e.preventDefault()}>
                 <input
@@ -75,14 +75,19 @@ class Popup extends React.Component {
                 />
                 <br />
                 <div> {ReactHtmlParser(this.state.svgData)} </div>
-                <div style={{ display: "flex" }}>
-                  <input
-                    type="text"
-                    name="captcha"
-                    placeholder="Enter captcha code"
-                    onChange={this.handleChange}
-                  />
-                  <br />
+
+                <input
+                  type="text"
+                  name="captcha"
+                  placeholder="Enter captcha code"
+                  onChange={this.handleChange}
+                />
+                <br />
+                <div style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
                   <button onClick={this.props.handleSubmit}>Submit</button>
                 </div>
 
