@@ -25,13 +25,14 @@ class Popup extends React.Component {
 
 
   render() {
+    //Vi kollar ifall captchan behöver refreshas hämtar från parent komponent refresh state.
     if(this.props.refresh) {
       this.getCaptcha();
     }
     return (
       <div className="popup">
         <div className="popup\_inner">
-          <button onClick={this.props.closePopup}>X</button>
+          <button className="button" onClick={this.props.closePopup}>X</button>
 
           <div
             style={{
@@ -43,7 +44,7 @@ class Popup extends React.Component {
             <div>
               <h2>{this.props.text}</h2>
               <div style={{ color: "blue" }}>
-                <button id='login' onClick={this.props.changeLogin}>
+                <button className="button" id='login' onClick={this.props.changeLogin}>
                   Already registered? login!
                 </button>
               </div>
@@ -83,7 +84,7 @@ class Popup extends React.Component {
                     onChange={this.handleChange}
                   />
                   <br />
-                  <button onClick={this.props.handleSubmit}>Submit</button>
+                  <button className="button" onClick={this.props.handleSubmit}>Submit</button>
                 </div>
 
                 <h3>{this.props.message}</h3>

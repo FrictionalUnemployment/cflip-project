@@ -208,9 +208,9 @@ render() {
 
     if (!this.state.isLoggedin && !this.state.showPopup) {
         //this.togglePopup.bind(this)
-        button = <button onClick={this.execPopup.bind(this)}>Login/Register</button>;
+        button = <button className="button" onClick={this.execPopup.bind(this)}>Login/Register</button>;
     } else if (this.state.isLoggedin === true) {
-        button = <button onClick={this.logOut.bind(this)}>Logout</button>;
+        button = <button className="button" onClick={this.logOut.bind(this)}>Logout</button>;
     }
 
         let balString = this.state.isLoggedin ? "Balance: " + this.state.balance + " -|" : null;
@@ -220,15 +220,19 @@ render() {
         return (
             <header className="App-header">
                 <div>
+
                     {this.state.showPopup ? null :
-                    <button onClick={this.showStats}>Statistics</button>}
+                    <button className="button" onClick={this.showStats}>Statistics</button>}
+                    {button}
+                    
             </div>
 
             <div id="userinfo">
                 <p>{balString}</p>
                 <p>{userString}</p>
             </div>
-            {button}
+           
+
             {(this.state.showPopup && this.state.stats) ?
                 <Statistics
                     closeStats={this.closeStats}

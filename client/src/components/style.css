@@ -25,8 +25,36 @@
     z-index: 2;
     background: white;  
   }
-  
+  .button {
+    background-color: transparent; /* Green */
+    border: 1px solid white;
+    padding: 5px 10px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    transition-duration: 0.4s;
+  }
+
+  input[type=text], input[type=password] {
+    border: 2px solid rgb(255, 255, 255);
+    background-color: transparent;
+    color: white;
+        border-radius: 4px;
+    }     
+
+    input[type=text]:focus, input[type=password]:focus {
+      border: 3px solid rgb(250, 133, 0);
+    }
+
+   
  
+  .button:hover {
+    background-color: rgb(250, 133, 0); /* Green */
+    color: white;
+  }
+  
   .btn:disabled{ 
     color: red;
   }

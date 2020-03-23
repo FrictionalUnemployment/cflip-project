@@ -33,7 +33,7 @@ class Loginpopup extends React.Component {
         return (
           <div className="popup">
             <div className="popup\_inner">
-              <button onClick={this.props.closeLoginPopup}>X</button>
+              <button className="button" onClick={this.props.closeLoginPopup}>X</button>
               <div
                 style={{
                   display: "flex",
@@ -44,7 +44,7 @@ class Loginpopup extends React.Component {
                 <div>
                   <h2>{this.props.text}</h2>
                   <div style={{ color: "blue" }}>
-                    <button id='register' onClick={this.props.changeLogin}>
+                    <button className="button" id='register' onClick={this.props.changeLogin}>
                       Not registered? register here!
                     </button>
 
@@ -59,25 +59,26 @@ class Loginpopup extends React.Component {
                       name="username"
                       onChange={this.handleChange}
                     />
-                    <br />
-
+                    <br/>
+                   
                     <input
                       type="password"
                       placeholder="Enter password"
                       name="password"
                       onChange={this.handleChange}
                     />
+                    
                     <br />
                     <div> {ReactHtmlParser(this.state.svgData)} </div>
                     <div style={{ display: "flex" }}>
-                      <input
+                      <input    
                         type="text"
                         name="captcha"
                         placeholder="Enter captcha code"
                         onChange={this.handleChange}
                       />
                       <br />
-                      <button onClick={this.props.handleLoginSubmit}>
+                      <button className="button" onClick={this.props.handleLoginSubmit}>
                         Submit
                       </button>
                     </div>

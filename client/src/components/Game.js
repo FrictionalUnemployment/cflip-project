@@ -136,9 +136,7 @@ class Game extends React.Component {
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
                     <CurrentBet {...this.state} />
-                   
-                        <img src='./../cflip-logo.png' className="App-logo"/>
-                   
+                    <img src='./../cflip-logo.png' className="App-logo"/>
                     <BetTimer {...this.state} />
                     <BetWinner {...this.state} />
                 </div>
