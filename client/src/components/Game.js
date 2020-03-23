@@ -88,7 +88,7 @@ class Game extends React.Component {
         // Här är data.data JSON strängen
         if (this._isMounted) {
             const parsed = JSON.parse(data.data);
-            this.setState({coinStatus: parsed.timeleft/1000.0});
+            this.setState({coinStatus: (parsed.timeleft/1000.0).toFixed(1)});
             if (parsed.winner != null) {
                 this.setState({lastWinner: parsed.winner[0], suit: null, amount: null});
                 setTimeout(() => {
