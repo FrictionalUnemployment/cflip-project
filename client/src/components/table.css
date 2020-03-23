@@ -8,11 +8,8 @@
     -ms-flex-direction: column;
     flex-direction: column;
     border: 1px solid white;
-<<<<<<< HEAD
     border-radius: 15px;
-=======
     border-collapse: collapse;
->>>>>>> 6dcd091d510fd25cba412190db1bcac0f2422b4d
   }
   
   .ReactTable * {
