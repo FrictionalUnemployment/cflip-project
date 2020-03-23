@@ -41,7 +41,13 @@ function updateCoin() {
         console.log(`Flips since server start: ${++flipsSinceStart}`);
         console.log(`Results: ${flipped}`);
         if (coin.bets.length > 0) {
-            coin.logChanges(flipped, db.getConnection());
+            db.getConnection()
+                .then((conn) => {
+                    coin.logChanges(flipped, conn);
+                })
+                .catch((err) => {
+                    console.error('Unable to create database connection: ' + err);
+                })
         } else {
             console.log("No bets placed on this flip.")
         }
