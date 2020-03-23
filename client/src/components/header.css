@@ -1,0 +1,12 @@
+
+.stats-button {
+    flex: 0 1 auto;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.login-button {
+    flex: 0 1 auto;
+    margin-left: auto;
+}
