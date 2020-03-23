@@ -13,7 +13,7 @@ class Coin {
         // Web socket server, denna ska klienten koppla upp sig till
         const privatekey = fs.readFileSync('ssl/privkey.pem');
         const cert = fs.readFileSync('ssl/fullchain.pem');
-        const credentials = {key: privatekey, cert: cert};
+        const credentials = { key: privatekey, cert: cert };
         this.httpsServer = https.createServer(credentials);
         this.wss = new WebSocket.Server({ server: this.httpsServer });
         this.wss.on('connection', function connection(ws, req) {
@@ -97,6 +97,7 @@ class Coin {
 
     logChanges(result, db) {
         let bets = this.bets.slice();
+        this.bets = [];
         let totalpot = 0;
         let winnerpot = 0;
         let winners = []
@@ -112,47 +113,52 @@ class Coin {
         }
         let loserpot = totalpot - winnerpot;
         let datetime = + new Date();
-        db.query(`INSERT INTO flip (Result, Date_time, Pot_size)
-             VALUES ('${result}', ${datetime}, ${totalpot});`)
-            .then(ans => {
-                const FID = ans.insertId;
-                console.log(`Flip ID: ${FID}`);
-                console.log(`Pot size: ${totalpot}`);
-                process.stdout.write('Winners: ');
-                console.dir(winners)
-                process.stdout.write('\nLosers: ');
-                console.dir(losers);
+        db.beginTransaction()
+            .then(() => {
+                db.query(`INSERT INTO flip (Result, Date_time, Pot_size)
+                          VALUES ('${result}', ${datetime}, ${totalpot});`)
+                    .then(ans => {
+                        const FID = ans.insertId;
+                        console.log(`Flip ID: ${FID}`);
+                        console.log(`Pot size: ${totalpot}`);
+                        process.stdout.write('Winners: ');
+                        console.dir(winners)
+                        process.stdout.write('\nLosers: ');
+                        console.dir(losers);
 
-                for (let i = 0; i < bets.length; i++) {
-                    let user = bets[i].user;
-                    if (bets[i].bet === result) {
-                        // Winners
-                        let winnings = Math.floor((bets[i].amount / winnerpot) * loserpot);
-                        db.query(`SELECT UID from user WHERE Username='${user}';`)
-                            .then(ans => {
-                                let UID = ans[0].UID;
-                                this.logWinner(winnings, UID, FID, db);
-                            })
-                    } else {
-                        // Losers
-                        let losses = bets[i].amount;
-                        if (winnerpot === 0) {
-                            // Inga vinnare, förlorar inga pengar
-                            losses = 0;
+                        for (let i = 0; i < bets.length; i++) {
+                            let user = bets[i].user;
+                            if (bets[i].bet === result) {
+                                // Winners
+                                let winnings = Math.floor((bets[i].amount / winnerpot) * loserpot);
+                                db.query(`SELECT UID from user WHERE Username='${user}';`)
+                                    .then(ans => {
+                                        let UID = ans[0].UID;
+                                        this.logWinner(winnings, UID, FID, db);
+                                    })
+                            } else {
+                                // Losers
+                                let losses = bets[i].amount;
+                                if (winnerpot === 0) {
+                                    // Inga vinnare, förlorar inga pengar
+                                    losses = 0;
+                                }
+                                db.query(`SELECT UID from user WHERE Username='${user}';`)
+                                    .then(ans => {
+                                        let UID = ans[0].UID;
+                                        this.logLoser(losses, UID, FID, db);
+                                    })
+                            }
                         }
-                        db.query(`SELECT UID from user WHERE Username='${user}';`)
-                            .then(ans => {
-                                let UID = ans[0].UID;
-                                this.logLoser(losses, UID, FID, db);
-                            })
-                    }
-                }
-                this.bets = [];
+                    });
             })
-            .catch(err => {
-                console.error('Error inserting flip' + err);
-                this.bets = [];
+            .then(() => {
+                db.commit();
             })
+            .catch((err) => {
+                db.rollback();
+                console.error('Unable to log flip results: ' + err);
+            });
     }
 
     logWinner(winnings, UID, FID, db) {
