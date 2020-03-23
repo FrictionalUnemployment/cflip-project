@@ -243,7 +243,7 @@ class Header extends Component {
             }
             {this.state.showPopup && !this.state.loginPage && !this.state.stats ?
                 <Popup
-                    text='Registration'
+                    text='Register'
                     refresh={this.state.refreshCaptcha}
                     handleRefresh={this.handleRefresh.bind(this)}
                     closePopup={this.togglePopup.bind(this)}

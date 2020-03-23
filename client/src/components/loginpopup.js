@@ -36,7 +36,7 @@ class Loginpopup extends React.Component {
         <button className="button" onClick={this.props.closeLoginPopup}>X</button>
         <div className="popup_real_inner">
           <div>
-            <h3>{this.props.text}</h3>
+            <h4>{this.props.text}</h4>
             <div style={{ color: "blue" }}>
               <button className="login-change-button" onClick={this.props.changeLogin}>
                 Register here!
