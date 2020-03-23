@@ -18,3 +18,12 @@
     margin-left: auto;
     text-decoration: underline;
 }
+
+#title {
+    color: #FF7E00;
+    flex: 0 1 auto;
+    position: absolute;
+    top: -50%;
+    left: 0.5%;
+    margin-right: auto;
+}
