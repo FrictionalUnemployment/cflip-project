@@ -207,7 +207,7 @@ class Statistics extends React.Component {
                 filterable: true,
                 Cell: props => {
                     return (
-                        <button onClick={() => {
+                        <button className="button"  onClick={() => {
                             this.handleUserQuery(props.original.Username);
                         }}>{props.original.Username}
                         </button>
@@ -283,7 +283,7 @@ class Statistics extends React.Component {
         return (
             <div className='popup'>
                 <div className="popup\_inner">
-                <button onClick={this.closeStatistics.bind(this)}>X</button>
+                <button className="button"  onClick={this.closeStatistics.bind(this)}>X</button>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                   
                         <div style={{ color: "red" }}>
