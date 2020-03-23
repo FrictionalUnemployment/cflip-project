@@ -4,7 +4,7 @@ const svgCaptcha = require('svg-captcha');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    let captcha = svgCaptcha.create({ noise: 2, size: 4, background: '#282c34' });
+    let captcha = svgCaptcha.create({ noise: 2, size: 4, background: '#1c1c1c' });
     req.session.captcha = captcha.text;
     res.type('svg');
     res.send(unescape(captcha.data));

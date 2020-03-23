@@ -1,11 +1,14 @@
 .App {
   text-align: center;
-  height: 100%;
+  height: 100vh;
 }
 
 .Site {
   flex-direction: column;
   height: 100%;
+  overflow: -moz-hidden-unscrollable;
+  overflow: hidden;
+  background-color: #121212;
 }
 
 .App-logo {
@@ -22,14 +25,23 @@
 
 .App-header {
   background-color: #121212;
-  min-height: 15%;
-  max-height: 15%;
   display: flex;
-  flex-direction: column;
+  height: 10;
+  justify-content: flex-start;
+  position: relative;
   align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+button {
+  background-color: #383838;
+  color: white;
+  border: 2px solid #888888;
+}
+
+input {
+  background-color: #888888;
 }
 
 .App-link {
@@ -41,7 +53,7 @@
     transform: rotateY(0deg);
   }
   to {
-    transform: rotateY(10000deg);
+    transform: rotateY(7200deg);
   }
 }
 
@@ -68,7 +80,8 @@
 .betchoice {
   display: flex;
   flex-direction: column;
-  width: 20%;
+  width: 13%;
+  padding: 20%;
 }
 
 .footer {
@@ -77,8 +90,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 15%;
-  max-height: 15%;
+  height: 20%;
 }
 
 .toplist {

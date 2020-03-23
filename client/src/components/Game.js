@@ -1,5 +1,4 @@
 import React from 'react'
-import logo from './../cflip-logo.png';
 const WebSocket = require('isomorphic-ws');
 
 class BetChoice extends React.Component {
@@ -88,7 +87,7 @@ class Game extends React.Component {
         // Här är data.data JSON strängen
         if (this._isMounted) {
             const parsed = JSON.parse(data.data);
-            this.setState({coinStatus: parsed.timeleft/1000.0});
+            this.setState({coinStatus: (parsed.timeleft/1000.0).toFixed(1)});
             if (parsed.winner != null) {
                 this.setState({lastWinner: parsed.winner[0], suit: null, amount: null});
                 setTimeout(() => {
@@ -136,7 +135,9 @@ class Game extends React.Component {
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
                     <CurrentBet {...this.state} />
-                    <img src='./../cflip-logo.png' className="App-logo"/>
+                   
+                        <img alt="CFLIP" src='./../cflip-logo.png' className="App-logo"/>
+                   
                     <BetTimer {...this.state} />
                     <BetWinner {...this.state} />
                 </div>

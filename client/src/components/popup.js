@@ -23,6 +23,8 @@ class Popup extends React.Component {
     this.setState({ svgData: data });
   }
 
+  //  <button className="button" id='login' onClick={this.props.changeLogin}>
+  // Already registered? login!
 
   render() {
     //Vi kollar ifall captchan behöver refreshas hämtar från parent komponent refresh state.
@@ -34,22 +36,17 @@ class Popup extends React.Component {
         <div className="popup\_inner">
           <button className="button" onClick={this.props.closePopup}>X</button>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              border: "1px solid white"
-            }}
-          >
+          <div className="popup_real_inner">
             <div>
-              <h2>{this.props.text}</h2>
+              <h3>{this.props.text}</h3>
               <div style={{ color: "blue" }}>
-                <button className="button" id='login' onClick={this.props.changeLogin}>
-                  Already registered? login!
+               
+                <button className="button" onClick={this.props.changeLogin}>
+                  Login here!
                 </button>
               </div>
-              <div style={{color: "red"}}>
-              <h3>{this.props.displayErrorMessage}</h3>
+              <div style={{ color: "red" }}>
+                <p>{this.props.displayErrorMessage}</p>
               </div>
               <form onSubmit={e => e.preventDefault()}>
                 <input
@@ -90,8 +87,8 @@ class Popup extends React.Component {
                 <h3>{this.props.message}</h3>
               </form>
             </div>
-          </div>
         </div>
+      </div>
       </div>
     );
   }
