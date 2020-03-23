@@ -30,16 +30,9 @@ class Popup extends React.Component {
     }
     return (
       <div className="popup">
-        <div className="popup\_inner">
           <button onClick={this.props.closePopup}>X</button>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              border: "1px solid white"
-            }}
-          >
+          <div className="popup_real_inner">
             <div>
               <h3>{this.props.text}</h3>
               <div style={{ color: "blue" }}>
@@ -94,7 +87,6 @@ class Popup extends React.Component {
                 <h3>{this.props.message}</h3>
               </form>
             </div>
-          </div>
         </div>
       </div>
     );

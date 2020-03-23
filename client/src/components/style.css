@@ -4,25 +4,20 @@
     right: 5%;
     margin: auto;
     z-index: 2;
-    background: #121212;
+    background: #383838;
     padding: 5px;
     border: 3px solid;
     border-color: #1c1c1c;
-     /*
-    display: inline-block;
-    text-align: center;
-    background-color: #383838;  */
   }  
-  .popup\_inner {  
-    position: absolute;  
-    left: 25%;  
-    right: 25%;  
-    top: 25%;  
-    bottom: 25%;  
-    margin: auto;  
-    border-radius: 20px;
+  .popup_inner {  
+    margin: 10px;
     z-index: 2;
-    background: white;  
+  }
+
+  .popup_real_inner {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
   }
   
  
