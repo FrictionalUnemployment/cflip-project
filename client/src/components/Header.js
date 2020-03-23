@@ -209,9 +209,9 @@ class Header extends Component {
 
         if (!this.state.isLoggedin && !this.state.showPopup) {
             //this.togglePopup.bind(this)
-            button = <button className="button" onClick={this.execPopup.bind(this)}>Login/Register</button>;
+            button = <button className="login-button" onClick={this.execPopup.bind(this)}>Login/Register</button>;
         } else if (this.state.isLoggedin === true) {
-            button = <button className="button" onClick={this.logOut.bind(this)}>Logout</button>;
+            button = <button className="login-button" onClick={this.logOut.bind(this)}>Logout</button>;
         }
 
         let balString = this.state.isLoggedin ? "Balance: " + this.state.balance + " -|" : null;
@@ -223,7 +223,7 @@ class Header extends Component {
                 <div>
 
                     {this.state.showPopup ? null :
-                    <button className="button" onClick={this.showStats}>Statistics</button>}
+                    <button id="stats-button" className="button" onClick={this.showStats}>Statistics</button>}
                     {button}
                     
             </div>

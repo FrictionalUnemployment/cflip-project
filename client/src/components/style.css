@@ -18,6 +18,8 @@
     display: flex;
     justify-content: center;
     padding: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
   }
   .button {
     background-color: transparent; /* Green */
@@ -27,7 +29,7 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 20px;
+    font-size: 17px;
     transition-duration: 0.4s;
   }
 
@@ -89,4 +91,10 @@ header {
   color: blueviolet;
   text-decoration: underline;
   border: none;
+  float: right;
+  margin-top: -20px;
+}
+
+.login-change-button:hover {
+  color: blue;
 }

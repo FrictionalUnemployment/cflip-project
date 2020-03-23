@@ -41,7 +41,7 @@ class Popup extends React.Component {
               <h3>{this.props.text}</h3>
               <div style={{ color: "blue" }}>
                
-                <button className="button" onClick={this.props.changeLogin}>
+                <button className="login-change-button" onClick={this.props.changeLogin}>
                   Login here!
                 </button>
               </div>
@@ -73,13 +73,17 @@ class Popup extends React.Component {
                 />
                 <br />
                 <div> {ReactHtmlParser(this.state.svgData)} </div>
-                <div style={{ display: "flex" }}>
                   <input
                     type="text"
                     name="captcha"
                     placeholder="Enter captcha code"
                     onChange={this.handleChange}
                   />
+                                  <div style={{
+                   display: "flex",
+                   alignItems: "center",
+                   justifyContent: "center"
+                   }}>
                   <br />
                   <button className="button" onClick={this.props.handleSubmit}>Submit</button>
                 </div>

@@ -1,5 +1,5 @@
 
-.stats-button {
+#stats-button {
     flex: 0 1 auto;
     position: absolute;
     left: 50%;
@@ -17,6 +17,10 @@
     right: 0%;
     margin-left: auto;
     text-decoration: underline;
+}
+
+.login-button:hover {
+    color: blue;
 }
 
 #title {
