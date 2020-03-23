@@ -220,6 +220,7 @@ class Header extends Component {
         // style={{position: 'absolute', top: '8px', right: '16px'}}
         return (
             <header className="App-header">
+                <h4 id="title">cflip.app</h4>
                 <div>
 
                     {this.state.showPopup ? null :
