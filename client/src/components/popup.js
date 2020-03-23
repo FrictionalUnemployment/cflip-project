@@ -35,15 +35,13 @@ class Popup extends React.Component {
       <div className="popup">
         <button className="button" onClick={this.props.closePopup}>X</button>
 
-          <div className="popup_real_inner">
-        <div>
+        <div className="popup_real_inner">
+          <div>
             <h4>{this.props.text}</h4>
-            <div style={{ color: "blue" }}>
 
-              <button className="login-change-button" onClick={this.props.changeLogin}>
-                Login here!
+            <button className="login-change-button" onClick={this.props.changeLogin}>
+              Login here!
                 </button>
-            </div>
             <div style={{ color: "red" }}>
               <p>{this.props.displayErrorMessage}</p>
             </div>
@@ -71,7 +69,7 @@ class Popup extends React.Component {
                 onChange={this.handleChange}
               />
               <br />
-              <div> {ReactHtmlParser(this.state.svgData)} </div>
+              <div className="captchaimage"> {ReactHtmlParser(this.state.svgData)} </div>
               <input
                 type="text"
                 name="captcha"
@@ -84,7 +82,7 @@ class Popup extends React.Component {
                 justifyContent: "center"
               }}>
                 <br />
-                <button className="button" onClick={this.props.handleSubmit}>Submit</button>
+                <button id="submitt" className="button" onClick={this.props.handleSubmit}>Submit</button>
               </div>
 
               <h3>{this.props.message}</h3>

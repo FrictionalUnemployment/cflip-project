@@ -37,12 +37,10 @@ class Loginpopup extends React.Component {
         <div className="popup_real_inner">
           <div>
             <h4>{this.props.text}</h4>
-            <div style={{ color: "blue" }}>
               <button className="login-change-button" onClick={this.props.changeLogin}>
                 Register here!
                     </button>
 
-            </div>
             <div style={{ color: "red", justifyContent: "center", }}>
               <p>{this.props.displayErrorMessage}</p>
             </div>
@@ -63,7 +61,7 @@ class Loginpopup extends React.Component {
               />
               <br />
               <div></div>
-              <div> {ReactHtmlParser(this.state.svgData)} </div>
+              <div className="captchaimage"> {ReactHtmlParser(this.state.svgData)} </div>
               <input
                 type="text"
                 name="captcha"
@@ -76,7 +74,7 @@ class Loginpopup extends React.Component {
                 alignItems: "center",
                 justifyContent: "center"
               }}>
-                <button className="button" onClick={this.props.handleLoginSubmit}>
+                <button id="submit" className="button" onClick={this.props.handleLoginSubmit}>
                   Submit
                   </button>
               </div>
