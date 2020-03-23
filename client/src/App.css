@@ -76,7 +76,8 @@ input {
 .betchoice {
   display: flex;
   flex-direction: column;
-  width: 20%;
+  width: 13%;
+  padding: 20%;
 }
 
 .footer {
