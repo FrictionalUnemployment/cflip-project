@@ -18,10 +18,10 @@
   .popup_real_inner {
     display: flex;
     justify-content: center;
-    padding: 10px;
     padding-left: 25px;
     padding-right: 25px;
-    
+    padding-bottom: 10px;
+    margin-top: -25px;
   }
   .button {
     background-color: transparent; /* Green */
@@ -99,4 +99,13 @@ header {
 
 .login-change-button:hover {
   color: blue;
+}
+
+.captchaimage {
+  margin-top: 8px;
+  margin-bottom: -10px;
+}
+
+#submit, #submitt {
+  margin-top: 10px;
 }
