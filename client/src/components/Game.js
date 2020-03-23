@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from '../logo512.png';
+import logo from './../cflip-logo.png';
 const WebSocket = require('isomorphic-ws');
 
 class BetChoice extends React.Component {
@@ -136,6 +136,9 @@ class Game extends React.Component {
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
                     <CurrentBet {...this.state} />
+                   
+                        <img src='./../cflip-logo.png' className="App-logo"/>
+                   
                     <BetTimer {...this.state} />
                     <BetWinner {...this.state} />
                 </div>

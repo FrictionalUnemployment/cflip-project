@@ -17,14 +17,17 @@ class Popup extends React.Component {
   }
 
   getCaptcha = async () => {
+    this.props.handleRefresh();
     const response = await fetch('/captcha')
     const data = await response.text();
-
     this.setState({ svgData: data });
   }
 
 
   render() {
+    if(this.props.refresh) {
+      this.getCaptcha();
+    }
     return (
       <div className="popup">
         <div className="popup\_inner">
@@ -44,7 +47,9 @@ class Popup extends React.Component {
                   Already registered? login!
                 </button>
               </div>
-
+              <div style={{color: "red"}}>
+              <h3>{this.props.displayErrorMessage}</h3>
+              </div>
               <form onSubmit={e => e.preventDefault()}>
                 <input
                   placeholder="Enter username"

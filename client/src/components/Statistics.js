@@ -141,11 +141,11 @@ class Statistics extends React.Component {
                 let loseKeys = Object.keys(userWID[i].losers);
 
                 if (winKeys.length > 1) {
-                    winKeys = Object.keys(userWID[i].winners) + ",";
+                    winKeys = Object.keys(userWID[i].winners).join(",");
                 }
 
                 if (loseKeys.length > 1) {
-                    loseKeys = Object.keys(userWID[i].losers) + ",";
+                    loseKeys = Object.keys(userWID[i].losers).join(",");
                 }
                 unixTime = unixTime.replace("T", " ")
                 unixTime = unixTime.replace("Z", "")
@@ -184,8 +184,8 @@ class Statistics extends React.Component {
     render() {
 
         const info = this.state.info;
-        for (var i = 0; i < info.length; i++) {
-            var obj = {
+        for (let i = 0; i < info.length; i++) {
+            let obj = {
                 "nr": i + 1,
                 "Username": info[i].Username,
                 "balanceId": info[i].Balance,
@@ -205,7 +205,6 @@ class Statistics extends React.Component {
                 Header: "User",
                 accessor: "Username",
                 filterable: true,
-
                 Cell: props => {
                     return (
                         <button onClick={() => {
@@ -249,6 +248,7 @@ class Statistics extends React.Component {
                     {
                         Header: "Results",
                         accessor: "winTrue",
+                        width: 200,
                         expand: true
                     }
                 ]
@@ -282,16 +282,10 @@ class Statistics extends React.Component {
 
         return (
             <div className='popup'>
-                <div style={{
-                    position: "relative",
-                    top: "3px",
-                    left: "678px"
-                }}>
-                    <button onClick={this.closeStatistics.bind(this)}>X</button>
-                </div>
                 <div className="popup\_inner">
-
+                <button onClick={this.closeStatistics.bind(this)}>X</button>
                     <div style={{ display: "flex", justifyContent: "center" }}>
+                  
                         <div style={{ color: "red" }}>
                             {this.state.errorMessage !== "" ?
                                 "Statistics for user: " + this.state.errorMessage
@@ -312,6 +306,8 @@ class Statistics extends React.Component {
                             justifyContent: "center"
                         }}
                     >
+                    
+                     
 
 
                         {!this.state.showStats ?

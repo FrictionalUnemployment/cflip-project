@@ -11,7 +11,7 @@
 .App-logo {
   height: 40vmin;
   pointer-events: none;
-  visibility: hidden;
+  z-index: 1;
 }
 
 @media (prefers-reduced-motion: no-preference) {

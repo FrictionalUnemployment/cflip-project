@@ -4,27 +4,32 @@ import ReactHtmlParser from "react-html-parser";
 class Loginpopup extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { svgData: "" };
+        this.state = { 
+        svgData: ""};
     }
-
+//Visa captcha när du öppnar popupen.
     componentDidMount() {
         this.getCaptcha();
     }
 
     handleChange = event => {
-    
         event.preventDefault();
         this.props.handleOnChange(event);
     };
-
+// Hämtar captcha och sparar det i svgData för att sedan rendera som HTML-kod.
     getCaptcha = async () => {
+        this.props.handleRefresh();
         const response = await fetch("/captcha");
         const data = await response.text();
-
-        this.setState({ svgData: data });
+        this.setState({ svgData: data});
+        
     };
 
     render() {
+        if(this.props.refresh) {
+          this.getCaptcha();
+        }
+
         return (
           <div className="popup">
             <div className="popup\_inner">

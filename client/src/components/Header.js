@@ -19,7 +19,8 @@ class Header extends Component {
             registeredUsername: '',
             captcha: '',
             svgData: '',
-            errorMessage: ''
+            errorMessage: '',
+            refreshCaptcha: false
         };
 
     }
@@ -136,7 +137,7 @@ checkCaptcha = async () => {
     });
     const data = await response.json();
     if (response.status !== 200) {
-        return this.setState({ errorMessage: "Wrong captcha!" });
+        return this.setState({ errorMessage: "Wrong captcha!", refreshCaptcha: true });
     }
     return data.robot
 
@@ -196,6 +197,11 @@ closeStats = () => {
     this.setState({ stats: false });
     this.togglePopup();
 }
+handleRefresh = () => {
+    this.setState({refreshCaptcha: false});
+}
+
+
 
 render() {
     let button;
@@ -232,17 +238,22 @@ render() {
             {this.state.showPopup && !this.state.loginPage && !this.state.stats ?
                 <Popup
                     text='Registration'
+                    refresh={this.state.refreshCaptcha}
+                    handleRefresh={this.handleRefresh.bind(this)}
                     closePopup={this.togglePopup.bind(this)}
+                    displayErrorMessage={this.state.errorMessage}
                     handleOnChange={this.handleOnChange.bind(this)}
                     changeLogin={this.changeLogin.bind(this)}
                     handleSubmit={this.comparePassword.bind(this)}
                     message={(this.state.passwordsMatch === false && <div>Passwords don't match!</div>)
-                        || (this.state.passwordsMatch === true && this.state.registeredUsername !== undefined && <div>You're registered! {this.state.registeredUsername} </div>)}
+                        || (this.state.passwordsMatch === true && this.state.registeredUsername !== "" && <div>You're registered! {this.state.registeredUsername} </div>)}
                 />
                 : null}
 
             {this.state.registeredUsername !== undefined && this.state.loginPage && this.state.showPopup && !this.state.stats ?
                 <Loginpopup
+                    refresh={this.state.refreshCaptcha}
+                    handleRefresh={this.handleRefresh.bind(this)}
                     text='Login'
                     displayErrorMessage={this.state.errorMessage}
                     closeLoginPopup={this.togglePopup.bind(this)}
