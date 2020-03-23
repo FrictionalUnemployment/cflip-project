@@ -41,7 +41,7 @@ function updateCoin() {
         console.log(`Flips since server start: ${++flipsSinceStart}`);
         console.log(`Results: ${flipped}`);
         if (coin.bets.length > 0) {
-            coin.logChanges(flipped, db);
+            coin.logChanges(flipped, db.getConnection());
         } else {
             console.log("No bets placed on this flip.")
         }
