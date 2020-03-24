@@ -18,7 +18,7 @@ class BetChoice extends React.Component {
     render() {
         return (
             <div className="betchoice">
-                <input ref={this.inputRef} type="number" min="0"></input>
+                <input className="i" ref={this.inputRef} type="number" min="1"></input>
                 <button className="s" onClick={this.handleClick}>Bet {this.props.suit}!</button>
             </div>
         )
