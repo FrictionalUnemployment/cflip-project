@@ -54,7 +54,8 @@ input {
 
 @keyframes App-logo-spin {
   0% { transform: rotateY(20deg);}
-  10% { transform: rotateY(1020deg);}
+  5% { transform: rotateY(1020deg);}
+  10% { transform: rotateY(2020deg);}
   20% { transform: rotateY(4020deg);}
   30% { transform: rotateY(6020deg);}
   40% { transform: rotateY(8020deg);}
@@ -62,7 +63,8 @@ input {
   60% { transform: rotateY(8020deg);}
   70% { transform: rotateY(6020deg);}
   80% { transform: rotateY(4020deg);}
-  90% { transform: rotateY(1020deg);}
+  90% { transform: rotateY(2020deg);}
+  95% { transform: rotateY(1020deg);}
   100% { transform: rotateY(20deg);}
 }
 
