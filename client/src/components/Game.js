@@ -21,7 +21,7 @@ class BetChoice extends React.Component {
             </div>
         )
     }
-    
+
 }
 
 class CurrentBet extends React.Component {
@@ -29,22 +29,6 @@ class CurrentBet extends React.Component {
         const bet = this.props.suit && this.props.amount != null ? "You bet " + this.props.amount + " on " + this.props.suit + "." : null;
         return (
             <p id="currentbettext">{bet}</p>
-        );
-    }
-}
-
-class BetWinner extends React.Component {
-
-    render() {
-        const winner = this.props.lastWinner ? this.props.lastWinner : null;
-        let image;
-        if (winner === 'heads') {
-            image = <img alt="HEADS" src="./../heads.png"/>;
-        } else {
-            image = <img alt="TAILS" src="./../tails.png"/>;
-        }
-        return (
-            <p id="wintext">{image}</p>
         );
     }
 }
@@ -84,7 +68,7 @@ class Game extends React.Component {
     componentDidMount() {
         this._isMounted = true;
         this.setState({
-            center: <img alt="CFLIP" src='./../cflip-logo.png' className="App-logo"/>
+            center: <img alt="CFLIP" src='./../cflip-logo.png' className="App-logo" />
         })
     }
 
@@ -93,17 +77,19 @@ class Game extends React.Component {
     }
 
     coinStatus(data) {
-        
+
         // Här är data.data JSON strängen
         if (this._isMounted) {
             const parsed = JSON.parse(data.data);
-            this.setState({coinStatus: (parsed.timeleft/1000.0).toFixed(1)});
+            this.setState({ coinStatus: (parsed.timeleft / 1000.0).toFixed(1) });
             if (parsed.winner != null) {
-                this.setState({
-                    center: <BetWinner lastWinner={parsed.winner[0]}/>
-            });
+                if (parsed.winner[0] === 'heads') {
+                    this.setState({ center: <img alt="HEADS" src="./../heads-cflip.png" className="image"/> });
+                } else {
+                    this.setState({ center: <img alt="TAILS" src="./../tails-cflip.png" className="image" />});
+                }
                 setTimeout(() => {
-                    this.setState({center: <img alt="CFLIP" src='./../cflip-logo.png' className="App-logo"/>});
+                    this.setState({ center: <img alt="CFLIP" src='./../cflip-logo.png' id="App-logo" className="image" /> });
                 }, 2000);
             }
         }
@@ -112,12 +98,12 @@ class Game extends React.Component {
     placeBet = async (suit, amount) => {
         // Här sätts vad, vem och hur mycket
         //const data = {bet: suit, username: name, amount: amount};
-        this.setState({suit: suit, amount: amount});
+        this.setState({ suit: suit, amount: amount });
 
         const response = await fetch(`/coin/bet/${suit}/${amount}`, {
             method: 'POST',
             //body: JSON.stringify(data),
-            headers: {'Accept':'application/json', 'Content-Type': 'application/json'}
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
         });
 
         const body = await response.json();
@@ -138,7 +124,7 @@ class Game extends React.Component {
     }
 
     clearWinner = () => {
-        
+
     }
     // <img src={logo} className="App-logo" alt="logo" />  // Snurrande coinen.
     render() {
@@ -147,7 +133,7 @@ class Game extends React.Component {
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
                     <CurrentBet {...this.state} />
-                   
+
                     {this.state.center}
                     <BetTimer {...this.state} />
                 </div>

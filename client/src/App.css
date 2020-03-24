@@ -11,14 +11,14 @@
   background-color: #121212;
 }
 
-.App-logo {
+.image {
   height: 40vmin;
   pointer-events: none;
   z-index: 1;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
+  #App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
