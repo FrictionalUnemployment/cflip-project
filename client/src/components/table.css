@@ -1,5 +1,5 @@
 .ReactTable {
-    position: relative;
+    
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -8,7 +8,7 @@
     -ms-flex-direction: column;
     flex-direction: column;
     border: 1px solid white;
-    border-collapse: collapse;
+    
   }
   
   .ReactTable * {
@@ -76,7 +76,6 @@
   .ReactTable .rt-thead .rt-td {
     padding: 5px 5px;
     line-height: normal;
-    position: relative;
     border-right: 1px solid #1c1c1c;
     -webkit-transition: box-shadow .3s cubic-bezier(.175, .885, .32, 1.275);
     transition: box-shadow .3s cubic-bezier(.175, .885, .32, 1.275);
@@ -128,7 +127,6 @@
     content: " ";
     height: 0;
     width: 0;
-    position: absolute;
     pointer-events: none
   }
   
@@ -239,7 +237,6 @@
   
   .ReactTable .rt-expander:after {
     content: '';
-    position: absolute;
     width: 0;
     height: 0;
     top: 50%;
@@ -262,7 +259,6 @@
   
   .ReactTable .rt-resizer {
     display: inline-block;
-    position: absolute;
     width: 36px;
     top: 0;
     bottom: 0;
@@ -396,7 +392,6 @@
   
   .ReactTable .rt-noData {
     display: block;
-    position: absolute;
     left: 50%;
     top: 50%;
     -webkit-transform: translate(-50%, -50%);
@@ -412,7 +407,6 @@
   
   .ReactTable .-loading {
     display: block;
-    position: absolute;
     left: 0;
     right: 0;
     top: 0;
@@ -426,7 +420,7 @@
   }
   
   .ReactTable .-loading>div {
-    position: absolute;
+    
     display: block;
     text-align: center;
     width: 100%;
@@ -486,7 +480,7 @@
   
   .ReactTable .select-wrap:after {
     content: '';
-    position: absolute;
+
     right: 8px;
     top: 50%;
     -webkit-transform: translate(0, -50%);
