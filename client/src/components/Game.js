@@ -37,8 +37,14 @@ class BetWinner extends React.Component {
 
     render() {
         const winner = this.props.lastWinner ? this.props.lastWinner : null;
+        let image;
+        if (winner === 'heads') {
+            image = <img alt="HEADS" src="./../heads.png"/>;
+        } else {
+            image = <img alt="TAILS" src="./../tails.png"/>;
+        }
         return (
-            <p id="wintext">{winner}</p>
+            <p id="wintext">{image}</p>
         );
     }
 }
