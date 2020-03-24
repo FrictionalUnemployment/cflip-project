@@ -120,3 +120,8 @@ header {
   right: 5%;
   font-size: 10px;
 }
+
+#beterror {
+  font-size: 48px;
+  color: red;
+}
