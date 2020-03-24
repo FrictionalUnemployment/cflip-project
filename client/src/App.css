@@ -24,7 +24,7 @@
   }
 
   #App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 28s linear;
   }
 }
 
@@ -54,12 +54,17 @@ input {
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(7200deg);
-  }
+  0% { transform: rotateY(20deg);}
+  10% { transform: rotateY(2020deg);}
+  20% { transform: rotateY(4020deg);}
+  30% { transform: rotateY(6020deg);}
+  40% { transform: rotateY(8020deg);}
+  50% { transform: rotateY(10020deg);}
+  60% { transform: rotateY(8020deg);}
+  70% { transform: rotateY(6020deg);}
+  80% { transform: rotateY(4020deg);}
+  90% { transform: rotateY(2020deg);}
+  100% { transform: rotateY(20deg);}
 }
 
 @keyframes Result-spin {
