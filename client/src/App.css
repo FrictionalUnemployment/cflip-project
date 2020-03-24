@@ -17,7 +17,12 @@
   z-index: 1;
 }
 
+
 @media (prefers-reduced-motion: no-preference) {
+  .image {
+    animation: Result-spin 2 1s linear;
+  }
+
   #App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
@@ -54,6 +59,18 @@ input {
   }
   to {
     transform: rotateY(7200deg);
+  }
+}
+
+@keyframes Result-spin {
+  0% {
+    transform: rotateY(-20deg);
+  }
+  50% {
+    transform: rotateY(20deg);
+  }
+  100% {
+    transform: rotatey(-20deg);
   }
 }
 
