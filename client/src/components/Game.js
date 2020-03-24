@@ -68,7 +68,7 @@ class Game extends React.Component {
     componentDidMount() {
         this._isMounted = true;
         this.setState({
-            center: <img alt="CFLIP" src='./../cflip-logo.png' className="App-logo" />
+            center: <img alt="CFLIP" src='./../cflip-logo.png' id="App-logo" className="App-logo" />
         })
     }
 
