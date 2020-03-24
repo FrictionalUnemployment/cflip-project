@@ -139,15 +139,6 @@ class Game extends React.Component {
         }
     }
 
-    getuserBalance = async (user) => {
-
-        const response = await fetch('/stats/user/' + user)
-        const data = await response.json();
-
-        const balance = JSON.stringify(data.Balance);
-        this.setState({ balance: balance });
-    }
-
     setErrorMsg = msg => {
         this.setState({betError: true, errorMsg: msg});
         setTimeout(() => {this.setState({betError: false, errorMsg: ""})}, 3000);
@@ -160,7 +151,7 @@ class Game extends React.Component {
             return;
         }
 
-        let balance = this.props.getBalance();
+        let balance = parseInt(this.props.getBalance());
         if (amount > balance) {
             this.setErrorMsg("Unsufficient money, setting max bet!");
             amount = balance;
