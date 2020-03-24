@@ -18,7 +18,7 @@ class BetChoice extends React.Component {
     render() {
         return (
             <div className="betchoice">
-                <input ref={this.inputRef} type="number"></input>
+                <input ref={this.inputRef} type="number" min="0"></input>
                 <button className="s" onClick={this.handleClick}>Bet {this.props.suit}!</button>
             </div>
         )
@@ -91,7 +91,8 @@ class Game extends React.Component {
             center: null,
             betHeads: null,
             betTails: null,
-            betError: false
+            betError: false,
+            errorMsg: ""
         }
         const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
@@ -138,9 +139,17 @@ class Game extends React.Component {
         }
     }
 
+    setErrorMsg = msg => {
+        this.setState({betError: true, errorMsg: msg});
+        setTimeout(() => {this.setState({betError: false, errorMsg: ""})}, 3000);
+    }
+
     placeBet = async (suit, amount) => {
         // Här sätts vad, vem och hur mycket
-        this.setState({ suit: suit, amount: amount });
+        if (amount < 0) {
+            this.setErrorMsg("You can't bet a negative amount!");
+            return;
+        }
 
         const response = await fetch(`/coin/bet/${suit}/${amount}`, {
             method: 'POST',
@@ -152,27 +161,22 @@ class Game extends React.Component {
             alert("Database read/write error!");
         }
         else if (response.status === 401) {
-            alert("You are not logged in!");
+            this.setErrorMsg("You are not logged in!");
         }
         else if (response.status === 403) {
             //throw Error(body.message);
-            this.setState({betError: true})
-            setTimeout(() => {this.setState({betError: false})}, 3000);
-            console.log(this.state.betError);
-
+            this.setErrorMsg("You already put a bet on this flip!");
         }
         else if (response.status === 422) {
             alert("Illegal value for bet!");
+        } else {
+            this.setState({ suit: suit, amount: amount });
         }
         return body.express;
     }
-
-    clearWinner = () => {
-
-    }
     
     render() {
-        let betErrorMsg = this.state.betError ? <p id="beterror">You already put a bet on this flip!</p> : null;
+        let betErrorMsg = this.state.betError ? <p id="beterror">{this.state.errorMsg}</p> : null;
         return (
             <div className="App-game">
                 <div className="users-bets" id="users-heads">
