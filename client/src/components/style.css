@@ -1,7 +1,7 @@
 .popup {
-  
+    position: absolute;
     top: 5%;  
-    right: 5%;
+    right: 2%;
     margin: auto;
     z-index: 2;
     background: #383838;
