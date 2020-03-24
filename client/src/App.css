@@ -50,6 +50,14 @@ button {
   font-size: 0.6em;
   transition-duration: 0.4s;
 }
+  button:hover {
+    background-color: #888888; /* Green */
+    color: white;
+  }
+  
+  button:disabled{ 
+    color: red;
+  }
 
 input {
   background-color: #888888;
