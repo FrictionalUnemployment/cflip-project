@@ -188,7 +188,7 @@ class Game extends React.Component {
                 <div className="users-bets" id="users-heads">
                     <Table data={this.state.betHeads} />
                 </div>
-                <BetChoice suit="heads" onClick={this.placeBet} />
+                <BetChoice id="betheads" suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
                     {betErrorMsg}
                     <CurrentBet {...this.state} />
@@ -199,7 +199,7 @@ class Game extends React.Component {
                 <div className="users-bets" id="users-tails">
                     <Table data={this.state.betTails} />
                 </div>
-                <BetChoice suit="tails" onClick={this.placeBet} />
+                <BetChoice id="bettails" suit="tails" onClick={this.placeBet} />
             </div>
         );
     }

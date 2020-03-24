@@ -16,6 +16,18 @@
   z-index: 1;
 }
 
+.App-game {
+  background-color: #1c1c1c;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+  height: 70%;
+  max-height: 70%;
+}
+
 
 @media (prefers-reduced-motion: no-preference) {
   .image {
@@ -95,17 +107,7 @@ input {
   }
 }
 
-.App-game {
-  background-color: #1c1c1c;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  width: 100%;
-  height: 70%;
-  max-height: 70%;
-}
+
 
 .gameboard {
   align-items: center;
@@ -192,4 +194,24 @@ ol {
 
 #users-heads {
   left: 3%;
+}
+
+@media (max-width: 479px) {
+  .image {
+    max-width: 100%;
+  }
+  .betchoice {
+    max-width: 20%;
+    margin-top: 10%;
+    margin-bottom: auto;
+  }
+  #betheads {
+    margin-left: 3%;
+  }
+  #bettails {
+    padding-right: 5%;
+  }
+  .i {
+    max-width: 95%;
+  }
 }
