@@ -40,7 +40,7 @@ class Coin {
     }
 
     updateCoin() {
-        let coinStatus = { timeleft: null, winner: null };
+        let coinStatus = { timeleft: null, winner: null, bet: this.bets};
         coinStatus.timeleft = this.decreaseTime();
         let res = null;
         if (!coinStatus.timeleft) {
