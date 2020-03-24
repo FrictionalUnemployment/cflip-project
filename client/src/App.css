@@ -152,3 +152,17 @@ ol {
 .BetTimer {
   margin-top: auto;
 }
+
+.users-bets {
+  position: absolute;
+  margin-bottom: auto;
+  color: white;
+}
+
+#users-tails {
+  right: 3%;
+}
+
+#users-heads {
+  left: 3%;
+}

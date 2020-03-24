@@ -33,6 +33,35 @@ class CurrentBet extends React.Component {
     }
 }
 
+class Table extends React.Component {
+    render() {
+        if (this.props.data) {
+            return (
+                <table>
+                    {this.props.data.map(row => <TableRow row={row} />)}
+                </table>
+            );
+        } else {
+            return(null);
+        }
+    }
+}
+
+class TableRow extends React.Component {
+    render() {
+        if (this.props.row) {
+            return (
+                <tr>
+                    <td key={this.props.row.user}>{this.props.row.user}</td>
+                    <td key={this.props.row.amount}>{this.props.row.amount}</td>
+                </tr>
+            );
+        } else {
+            return (null);
+        }
+    }
+}
+
 class BetTimer extends React.Component {
 
     render() {
@@ -57,7 +86,9 @@ class Game extends React.Component {
             lastWinner: false,
             suit: null,
             amount: null,
-            center: null
+            center: null,
+            betHeads: null,
+            betTails: null
         }
         const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
@@ -84,13 +115,22 @@ class Game extends React.Component {
             this.setState({ coinStatus: (parsed.timeleft / 1000.0).toFixed(1) });
             if (parsed.winner != null) {
                 if (parsed.winner[0] === 'heads') {
-                    this.setState({ center: <img alt="HEADS" src="./../heads-cflip.png" className="image"/> });
+                    this.setState({ center: <img alt="HEADS" src="./../heads-cflip.png" className="image" /> });
                 } else {
-                    this.setState({ center: <img alt="TAILS" src="./../tails-cflip.png" className="image" />});
+                    this.setState({ center: <img alt="TAILS" src="./../tails-cflip.png" className="image" /> });
                 }
                 setTimeout(() => {
                     this.setState({ center: <img alt="CFLIP" src='./../cflip-logo.png' id="App-logo" className="image" /> });
                 }, 2000);
+            }
+
+            if (parsed.bet.length > 0) {
+                this.setState({
+                    betHeads: parsed.bet.filter(user => user.bet === 'heads'),
+                    betTails: parsed.bet.filter(user => user.bet === 'tails')
+                });
+            } else {
+                this.setState({ betHeads: null, betTails: null });
             }
         }
     }
@@ -130,12 +170,18 @@ class Game extends React.Component {
     render() {
         return (
             <div className="App-game">
+                <div className="users-bets" id="users-heads">
+                    <Table data={this.state.betHeads} />
+                </div>
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
                     <CurrentBet {...this.state} />
 
                     {this.state.center}
                     <BetTimer {...this.state} />
+                </div>
+                <div className="users-bets" id="users-tails">
+                    <Table data={this.state.betTails} />
                 </div>
                 <BetChoice suit="tails" onClick={this.placeBet} />
             </div>
