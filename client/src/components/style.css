@@ -111,3 +111,10 @@ header {
 #submit, #submitt {
   margin-top: 10px;
 }
+
+.closeButton {
+  position: absolute;
+  top: 3%;
+  right: 5%;
+  font-size: 10px;
+}

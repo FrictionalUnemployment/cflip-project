@@ -33,7 +33,7 @@ class Popup extends React.Component {
     }
     return (
       <div className="popup">
-        <button className="button" onClick={this.props.closePopup}>X</button>
+        <button className="button closeButton" onClick={this.props.closePopup}>X</button>
 
         <div className="popup_real_inner">
           <div>
