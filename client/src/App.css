@@ -82,8 +82,10 @@ input {
   flex-direction: column;
   width: auto;
   padding: auto;
-  margin-bottom: -25%;
+  margin-top: auto;
+  margin-bottom: 3%;
 }
+
 
 .footer {
   display: flex;
