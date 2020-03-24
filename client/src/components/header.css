@@ -27,7 +27,18 @@
     color: #FF7E00;
     flex: 0 1 auto;
     position: absolute;
-    top: -50%;
     left: 0.5%;
     margin-right: auto;
+}
+
+.userInfo {
+    color: #FF7E00;
+    font-weight: bold;
+    font-size: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    right: 1%;
+    bottom: -120%;
+    z-index: 1;
 }

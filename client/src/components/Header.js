@@ -214,9 +214,8 @@ class Header extends Component {
             button = <button className="login-button" onClick={this.logOut.bind(this)}>Logout</button>;
         }
 
-        let balString = this.state.isLoggedin ? "Balance: " + this.props.getBalance() + " -|" : null;
-        let userString = this.state.isLoggedin ? "- Logged in as: " + this.state.registeredUsername : null;
-
+        let userString = this.state.isLoggedin ? `Username: ${this.state.registeredUsername}` : null;
+        let userBalance = this.state.isLoggedin ? `Balance: ${this.props.getBalance()}` : null;
         // style={{position: 'absolute', top: '8px', right: '16px'}}
         return (
             <header className="App-header">
@@ -224,55 +223,50 @@ class Header extends Component {
                 <div>
 
                     {this.state.showPopup ? null :
-                    <button id="stats-button" className="button" onClick={this.showStats}>Statistics</button>}
+                        <button id="stats-button" className="button" onClick={this.showStats}>Statistics</button>}
                     {button}
-                    
-            </div>
 
-            <div id="userinfo">
-                <p>{balString}</p>
-                <p>{userString}</p>
-            </div>
-           
+                </div>
+                <p className="userInfo">{userString} <br></br> {userBalance}</p>
 
-            {(this.state.showPopup && this.state.stats) ?
-                <Statistics
-                    closeStats={this.closeStats}
-                />
-                : null
-            }
-            {this.state.showPopup && !this.state.loginPage && !this.state.stats ?
-                <Popup
-                    text='Register'
-                    refresh={this.state.refreshCaptcha}
-                    handleRefresh={this.handleRefresh.bind(this)}
-                    closePopup={this.togglePopup.bind(this)}
-                    displayErrorMessage={this.state.errorMessage}
-                    handleOnChange={this.handleOnChange.bind(this)}
-                    changeLogin={this.changeLogin.bind(this)}
-                    handleSubmit={this.comparePassword.bind(this)}
-                    message={(this.state.passwordsMatch === false && <div>Passwords don't match!</div>)
-                        || (this.state.passwordsMatch === true && this.state.registeredUsername !== "" && <div>You're registered! {this.state.registeredUsername} </div>)}
-                />
-                : null}
+                {(this.state.showPopup && this.state.stats) ?
+                    <Statistics
+                        closeStats={this.closeStats}
+                    />
+                    : null
+                }
+                {this.state.showPopup && !this.state.loginPage && !this.state.stats ?
+                    <Popup
+                        text='Register'
+                        refresh={this.state.refreshCaptcha}
+                        handleRefresh={this.handleRefresh.bind(this)}
+                        closePopup={this.togglePopup.bind(this)}
+                        displayErrorMessage={this.state.errorMessage}
+                        handleOnChange={this.handleOnChange.bind(this)}
+                        changeLogin={this.changeLogin.bind(this)}
+                        handleSubmit={this.comparePassword.bind(this)}
+                        message={(this.state.passwordsMatch === false && <div>Passwords don't match!</div>)
+                            || (this.state.passwordsMatch === true && this.state.registeredUsername !== "" && <div>You're registered! {this.state.registeredUsername} </div>)}
+                    />
+                    : null}
 
-            {this.state.registeredUsername !== undefined && this.state.loginPage && this.state.showPopup && !this.state.stats ?
-                <Loginpopup
-                    refresh={this.state.refreshCaptcha}
-                    handleRefresh={this.handleRefresh.bind(this)}
-                    text='Login'
-                    displayErrorMessage={this.state.errorMessage}
-                    closeLoginPopup={this.togglePopup.bind(this)}
-                    changeLogin={this.changeLogin.bind(this)}
-                    handleOnChange={this.handleOnChange.bind(this)}
-                    handleLoginSubmit={this.handleLoginCaptcha.bind(this)}
-                />
-                : null
-            }
+                {this.state.registeredUsername !== undefined && this.state.loginPage && this.state.showPopup && !this.state.stats ?
+                    <Loginpopup
+                        refresh={this.state.refreshCaptcha}
+                        handleRefresh={this.handleRefresh.bind(this)}
+                        text='Login'
+                        displayErrorMessage={this.state.errorMessage}
+                        closeLoginPopup={this.togglePopup.bind(this)}
+                        changeLogin={this.changeLogin.bind(this)}
+                        handleOnChange={this.handleOnChange.bind(this)}
+                        handleLoginSubmit={this.handleLoginCaptcha.bind(this)}
+                    />
+                    : null
+                }
 
-        </header>
+            </header>
 
-    );
-}
+        );
+    }
 }
 export default Header;
