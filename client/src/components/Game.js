@@ -9,8 +9,10 @@ class BetChoice extends React.Component {
     }
 
     handleClick() {
-        this.props.onClick(this.props.suit, this.inputRef.current.value);
-        this.inputRef.current.value = "";
+        if (this.inputRef.current.value !== "") {
+            this.props.onClick(this.props.suit, this.inputRef.current.value);
+            this.inputRef.current.value = "";
+        }
     }
 
     render() {
@@ -88,7 +90,8 @@ class Game extends React.Component {
             amount: null,
             center: null,
             betHeads: null,
-            betTails: null
+            betTails: null,
+            betError: false
         }
         const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
@@ -137,12 +140,10 @@ class Game extends React.Component {
 
     placeBet = async (suit, amount) => {
         // Här sätts vad, vem och hur mycket
-        //const data = {bet: suit, username: name, amount: amount};
         this.setState({ suit: suit, amount: amount });
 
         const response = await fetch(`/coin/bet/${suit}/${amount}`, {
             method: 'POST',
-            //body: JSON.stringify(data),
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
         });
 
@@ -155,7 +156,10 @@ class Game extends React.Component {
         }
         else if (response.status === 403) {
             //throw Error(body.message);
-            alert("Already put a bet on this flip!");
+            this.setState({betError: true})
+            setTimeout(() => {this.setState({betError: false})}, 3000);
+            console.log(this.state.betError);
+
         }
         else if (response.status === 422) {
             alert("Illegal value for bet!");
@@ -166,8 +170,9 @@ class Game extends React.Component {
     clearWinner = () => {
 
     }
-    // <img src={logo} className="App-logo" alt="logo" />  // Snurrande coinen.
+    
     render() {
+        let betErrorMsg = this.state.betError ? <p id="beterror">You already put a bet on this flip!</p> : null;
         return (
             <div className="App-game">
                 <div className="users-bets" id="users-heads">
@@ -175,6 +180,7 @@ class Game extends React.Component {
                 </div>
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
+                    {betErrorMsg}
                     <CurrentBet {...this.state} />
 
                     {this.state.center}
