@@ -78,6 +78,8 @@ header {
 #wintext {
   color: #FF7E00;
   font-size: 48px;
+  text-transform: uppercase;
+  animation: App-logo-spin infinite 20s linear;
 }
 
 #currentbettext {

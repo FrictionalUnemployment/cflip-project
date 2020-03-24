@@ -36,7 +36,7 @@ class CurrentBet extends React.Component {
 class BetWinner extends React.Component {
 
     render() {
-        const winner = this.props.lastWinner ? "Winner is " + this.props.lastWinner : null;
+        const winner = this.props.lastWinner ? this.props.lastWinner : null;
         return (
             <p id="wintext">{winner}</p>
         );
