@@ -186,7 +186,7 @@ class Header extends Component {
         const data = await response.json();
 
         const balance = JSON.stringify(data.Balance);
-        this.setState({ balance: balance });
+        this.props.setBalance(balance);
     }
 
     showStats = () => {
@@ -214,7 +214,7 @@ class Header extends Component {
             button = <button className="login-button" onClick={this.logOut.bind(this)}>Logout</button>;
         }
 
-        let balString = this.state.isLoggedin ? "Balance: " + this.state.balance + " -|" : null;
+        let balString = this.state.isLoggedin ? "Balance: " + this.props.getBalance() + " -|" : null;
         let userString = this.state.isLoggedin ? "- Logged in as: " + this.state.registeredUsername : null;
 
         // style={{position: 'absolute', top: '8px', right: '16px'}}
