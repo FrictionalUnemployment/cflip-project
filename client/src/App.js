@@ -10,7 +10,7 @@ class App extends Component {
     render() {
         return (
             <div className="Site">
-                <Header setGame={this.setGame} setStats={this.setStats} />
+                <Header />
                 <Game />
                 <Footer />
             </div>

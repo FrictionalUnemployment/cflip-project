@@ -9,8 +9,10 @@ class BetChoice extends React.Component {
     }
 
     handleClick() {
-        this.props.onClick(this.props.suit, this.inputRef.current.value);
-        this.inputRef.current.value = "";
+        if (this.inputRef.current.value !== "") {
+            this.props.onClick(this.props.suit, this.inputRef.current.value);
+            this.inputRef.current.value = "";
+        }
     }
 
     render() {
@@ -137,12 +139,10 @@ class Game extends React.Component {
 
     placeBet = async (suit, amount) => {
         // Här sätts vad, vem och hur mycket
-        //const data = {bet: suit, username: name, amount: amount};
         this.setState({ suit: suit, amount: amount });
 
         const response = await fetch(`/coin/bet/${suit}/${amount}`, {
             method: 'POST',
-            //body: JSON.stringify(data),
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
         });
 
@@ -166,7 +166,6 @@ class Game extends React.Component {
     clearWinner = () => {
 
     }
-    // <img src={logo} className="App-logo" alt="logo" />  // Snurrande coinen.
     render() {
         return (
             <div className="App-game">
