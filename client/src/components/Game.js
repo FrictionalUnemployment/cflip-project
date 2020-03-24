@@ -36,7 +36,7 @@ class CurrentBet extends React.Component {
 class BetWinner extends React.Component {
 
     render() {
-        const winner = this.props.lastWinner ? "Winner is " + this.props.lastWinner : null;
+        const winner = this.props.lastWinner ? this.props.lastWinner : null;
         return (
             <p id="wintext">{winner}</p>
         );
@@ -48,11 +48,11 @@ class BetTimer extends React.Component {
     render() {
         if (this.props.coinStatus <= 5) {
             return (
-                <label id="urgenttimer">{this.props.coinStatus}</label>
+                <label id="urgenttimer" className="BetTimer">{this.props.coinStatus}</label>
             );
         } else {
             return (
-                <label id="normaltimer">{this.props.coinStatus}</label>
+                <label id="normaltimer" className="BetTimer">{this.props.coinStatus}</label>
             );
         }
     }
@@ -66,7 +66,8 @@ class Game extends React.Component {
             coinStatus: 0,
             lastWinner: false,
             suit: null,
-            amount: null
+            amount: null,
+            center: null
         }
         const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
@@ -76,6 +77,9 @@ class Game extends React.Component {
 
     componentDidMount() {
         this._isMounted = true;
+        this.setState({
+            center: <img alt="CFLIP" src='./../cflip-logo.png' className="App-logo"/>
+        })
     }
 
     componentWillUnmount() {
@@ -89,10 +93,12 @@ class Game extends React.Component {
             const parsed = JSON.parse(data.data);
             this.setState({coinStatus: (parsed.timeleft/1000.0).toFixed(1)});
             if (parsed.winner != null) {
-                this.setState({lastWinner: parsed.winner[0], suit: null, amount: null});
+                this.setState({
+                    center: <BetWinner lastWinner={parsed.winner[0]}/>
+            });
                 setTimeout(() => {
-                    this.setState({lastWinner: false, suit: null});
-                }, 5000);
+                    this.setState({center: <img alt="CFLIP" src='./../cflip-logo.png' className="App-logo"/>});
+                }, 2000);
             }
         }
     }
@@ -136,10 +142,8 @@ class Game extends React.Component {
                 <div className="gameboard">
                     <CurrentBet {...this.state} />
                    
-                        <img alt="CFLIP" src='./../cflip-logo.png' className="App-logo"/>
-                   
+                    {this.state.center}
                     <BetTimer {...this.state} />
-                    <BetWinner {...this.state} />
                 </div>
                 <BetChoice suit="tails" onClick={this.placeBet} />
             </div>

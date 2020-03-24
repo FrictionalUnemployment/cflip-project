@@ -82,8 +82,12 @@ input {
   flex-direction: column;
   width: auto;
   padding: auto;
-  margin-bottom: -25%;
+  margin-top: auto;
+  margin-bottom: 2%;
+  margin-left: 2%;
+  margin-right: 2%;
 }
+
 
 .footer {
   display: flex;
@@ -120,4 +124,8 @@ ol {
 #normaltimer {
   color: white;
   font-size: 72px;
+}
+
+.BetTimer {
+  margin-top: auto;
 }
