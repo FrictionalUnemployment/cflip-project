@@ -52,3 +52,10 @@
     bottom: -120%;
     z-index: 1;
 }
+
+@media (max-width: 479px) {
+    .App-header {
+        height: 8%;
+        font-size: calc(15px + 2vmin);
+    }
+}
