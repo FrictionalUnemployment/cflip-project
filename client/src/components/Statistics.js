@@ -3,6 +3,7 @@ import ReactTable from 'react-table-6'
 import './../styles/table.css'
 
 
+
 class Statistics extends React.Component {
     constructor(props) {
         super(props);
@@ -280,10 +281,8 @@ class Statistics extends React.Component {
 
 
         return (
-            <div className='popup'>
-                <div className="popup\_inner">
-                <button onClick={this.closeStatistics.bind(this)}>X</button>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
+            <div>
+                    <div style={{ display: "flex", justifyContent: "center" , color: "white" }}>
                   
                         <div style={{ color: "red" }}>
                             {this.state.errorMessage !== "" ?
@@ -299,12 +298,9 @@ class Statistics extends React.Component {
 
 
                     </div>
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "center"
-                        }}
-                    >
+                   
+
+                   <div className="App-game">
                     
                      
 
@@ -347,15 +343,9 @@ class Statistics extends React.Component {
                             : null
                         }
 
-
-                    </div>
-                </div>
-            </div>
-
-
+                        </div>
+                        </div>
         );
-
-
 
     }
 
