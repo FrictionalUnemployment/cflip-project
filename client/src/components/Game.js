@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './../styles/Game.css';
 const WebSocket = require('isomorphic-ws');
 
 class BetChoice extends React.Component {
@@ -9,15 +10,17 @@ class BetChoice extends React.Component {
     }
 
     handleClick() {
-        this.props.onClick(this.props.suit, this.inputRef.current.value);
-        this.inputRef.current.value = "";
+        if (this.inputRef.current.value !== "") {
+            this.props.onClick(this.props.suit, this.inputRef.current.value);
+            this.inputRef.current.value = "";
+        }
     }
 
     render() {
         return (
             <div className="betchoice">
-                <input ref={this.inputRef} type="number"></input>
-                <button className="s" onClick={this.handleClick}>Bet {this.props.suit}!</button>
+                <input className="betInput" ref={this.inputRef} type="number" min="1"></input>
+                <button className="betButton" onClick={this.handleClick}>Bet {this.props.suit}!</button>
             </div>
         )
     }
@@ -89,7 +92,12 @@ class Game extends React.Component {
             center: null,
             betHeads: null,
             betTails: null,
+<<<<<<< HEAD
             stats: null
+=======
+            betError: false,
+            errorMsg: ""
+>>>>>>> c5a092a2732b51f5c1dc07adca78e1bed64578e5
         }
         const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
@@ -120,6 +128,7 @@ class Game extends React.Component {
                 } else {
                     this.setState({ center: <img alt="TAILS" src="./../tails-cflip.png" className="image" /> });
                 }
+                this.setState({suit: null, amount: null});
                 setTimeout(() => {
                     this.setState({ center: <img alt="CFLIP" src='./../cflip-logo.png' id="App-logo" className="image" /> });
                 }, 2000);
@@ -136,14 +145,26 @@ class Game extends React.Component {
         }
     }
 
+    setErrorMsg = msg => {
+        this.setState({betError: true, errorMsg: msg});
+        setTimeout(() => {this.setState({betError: false, errorMsg: ""})}, 3000);
+    }
+
     placeBet = async (suit, amount) => {
         // Här sätts vad, vem och hur mycket
-        //const data = {bet: suit, username: name, amount: amount};
-        this.setState({ suit: suit, amount: amount });
+        if (amount < 0) {
+            this.setErrorMsg("You can't bet a negative amount!");
+            return;
+        }
+
+        let balance = parseInt(this.props.getBalance());
+        if (amount > balance) {
+            this.setErrorMsg("Unsufficient money, setting max bet!");
+            amount = balance;
+        }
 
         const response = await fetch(`/coin/bet/${suit}/${amount}`, {
             method: 'POST',
-            //body: JSON.stringify(data),
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
         });
 
@@ -152,24 +173,22 @@ class Game extends React.Component {
             alert("Database read/write error!");
         }
         else if (response.status === 401) {
-            alert("You are not logged in!");
+            this.setErrorMsg("You are not logged in!");
         }
         else if (response.status === 403) {
             //throw Error(body.message);
-            alert("Already put a bet on this flip!");
+            this.setErrorMsg("You already put a bet on this flip!");
         }
         else if (response.status === 422) {
             alert("Illegal value for bet!");
+        } else {
+            this.setState({ suit: suit, amount: amount });
         }
         return body.express;
     }
-
-    clearWinner = () => {
-
-    }
-    // <img src={logo} className="App-logo" alt="logo" />  // Snurrande coinen.
+    
     render() {
-       
+        let betErrorMsg = this.state.betError ? <p id="beterror">{this.state.errorMsg}</p> : null;
         return (
          
             <div className="App-game">
@@ -177,9 +196,9 @@ class Game extends React.Component {
                 <div className="users-bets" id="users-heads">
                     <Table data={this.state.betHeads} />
                 </div>
-                
-                <BetChoice suit="heads" onClick={this.placeBet} />
+                <BetChoice id="betheads" suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
+                    {betErrorMsg}
                     <CurrentBet {...this.state} />
 
                     {this.state.center}
@@ -188,11 +207,8 @@ class Game extends React.Component {
                 <div className="users-bets" id="users-tails">
                     <Table data={this.state.betTails} />
                 </div>
-                <BetChoice suit="tails" onClick={this.placeBet} />  
-          
-        </div>
-        
-         
+                <BetChoice id="bettails" suit="tails" onClick={this.placeBet} />
+            </div>
         );
     }
 }

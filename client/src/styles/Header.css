@@ -1,0 +1,61 @@
+.App-header {
+  background-color: #121212;
+  display: flex;
+  height: 5%;
+  justify-content: flex-start;
+  position: relative;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.login-button {
+    color: blueviolet;
+    background-color: inherit;
+    border: none;
+    flex: 0 1 auto;
+    position: absolute;
+    top: 1%;
+    right: 0%;
+    margin-left: auto;
+    text-decoration: underline;
+}
+
+.login-button:hover {
+    color: blue;
+}
+
+#stats-button {
+    flex: 0 1 auto;
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    transform: translate(-50%);
+}
+
+#title {
+    color: #FF7E00;
+    flex: 0 1 auto;
+    position: absolute;
+    left: 0.5%;
+    margin-right: auto;
+}
+
+.userInfo {
+    color: #FF7E00;
+    font-weight: bold;
+    font-size: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    right: 1%;
+    bottom: -120%;
+    z-index: 1;
+}
+
+@media (max-width: 479px) {
+    .App-header {
+        height: 8%;
+        font-size: calc(15px + 2vmin);
+    }
+}

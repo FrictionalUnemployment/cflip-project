@@ -1,4 +1,5 @@
 import React from 'react'
+import './../styles/BotList.css'
 
 function BotItem(props) {
     return (

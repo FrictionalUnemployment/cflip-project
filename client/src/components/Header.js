@@ -3,7 +3,7 @@ import Popup from './popup.js';
 import Loginpopup from './loginpopup.js';
 import 'whatwg-fetch'
 import Statistics from './Statistics.js';
-import './header.css';
+import './../styles/Header.css';
 
 class Header extends Component {
     constructor(props) {
@@ -186,7 +186,7 @@ class Header extends Component {
         const data = await response.json();
 
         const balance = JSON.stringify(data.Balance);
-        this.setState({ balance: balance });
+        this.props.setBalance(balance);
     }
 
     showStats = () => {
@@ -214,17 +214,23 @@ class Header extends Component {
             button = <button className="login-button" onClick={this.logOut.bind(this)}>Logout</button>;
         }
 
+<<<<<<< HEAD
         let balString = this.state.isLoggedin ? "Balance: " + this.state.balance + " -|" : null;
         let userString = this.state.isLoggedin ? "- Logged in as: " + this.state.registeredUsername : null;
 
       
+=======
+        let userString = this.state.isLoggedin ? `Username: ${this.state.registeredUsername}` : null;
+        let userBalance = this.state.isLoggedin ? `Balance: ${this.props.getBalance()}` : null;
+        // style={{position: 'absolute', top: '8px', right: '16px'}}
+>>>>>>> c5a092a2732b51f5c1dc07adca78e1bed64578e5
         return (
             <header className="App-header">
                 <h4 id="title">cflip.app</h4>
                 <div>
 
                     {this.state.showPopup ? null :
-                    <button id="stats-button" className="button" onClick={this.showStats}>Statistics</button>}
+                        <button id="stats-button" onClick={this.showStats}>Statistics</button>}
                     {button}
                     
             </div>
@@ -273,9 +279,47 @@ class Header extends Component {
                 : null
             }
 
-        </header>
+                </div>
+                <p className="userInfo">{userString} <br></br> {userBalance}</p>
 
-    );
-}
+                {(this.state.showPopup && this.state.stats) ?
+                    <Statistics
+                        closeStats={this.closeStats}
+                    />
+                    : null
+                }
+                {this.state.showPopup && !this.state.loginPage && !this.state.stats ?
+                    <Popup
+                        text='Register'
+                        refresh={this.state.refreshCaptcha}
+                        handleRefresh={this.handleRefresh.bind(this)}
+                        closePopup={this.togglePopup.bind(this)}
+                        displayErrorMessage={this.state.errorMessage}
+                        handleOnChange={this.handleOnChange.bind(this)}
+                        changeLogin={this.changeLogin.bind(this)}
+                        handleSubmit={this.comparePassword.bind(this)}
+                        message={(this.state.passwordsMatch === false && <div>Passwords don't match!</div>)
+                            || (this.state.passwordsMatch === true && this.state.registeredUsername !== "" && <div>You're registered! {this.state.registeredUsername} </div>)}
+                    />
+                    : null}
+
+                {this.state.registeredUsername !== undefined && this.state.loginPage && this.state.showPopup && !this.state.stats ?
+                    <Loginpopup
+                        refresh={this.state.refreshCaptcha}
+                        handleRefresh={this.handleRefresh.bind(this)}
+                        text='Login'
+                        displayErrorMessage={this.state.errorMessage}
+                        closeLoginPopup={this.togglePopup.bind(this)}
+                        changeLogin={this.changeLogin.bind(this)}
+                        handleOnChange={this.handleOnChange.bind(this)}
+                        handleLoginSubmit={this.handleLoginCaptcha.bind(this)}
+                    />
+                    : null
+                }
+
+            </header>
+
+        );
+    }
 }
 export default Header;
