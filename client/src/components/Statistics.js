@@ -1,7 +1,6 @@
 import React from 'react';
-import './style.css';
 import ReactTable from 'react-table-6'
-import './table.css'
+import './../styles/table.css'
 
 
 class Statistics extends React.Component {
@@ -207,7 +206,7 @@ class Statistics extends React.Component {
                 filterable: true,
                 Cell: props => {
                     return (
-                        <button className="button"  onClick={() => {
+                        <button onClick={() => {
                             this.handleUserQuery(props.original.Username);
                         }}>{props.original.Username}
                         </button>
@@ -283,7 +282,7 @@ class Statistics extends React.Component {
         return (
             <div className='popup'>
                 <div className="popup\_inner">
-                <button className="button"  onClick={this.closeStatistics.bind(this)}>X</button>
+                <button onClick={this.closeStatistics.bind(this)}>X</button>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                   
                         <div style={{ color: "red" }}>

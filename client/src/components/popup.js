@@ -1,5 +1,5 @@
 import React from 'react';
-import './style.css';
+import './../styles/loginpopup.css';
 import ReactHtmlParser from 'react-html-parser';
 class Popup extends React.Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class Popup extends React.Component {
     }
     return (
       <div className="popup">
-        <button className="button closeButton" onClick={this.props.closePopup}>X</button>
+        <button className="closeButton" onClick={this.props.closePopup}>X</button>
 
         <div className="popup_real_inner">
           <div>
@@ -82,7 +82,7 @@ class Popup extends React.Component {
                 justifyContent: "center"
               }}>
                 <br />
-                <button id="submitt" className="button" onClick={this.props.handleSubmit}>Submit</button>
+                <button className="submit" onClick={this.props.handleSubmit}>Submit</button>
               </div>
 
               <h3>{this.props.message}</h3>

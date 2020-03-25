@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './../styles/Game.css';
 const WebSocket = require('isomorphic-ws');
 
 class BetChoice extends React.Component {
@@ -18,8 +19,8 @@ class BetChoice extends React.Component {
     render() {
         return (
             <div className="betchoice">
-                <input className="i" ref={this.inputRef} type="number" min="1"></input>
-                <button className="s" onClick={this.handleClick}>Bet {this.props.suit}!</button>
+                <input className="betInput" ref={this.inputRef} type="number" min="1"></input>
+                <button className="betButton" onClick={this.handleClick}>Bet {this.props.suit}!</button>
             </div>
         )
     }

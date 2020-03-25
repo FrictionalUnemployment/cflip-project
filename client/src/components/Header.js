@@ -3,7 +3,7 @@ import Popup from './popup.js';
 import Loginpopup from './loginpopup.js';
 import 'whatwg-fetch'
 import Statistics from './Statistics.js';
-import './header.css';
+import './../styles/Header.css';
 
 class Header extends Component {
     constructor(props) {
@@ -223,7 +223,7 @@ class Header extends Component {
                 <div>
 
                     {this.state.showPopup ? null :
-                        <button id="stats-button" className="button" onClick={this.showStats}>Statistics</button>}
+                        <button id="stats-button" onClick={this.showStats}>Statistics</button>}
                     {button}
 
                 </div>
