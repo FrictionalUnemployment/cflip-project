@@ -214,32 +214,31 @@ class Header extends Component {
             button = <button className="login-button" onClick={this.logOut.bind(this)}>Logout</button>;
         }
 
-<<<<<<< HEAD
-        let balString = this.state.isLoggedin ? "Balance: " + this.state.balance + " -|" : null;
-        let userString = this.state.isLoggedin ? "- Logged in as: " + this.state.registeredUsername : null;
-
-      
-=======
         let userString = this.state.isLoggedin ? `Username: ${this.state.registeredUsername}` : null;
         let userBalance = this.state.isLoggedin ? `Balance: ${this.props.getBalance()}` : null;
-        // style={{position: 'absolute', top: '8px', right: '16px'}}
->>>>>>> c5a092a2732b51f5c1dc07adca78e1bed64578e5
+      
         return (
             <header className="App-header">
                 <h4 id="title">cflip.app</h4>
                 <div>
 
-                    {this.state.showPopup ? null :
-                        <button id="stats-button" onClick={this.showStats}>Statistics</button>}
+    
+                    <div>
+                        {this.props.setMode === 2 ? 
+                        <button id="stats-button" onClick={this.props.setGame}>Game</button>
+                        : null
+                    }
+                    {this.props.setMode === 1 ? 
+                        <button id="stats-button" onClick={this.props.setStats}>Statistics</button>
+                        : null
+                    }
+                    </div>
+                        
                     {button}
                     
             </div>
 
-            <div id="userinfo">
-                <p>{balString}</p>
-                <p>{userString}</p>
-            </div>
-          
+        
 
             {this.state.showPopup && !this.state.loginPage && !this.state.stats ?
                 <Popup
@@ -279,7 +278,7 @@ class Header extends Component {
                 : null
             }
 
-                </div>
+            
                 <p className="userInfo">{userString} <br></br> {userBalance}</p>
 
                 {(this.state.showPopup && this.state.stats) ?

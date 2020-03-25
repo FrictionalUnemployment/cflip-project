@@ -92,12 +92,8 @@ class Game extends React.Component {
             center: null,
             betHeads: null,
             betTails: null,
-<<<<<<< HEAD
-            stats: null
-=======
             betError: false,
             errorMsg: ""
->>>>>>> c5a092a2732b51f5c1dc07adca78e1bed64578e5
         }
         const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
