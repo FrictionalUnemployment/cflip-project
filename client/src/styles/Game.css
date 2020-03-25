@@ -75,6 +75,11 @@
   border-bottom-right-radius: 0px;
 }
 
+#currentbettext {
+  color: blue;
+  font-size: 2em;
+}
+
 @media (max-width: 479px) {
     .App-game {
       height: 100%;
@@ -96,11 +101,9 @@
     .betInput {
         max-width: 95%; 
     }
-}
-
-#currentbettext {
-  color: blue;
-  font-size: 48px;
+    #currentbettext {
+      font-size: 1.25em;
+    }
 }
 
 .BetTimer {

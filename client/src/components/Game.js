@@ -124,6 +124,7 @@ class Game extends React.Component {
                 } else {
                     this.setState({ center: <img alt="TAILS" src="./../tails-cflip.png" className="image" /> });
                 }
+                this.setState({suit: null, amount: null});
                 setTimeout(() => {
                     this.setState({ center: <img alt="CFLIP" src='./../cflip-logo.png' id="App-logo" className="image" /> });
                 }, 2000);
