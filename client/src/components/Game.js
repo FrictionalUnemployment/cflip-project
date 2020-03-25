@@ -88,7 +88,8 @@ class Game extends React.Component {
             amount: null,
             center: null,
             betHeads: null,
-            betTails: null
+            betTails: null,
+            stats: null
         }
         const ws = new WebSocket('wss://cflip.app:5001'); // Kopplad mot coinen
         // När medelanden kommer körs funktionen updateCoinStatus
@@ -168,11 +169,15 @@ class Game extends React.Component {
     }
     // <img src={logo} className="App-logo" alt="logo" />  // Snurrande coinen.
     render() {
+       
         return (
+         
             <div className="App-game">
+            
                 <div className="users-bets" id="users-heads">
                     <Table data={this.state.betHeads} />
                 </div>
+                
                 <BetChoice suit="heads" onClick={this.placeBet} />
                 <div className="gameboard">
                     <CurrentBet {...this.state} />
@@ -183,8 +188,11 @@ class Game extends React.Component {
                 <div className="users-bets" id="users-tails">
                     <Table data={this.state.betTails} />
                 </div>
-                <BetChoice suit="tails" onClick={this.placeBet} />
-            </div>
+                <BetChoice suit="tails" onClick={this.placeBet} />  
+          
+        </div>
+        
+         
         );
     }
 }

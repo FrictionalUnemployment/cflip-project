@@ -217,7 +217,7 @@ class Header extends Component {
         let balString = this.state.isLoggedin ? "Balance: " + this.state.balance + " -|" : null;
         let userString = this.state.isLoggedin ? "- Logged in as: " + this.state.registeredUsername : null;
 
-        // style={{position: 'absolute', top: '8px', right: '16px'}}
+      
         return (
             <header className="App-header">
                 <h4 id="title">cflip.app</h4>
@@ -233,14 +233,8 @@ class Header extends Component {
                 <p>{balString}</p>
                 <p>{userString}</p>
             </div>
-           
+          
 
-            {(this.state.showPopup && this.state.stats) ?
-                <Statistics
-                    closeStats={this.closeStats}
-                />
-                : null
-            }
             {this.state.showPopup && !this.state.loginPage && !this.state.stats ?
                 <Popup
                     text='Register'
@@ -251,10 +245,19 @@ class Header extends Component {
                     handleOnChange={this.handleOnChange.bind(this)}
                     changeLogin={this.changeLogin.bind(this)}
                     handleSubmit={this.comparePassword.bind(this)}
-                    message={(this.state.passwordsMatch === false && <div>Passwords don't match!</div>)
-                        || (this.state.passwordsMatch === true && this.state.registeredUsername !== "" && <div>You're registered! {this.state.registeredUsername} </div>)}
+                    message={(this.state.passwordsMatch === false && 
+                              <div>
+                              Passwords don't match!
+                              </div>) || 
+                              (this.state.passwordsMatch === true && 
+                              this.state.registeredUsername !== "" && 
+                              <div>
+                              You're registered! {this.state.registeredUsername} 
+                              </div>)
+                            }
                 />
-                : null}
+                : null
+                }
 
             {this.state.registeredUsername !== undefined && this.state.loginPage && this.state.showPopup && !this.state.stats ?
                 <Loginpopup
