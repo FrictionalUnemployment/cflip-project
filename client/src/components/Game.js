@@ -154,6 +154,10 @@ class Game extends React.Component {
         }
 
         let balance = parseInt(this.props.getBalance());
+        if (balance <= 0) {
+            this.setErrorMsg("No money left. Game Over!");
+            return;
+        }
         if (amount > balance) {
             this.setErrorMsg("Unsufficient money, setting max bet!");
             amount = balance;
