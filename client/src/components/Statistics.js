@@ -17,10 +17,11 @@ class Statistics extends React.Component {
             showStats: false,
             userArray: [],
             expanded: {},
-            errorMessage: '',
-            Loading: false
+            errorMessageWins: '',
+            Loading: false,
+            errorMessageLosses: ''
         };
-    
+
     }
 
 
@@ -64,11 +65,12 @@ class Statistics extends React.Component {
             if (response.status !== 200) {
 
                 if (body.errors[0].msg === "Invalid value") {
-                    return this.setState({ errorMessage: body.errors[0].msg });
+                    return this.setState({ errorMessageWins: body.errors[0].msg });
                 }
             }
-
-            this.state.winsInfo.push(body)
+            if (userInfo.Wins[0] !== null) {
+                this.state.winsInfo.push(body);
+            }
 
         }
     }
@@ -82,21 +84,22 @@ class Statistics extends React.Component {
             const body = await response.json();
             if (response.status !== 200) {
                 if (body.errors[0].msg === "Invalid value") {
-                    return this.setState({ errorMessage: body.errors[0].msg });
+                    return this.setState({ errorMessageLosses: body.errors[0].msg });
                 }
             }
-
-            this.state.loseInfo.push(body)
+            if (userInfo.Losses[0] !== null) {
+                this.state.loseInfo.push(body);
+            }
 
         }
     }
 
     handleUserQuery = user => {
 
-        if (this.state.errorMessage !== "") {
-            this.setState({ errorMessage: '', Loading: false });
-        } else if(this.state.Loading === false) {
-            this.setState({Loading: true});
+        if (this.state.errorMessageWins !== "" || this.state.errorMessageLosses !== "") {
+            this.setState({ errorMessageWins: '', Loading: false, errorMessageLosses: ''});
+        } else if (this.state.Loading === false) {
+            this.setState({ Loading: true });
             this.getUser(user)
                 .then(() => this.getWID()).then(() => this.getLosses()).then(() => this.showUserStats());
         }
@@ -107,7 +110,7 @@ class Statistics extends React.Component {
         const userInfo = this.state.userInfo;
         const userWID = this.state.winsInfo;
         const loseInfo = this.state.loseInfo;
-        if (this.state.errorMessage === "") {
+        if (this.state.errorMessageLosses === "") {
 
             for (var i = 0; i < userInfo.Losses.length; i++) {
                 let unixTime = new Date(loseInfo[i].time).toISOString();
@@ -121,9 +124,9 @@ class Statistics extends React.Component {
                 if (loseKeys.length > 1) {
                     loseKeys = Object.keys(loseInfo[i].losers) + ",";
                 }
-               unixTime = unixTime.replace("T", " ")
-               unixTime = unixTime.replace("Z", "")
-                
+                unixTime = unixTime.replace("T", " ")
+                unixTime = unixTime.replace("Z", "")
+
                 let obj = {
                     "FlipTime": unixTime,
                     "Results": loseInfo[i].results,
@@ -134,7 +137,8 @@ class Statistics extends React.Component {
                 };
                 this.state.userArray.push(obj);
             }
-
+        }
+        if (this.state.errorMessageWins === "") {
             for (let i = 0; i < userInfo.Wins.length; i++) {
                 let unixTime = new Date(userWID[i].time).toISOString();
                 let winKeys = Object.keys(userWID[i].winners);
@@ -162,10 +166,9 @@ class Statistics extends React.Component {
             }
 
             this.setState({
-                showStats: true, Loading: false
+                showStats: true, Loading: false, errorMessageWins: '', errorMessageLosses: ''
             });
         }
-
 
     }
 
@@ -199,7 +202,6 @@ class Statistics extends React.Component {
                 Header: "ID",
                 accessor: "nr",
                 filterable: false
-
             },
             {
                 Header: "User",
@@ -282,69 +284,70 @@ class Statistics extends React.Component {
 
         return (
             <div>
-                    <div style={{ display: "flex", justifyContent: "center" , color: "white" }}>
-                  
-                        <div style={{ color: "red" }}>
-                            {this.state.errorMessage !== "" ?
-                                "Statistics for user: " + this.state.errorMessage
-                                : null
-                            }
-                        </div>
+                <div style={{ display: "flex", justifyContent: "center", color: "white" }}>
 
-                        {this.state.userInfo.Username !== undefined && this.state.errorMessage === "" ?
-                            "Statistics for user: " + this.state.userInfo.Username
+                    <div style={{ color: "red" }}>
+                        {this.state.errorMessageWins !== "" || this.state.errorMessageLosses !== "" ?
+                            "Statistics for user: " + this.state.errorMessage
                             : null
                         }
-
-
                     </div>
-                   
 
-                   <div className="App-game">
-                    
-                     
+                    {this.state.userInfo.Username !== undefined && this.state.errorMessageWins == ""
+                    || this.state.userInfo.Username !== undefined && this.state.errorMessageLosses == ""  ?
+                        "Statistics for user: " + this.state.userInfo.Username
+                        : null
+                    }
 
 
-                        {!this.state.showStats ?
-                            <ReactTable data={this.state.array} columns={columnsDefault} filterable={["USERID"]}
-                                showPageSizeOptions={false} defaultPageSize={10}
+                </div>
 
-                            />
-                            : null
-                        }
+
+                <div className="App-game">
 
 
 
-                        {this.state.showStats ?
+
+                    {!this.state.showStats ?
+                        <ReactTable data={this.state.array} columns={columnsDefault} filterable={["USERID"]}
+                            showPageSizeOptions={false} defaultPageSize={10}
+
+                        />
+                        : null
+                    }
 
 
-                            <ReactTable data={this.state.userArray} columns={columnsWinUser}
-                                showPageSizeOptions={false}
-                                defaultPageSize={12}
-                                expanded={this.state.expanded}
-                                onExpandedChange={(expanded, index, event) => {
-                                    this.setState({ expanded });
-                                }}
-                                SubComponent={row => {
 
-                                    const temp = this.state.userArray[row.index]
-                                    return (
-                                        <div style={{ padding: "20px" }}>
-                                            <ReactTable
-                                                data={[temp]}
-                                                columns={subWinInfo}
-                                                showPagination={false}
-                                                defaultPageSize={1}
-                                            />
-                                        </div>
-                                    );
-                                }}
-                            />
-                            : null
-                        }
+                    {this.state.showStats ?
 
-                        </div>
-                        </div>
+
+                        <ReactTable data={this.state.userArray} columns={columnsWinUser}
+                            showPageSizeOptions={false}
+                            defaultPageSize={12}
+                            expanded={this.state.expanded}
+                            onExpandedChange={(expanded, index, event) => {
+                                this.setState({ expanded });
+                            }}
+                            SubComponent={row => {
+
+                                const temp = this.state.userArray[row.index]
+                                return (
+                                    <div style={{ padding: "20px" }}>
+                                        <ReactTable
+                                            data={[temp]}
+                                            columns={subWinInfo}
+                                            showPagination={false}
+                                            defaultPageSize={1}
+                                        />
+                                    </div>
+                                );
+                            }}
+                        />
+                        : null
+                    }
+
+                </div>
+            </div>
         );
 
     }
