@@ -98,20 +98,20 @@ class Coin {
     logChanges(result, db) {
         let bets = this.bets.slice();
         this.bets = [];
-        let totalpot = 0;
         let winnerpot = 0;
+        let loserpot = 0;
         let winners = []
         let losers = []
         for (let i = 0; i < bets.length; i++) {
-            totalpot += parseFloat(bets[i].amount);
             if (bets[i].bet === result) {
-                winnerpot += bets[i].amount;
+                winnerpot += parseInt(bets[i].amount);
                 winners.push(bets[i].user);
             } else {
+                loserpot += parseInt(bets[i].amount);
                 losers.push(bets[i].user);
             }
         }
-        let loserpot = totalpot - winnerpot;
+        let totalpot = winnerpot + loserpot;
         let datetime = + new Date();
         db.beginTransaction()
             .then(() => {
