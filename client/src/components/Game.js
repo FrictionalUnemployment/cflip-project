@@ -146,8 +146,9 @@ class Game extends React.Component {
         setTimeout(() => {this.setState({betError: false, errorMsg: ""})}, 3000);
     }
 
-    placeBet = async (suit, amount) => {
+    placeBet = async (suit, amnt) => {
         // Här sätts vad, vem och hur mycket
+        let amount = parseInt(amnt);
         if (amount < 0) {
             this.setErrorMsg("You can't bet a negative amount!");
             return;
