@@ -104,10 +104,10 @@ class Coin {
         let losers = []
         for (let i = 0; i < bets.length; i++) {
             if (bets[i].bet === result) {
-                winnerpot += bets[i].amount;
+                winnerpot += parseInt(bets[i].amount);
                 winners.push(bets[i].user);
             } else {
-                loserpot += bets[i].amount;
+                loserpot += parseInt(bets[i].amount);
                 losers.push(bets[i].user);
             }
         }
