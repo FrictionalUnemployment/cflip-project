@@ -100,6 +100,7 @@ class Coin {
         this.bets = [];
         let totalpot = 0;
         let winnerpot = 0;
+        let loserpot = 0;
         let winners = []
         let losers = []
         for (let i = 0; i < bets.length; i++) {
@@ -108,10 +109,10 @@ class Coin {
                 winnerpot += bets[i].amount;
                 winners.push(bets[i].user);
             } else {
+                loserpot += bets[i].amount;
                 losers.push(bets[i].user);
             }
         }
-        let loserpot = totalpot - winnerpot;
         let datetime = + new Date();
         db.beginTransaction()
             .then(() => {
