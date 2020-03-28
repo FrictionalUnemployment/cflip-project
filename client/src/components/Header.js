@@ -42,18 +42,15 @@ class Header extends Component {
     }
 
     handleOnChange(event) {
-
         this.setState({
             [event.target.name]: event.target.value
         })
-
     }
 
     changeLogin() {
         this.setState({
             loginPage: !this.state.loginPage
         });
-
     }
 
     handleLoginCaptcha() {
@@ -61,14 +58,11 @@ class Header extends Component {
             .then(result => {
                 if (result === true) this.handleLogin();
             });
-
     }
 
     handleLogin = async () => {
         // data innehåller informationen som behövs i header
-
         const data = { username: `${this.state.username}`, password: `${this.state.password}` };
-
         // gör förfrågningen med fetch functionen.
         const response = await fetch('/user/login', {
             method: 'POST',
@@ -83,12 +77,7 @@ class Header extends Component {
             } else if (response.status === 400) {
                 return this.setState({ errorMessage: "Password incorrect!" })
             }
-
         }
-
-
-        //returnerar svar från backend vilket är användarnamnet
-
         this.setState({ registeredUsername: body, isLoggedin: true, errorMessage: '' });
         this.getUserBalance(this.state.registeredUsername);
         sessionStorage.setItem('username', body);
@@ -100,15 +89,10 @@ class Header extends Component {
 
 
     comparePassword() {
-
         if (this.state.password !== this.state.checkpassword) {
-            this.setState({ passwordsMatch: false })
-
-            //alert(this.props.passwordsMatch)
-            return false; // The form won't submit
+            return this.setState({ passwordsMatch: false })
         } else
-            this.setState({ passwordsMatch: true })
-
+        this.setState({ passwordsMatch: true })
         this.checkCaptcha()
             .then(result => {
                 if (result === true) this.register_user();
@@ -129,7 +113,6 @@ class Header extends Component {
     }
 
     checkCaptcha = async () => {
-
         const captchatext = { input: `${this.state.captcha}` };
         const response = await fetch('/captcha', {
             method: 'POST',
@@ -141,7 +124,6 @@ class Header extends Component {
             return this.setState({ errorMessage: "Wrong captcha!", refreshCaptcha: true });
         }
         return data.robot
-
     }
 
     register_user = async () => {
@@ -157,11 +139,6 @@ class Header extends Component {
         });
         //  Här kollar vi på svaret som vi får av servern
         const body = await response.json();
-
-        if (response.status !== 200) {
-            // Någon har gått fel
-            throw Error(body.message)
-        }
 
         //returnerar svar från backend vilket är användarnamnet
         return this.setState({
@@ -181,10 +158,8 @@ class Header extends Component {
     }
 
     async getUserBalance(user) {
-
         const response = await fetch('/stats/user/' + user)
         const data = await response.json();
-
         const balance = JSON.stringify(data.Balance);
         this.props.setBalance(balance);
     }
@@ -198,14 +173,15 @@ class Header extends Component {
         this.setState({ stats: false });
         this.togglePopup();
     }
+
     handleRefresh = () => {
         this.setState({ refreshCaptcha: false });
     }
 
-
-
     render() {
         let button;
+        let userString = this.state.isLoggedin ? `Username: ${this.state.registeredUsername}` : null;
+        let userBalance = this.state.isLoggedin ? `Balance: ${this.props.getBalance()}` : null;
 
         if (!this.state.isLoggedin && !this.state.showPopup) {
             //this.togglePopup.bind(this)
@@ -213,16 +189,11 @@ class Header extends Component {
         } else if (this.state.isLoggedin === true) {
             button = <button className="login-button" onClick={this.logOut.bind(this)}>Logout</button>;
         }
-
-        let userString = this.state.isLoggedin ? `Username: ${this.state.registeredUsername}` : null;
-        let userBalance = this.state.isLoggedin ? `Balance: ${this.props.getBalance()}` : null;
-      
+        
         return (
             <header className="App-header">
                 <h4 id="title">cflip.app</h4>
                 <div>
-
-    
                     <div>
                         {this.props.setMode === 2 ? 
                         <button id="stats-button" onClick={this.props.setGame}>Game</button>
@@ -233,12 +204,8 @@ class Header extends Component {
                         : null
                     }
                     </div>
-                        
                     {button}
-                    
             </div>
-
-        
 
             {this.state.showPopup && !this.state.loginPage && !this.state.stats ?
                 <Popup
@@ -277,8 +244,6 @@ class Header extends Component {
                 />
                 : null
             }
-
-            
                 <p className="userInfo">{userString} <br></br> {userBalance}</p>
 
                 {(this.state.showPopup && this.state.stats) ?
@@ -287,6 +252,7 @@ class Header extends Component {
                     />
                     : null
                 }
+
                 {this.state.showPopup && !this.state.loginPage && !this.state.stats ?
                     <Popup
                         text='Register'
@@ -297,11 +263,15 @@ class Header extends Component {
                         handleOnChange={this.handleOnChange.bind(this)}
                         changeLogin={this.changeLogin.bind(this)}
                         handleSubmit={this.comparePassword.bind(this)}
-                        message={(this.state.passwordsMatch === false && <div>Passwords don't match!</div>)
-                            || (this.state.passwordsMatch === true && this.state.registeredUsername !== "" && <div>You're registered! {this.state.registeredUsername} </div>)}
+                        message=
+                        {(this.state.passwordsMatch === false && 
+                        <div>Passwords don't match!</div>) || 
+                        (this.state.passwordsMatch === true && 
+                        this.state.registeredUsername !== "" && 
+                        <div>You're registered! {this.state.registeredUsername}</div>)}
                     />
-                    : null}
-
+                    : null
+                    }
                 {this.state.registeredUsername !== undefined && this.state.loginPage && this.state.showPopup && !this.state.stats ?
                     <Loginpopup
                         refresh={this.state.refreshCaptcha}
@@ -315,9 +285,7 @@ class Header extends Component {
                     />
                     : null
                 }
-
             </header>
-
         );
     }
 }

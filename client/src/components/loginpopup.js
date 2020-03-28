@@ -37,10 +37,10 @@ class Loginpopup extends React.Component {
         <div className="popup_real_inner">
           <div>
             <h4>{this.props.text}</h4>
-              <button className="login-change-button" onClick={this.props.changeLogin}>
-                Register here!
-                    </button>
-
+            <button className="login-change-button" 
+            onClick={this.props.changeLogin}>
+              Register here!
+            </button>
             <div style={{ color: "red", justifyContent: "center", }}>
               <p>{this.props.displayErrorMessage}</p>
             </div>
@@ -52,7 +52,6 @@ class Loginpopup extends React.Component {
                 onChange={this.handleChange}
               />
               <br />
-
               <input
                 type="password"
                 placeholder="Enter password"
@@ -85,5 +84,4 @@ class Loginpopup extends React.Component {
     );
   }
 }
-
 export default Loginpopup;

@@ -9,7 +9,6 @@
     flex-direction: column;
     border-radius: 15px;
     border-collapse: collapse;
-    max-width: 100%;
   }
   
   .ReactTable * {
